@@ -55,7 +55,7 @@ class ChatUser{
     }
     public function setPassword($password)
     {
-        $this->password = $password;
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
     public function getPassword()
     {
@@ -108,6 +108,16 @@ class ChatUser{
     }
 
     public function resetPassword()
+    {
+
+    }
+
+    public function getUserByEmail()
+    {
+
+    }
+
+    public function updateUserStatus()
     {
         
     }

@@ -1,0 +1,28 @@
+CREATE TABLE `user` (
+    user_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    fname VARCHAR(255) NOT NULL,
+    mname VARCHAR(255),
+    lname VARCHAR(255) NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    photo VARCHAR(110),
+    registration_date DATETIME,
+    status ENUM('Active', 'Inactive') NOT NULL,
+    password_update_date DATETIME
+);
+
+
+
+CREATE TABLE Chatting (
+    message_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT(11) NOT NULL,
+    receiver_id INT(11) NOT NULL,
+    timestamp DATETIME NOT NULL,
+    message TEXT,
+    message_status ENUM('send', 'read') NOT NULL
+);
+
+ALTER TABLE Chatting
+    ADD CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) REFERENCES User(user_id),
+    ADD CONSTRAINT fk_receiver_id FOREIGN KEY (receiver_id) REFERENCES User(user_id);

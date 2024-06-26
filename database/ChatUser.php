@@ -128,19 +128,30 @@ class ChatUser{
     {
         $query = "
         SELECT * FROM User
+<<<<<<< HEAD
+        WHERE email = :email
+=======
         WHERE user_email = :user_email
+>>>>>>> 4a855e303e7b33998066ec5349f2ed04d39fa71d
         ";
  
         $statement = $this->connect->prepare($query);
  
+<<<<<<< HEAD
+        $statement->bindParam(':email', $this->email);
+=======
         $statement->bindParam(':user_email', $this->email);
+>>>>>>> 4a855e303e7b33998066ec5349f2ed04d39fa71d
  
         if ($statement->execute()) {
             $user_data = $statement->fetch(PDO::FETCH_ASSOC);
         }
         return $user_data;
+<<<<<<< HEAD
+=======
 
         
+>>>>>>> 4a855e303e7b33998066ec5349f2ed04d39fa71d
     }
 
     public function updateUserStatus()

@@ -168,23 +168,5 @@ class ChatUser{
         }
         return $user_data;
     }
-
-    public function updateUserLoginStatus()
-    {
-        $query = "
-            UPDATE user
-            SET status= :user_status
-            WHERE user_id = :user_id
-        ";
-        $statement = $this->connection->prepare($query);
-        $statement->bindParam(":user_status", $this->status);
-        $statement->bindParam(':user_id',$this->user_id);
-        if ($statement->execute()) {
-            return true;
-        }
-        return false;
-
-    }
-
 }
 ?>

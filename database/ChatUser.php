@@ -169,9 +169,9 @@ class ChatUser{
         return $user_data;
     }
 
-    public function updateUserStatus()
+    public function UpdateUserLoginStatus()
     {
-        
+        $query = "Update user set status where email = :email";
     }
 
 }

@@ -71,7 +71,7 @@
         padding: 5px;
         width: 100%;
         outline: none;
-        border: 2px solid black;
+        border: 1px solid black;
     }
 
     .button-box {

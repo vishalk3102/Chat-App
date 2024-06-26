@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat-App</title>
+    <title>ChatApp</title>
     <link rel="stylesheet" href="style/style.css">
 </head>
 

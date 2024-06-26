@@ -5,6 +5,7 @@ class ChatUser{
     private $fname ;
     private $mname ;
     private $lname;
+    private $username;
     private $password;
     private $email ;
     private $photo ;
@@ -53,6 +54,17 @@ class ChatUser{
     {
         return $this->lname;
     }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
     public function setPassword($password)
     {
         $this->password = password_hash($password, PASSWORD_DEFAULT);
@@ -128,6 +140,7 @@ class ChatUser{
         }
         return $user_data;
 
+        
     }
 
     public function updateUserStatus()

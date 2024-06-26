@@ -4,16 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat-App</title>
+    <title>ChatApp</title>
     <link rel="stylesheet" href="style/style.css">
 </head>
 
 <body>
-    <div class="container">
+    <div class="container reg-container">
         <div class="title">Registration</div>
         <div class="content">
             <form action="#">
-                <div class="user-details">
+                <div class="user-details fields">
                     <div class="input-box">
                         <span class="details">First Name</span>
                         <input type="text" placeholder="Enter your name" required>
@@ -41,6 +41,10 @@
                 </div>
                 <div class="button">
                     <input type="submit" value="Register">
+                </div>
+                <div class="log">
+                    Already Registered ! 
+                    <a href="index.php"> Login </a>
                 </div>
             </form>
         </div>

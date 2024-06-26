@@ -104,28 +104,6 @@ class ChatUser{
 
     public function saveUser()
     {
-        $query = "
-            INSERT INTO user (fname, mname, lname, username, password, email, photo, registration_date, status, password_update_date)
-            VALUES (:fname, :mname, :lname, :username, :password, :email, :photo, :registration_date, :status, :password_update_date)
-        ";
-        $statement = $this->connect->prepare($query);
- 
-        $statement->bindValue(':fname', $this->fname);
-        $statement->bindValue(':mname', $this->mname);
-        $statement->bindValue(':lname', $this->lname);
-        $statement->bindValue(':username', $this->username);
-        $statement->bindValue(':password', $this->password);
-        $statement->bindValue(':email', $this->email);
-        $statement->bindValue(':photo', $this->photo);
-        $statement->bindValue(':registration_date', $this->registration_date);
-        $statement->bindValue(':status', $this->status);
-        $statement->bindValue(':password_update_date', $this->password_update_date, PDO::PARAM_NULL); // Bind as null if null
- 
-        if ($statement->execute()) {
-            return true;
-        } else {
-            return false;
-        }
 
     }
 

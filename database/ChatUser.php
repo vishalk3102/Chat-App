@@ -15,7 +15,7 @@ class ChatUser{
     private $password_update_date;
     private $connection;
 
-    public function _contruct()
+    public function __construct()
     {
         $database = new DatabaseConnection();
         $this->connection = $database->connect();
@@ -121,7 +121,7 @@ class ChatUser{
                 VALUES (:fname, :mname, :lname, :username, :password, :email, :photo, :registration_date, :status, :password_update_date)
             ";
     
-            $statement = $this->db->prepare($query);
+            $statement = $this->connection->prepare($query);
     
             $statement->bindParam(':fname', $this->fname);
             $statement->bindParam(':mname', $this->mname, PDO::PARAM_NULL);
@@ -160,7 +160,6 @@ class ChatUser{
         ";
  
         $statement = $this->connection->prepare($query);
- 
         $statement->bindParam(':email', $this->email);
  
         if ($statement->execute()) {
@@ -171,7 +170,18 @@ class ChatUser{
 
     public function updateUserLoginStatus()
     {
-        
+        $query = "
+            UPDATE user
+            SET status= :user_status
+            WHERE user_id = :user_id
+        ";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(":user_status", $this->status);
+        $statement->bindParam(':user_id',$this->user_id);
+        if ($statement->execute()) {
+            return true;
+        }
+        return false;
     }
 
 }

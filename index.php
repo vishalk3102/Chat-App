@@ -8,17 +8,17 @@ if (isset($_SESSION['user_data']))
 
 if(isset($_POST['email'],$_POST['password']))
 {
-    require_once('../database/ChatUser.php');
+    require_once('database/ChatUser.php');
     $user = new ChatUser();
     $user->setRegistrationEmail($_POST['email']);
-    $user_data = $user->getUserByEmail($_POST['email']);
+    $user_data = $user->getUserByEmail();
     if(is_array( $user_data) && count($user_data) > 0)
     {
         if(password_verify($_POST['password'],$user_data['password']))
         {
             $user->setUserId($user_data['user_id']);
             $user->setStatus('Active');
-            if($user->updateUserData())
+            if($user->UpdateUserLoginStatus())
             {
                 $_SESSION['user_data'] = [
                     'id'=> $user_data['user_id'],
@@ -28,7 +28,7 @@ if(isset($_POST['email'],$_POST['password']))
                     'photo'=> $user_data['photo'],
                     'email' => $user_data['email'],
                 ];
-                header('locaton:profile.php');
+                header('location:profile.php');
             }
         }
         else
@@ -57,7 +57,7 @@ if(isset($_POST['email'],$_POST['password']))
 <div class="container log-container">
         <div class="title">Login</div>
         <div class="content">
-            <form action="#">
+            <form method="POST">
                 <div class="user-details">
                     <?php
                       if($error != '')

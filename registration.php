@@ -7,12 +7,12 @@
     if($_SERVER['REQUEST_METHOD'] == 'POST') 
     {
         session_start();
-        if(isset($_SESSION['user']))
+        if(isset($_SESSION['user_data']))
         {
             header('location:profile.php');
         }
 
-        require_once('./database/ChatUser.php');
+        require_once('database/ChatUser.php');
 
         $user = new ChatUser();
         $user->setfname($_POST['first_name']);
@@ -24,11 +24,9 @@
         $user->setPasswordUpdateDate(date('Y-m-d H:i:s'));
         $user->setRegistrationDate(date('Y-m-d H:i:s'));
         $user->setPhoto('avtar1');
-        $user->setStatus('Not Active');
-
+        $user->setStatus('Inactive');
         $checkuser = $user->getUserByEmail();
-
-        if(!is_null($checkuser)) 
+        if(is_array( $checkuser) && count($checkuser) > 0)
         {
             $error = "There already exist a user with this email";
         }
@@ -74,7 +72,7 @@
         ?>
         <div class="title">Registration</div>
         <div class="content">
-            <form action="#">
+            <form  method="POST">
                 <div class="user-details fields">
                     <div class="input-box">
                         <span class="details">First Name</span>

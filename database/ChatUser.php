@@ -131,7 +131,7 @@ class ChatUser{
         WHERE user_email = :user_email
         ";
  
-        $statement = $this->connect->prepare($query);
+        $statement = $this->connection->prepare($query);
  
         $statement->bindParam(':user_email', $this->email);
  
@@ -143,7 +143,7 @@ class ChatUser{
         
     }
 
-    public function updateUserStatus()
+    public function updateUserLoginStatus()
     {
         
     }

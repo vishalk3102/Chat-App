@@ -1,31 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatApp</title>
+    <title>Login-page</title>
     <link rel="stylesheet" href="style/style.css">
 </head>
-
 <body>
-    <div class="container reg-container">
-        <div class="title">Registration</div>
+<div class="container log-container">
+        <div class="title">Login</div>
         <div class="content">
             <form action="#">
-                <div class="user-details fields">
-                    <div class="input-box">
-                        <span class="details">First Name</span>
-                        <input type="text" placeholder="Enter your name" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Middle Name</span>
-                        <input type="text" placeholder="Enter your name" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="details">Last Name</span>
-                        <input type="text" placeholder="Enter your name" required>
-                    </div>
+                <div class="user-details">
+                  
                     <div class="input-box">
                         <span class="details">Email</span>
                         <input type="text" placeholder="Enter your email" required>
@@ -34,21 +21,18 @@
                         <span class="details">Password</span>
                         <input type="text" placeholder="Enter your password" required>
                     </div>
-                    <div class="input-box">
-                        <span class="details">Confirm Password</span>
-                        <input type="text" placeholder="Confirm your password" required>
-                    </div>
+                   
                 </div>
                 <div class="button">
-                    <input type="submit" value="Register">
+                    <input type="submit" value="Login">
                 </div>
+                <p> Forgot Password ! <a href="forgetPass.php">Click</a> </p>
                 <div class="log">
-                    Already Registered ! 
-                    <a href="login.php"> Login </a>
+                        New User !  
+                        <a href="registration.php"> Register </a>
                 </div>
             </form>
         </div>
     </div>
 </body>
-
 </html>

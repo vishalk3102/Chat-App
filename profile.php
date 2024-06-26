@@ -119,7 +119,7 @@
                         </a>
                     </button>
                     <button>
-                        <a href="editProfile.php">
+                        <a href="changePassword.php">
                             Change Password
                         </a>
                     </button>

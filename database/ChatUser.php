@@ -142,7 +142,19 @@ class ChatUser{
 
     public function getUserByEmail()
     {
-
+        $query = "
+        SELECT * FROM User
+        WHERE email = :email
+        ";
+ 
+        $statement = $this->connect->prepare($query);
+ 
+        $statement->bindParam(':email', $this->email);
+ 
+        if ($statement->execute()) {
+            $user_data = $statement->fetch(PDO::FETCH_ASSOC);
+        }
+        return $user_data;
     }
 
     public function updateUserStatus()

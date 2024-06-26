@@ -5,7 +5,6 @@ class ChatUser{
     private $fname ;
     private $mname ;
     private $lname;
-    private $username;
     private $password;
     private $email ;
     private $photo ;
@@ -54,17 +53,6 @@ class ChatUser{
     {
         return $this->lname;
     }
-
-    public function setUsername($username)
-    {
-        $this->username = $username;
-    }
-
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
     public function setPassword($password)
     {
         $this->password = password_hash($password, PASSWORD_DEFAULT);
@@ -114,10 +102,38 @@ class ChatUser{
         return $this->password_update_date;
     }
 
-    public function saveUser()
-    {
-
+    public function saveUser() {
+        try {
+            $query = "
+                INSERT INTO `user` (fname, mname, lname, username, password, email, photo, registration_date, status, password_update_date) 
+                VALUES (:fname, :mname, :lname, :username, :password, :email, :photo, :registration_date, :status, :password_update_date)
+            ";
+    
+            $statement = $this->db->prepare($query);
+    
+            $statement->bindParam(':fname', $this->fname);
+            $statement->bindParam(':mname', $this->mname, PDO::PARAM_NULL);
+            $statement->bindParam(':lname', $this->lname);
+            $statement->bindParam(':username', $this->username);
+            $statement->bindParam(':password', $this->password);
+            $statement->bindParam(':email', $this->email);
+            $statement->bindParam(':photo', $this->photo);
+            $statement->bindParam(':registration_date', $this->registration_date);
+            $statement->bindParam(':status', $this->status);
+            $statement->bindParam(':password_update_date', $this->password_update_date, PDO::PARAM_NULL);
+    
+            $result = $statement->execute();
+    
+            if ($result) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
     }
+    
 
     public function resetPassword()
     {
@@ -128,30 +144,17 @@ class ChatUser{
     {
         $query = "
         SELECT * FROM User
-<<<<<<< HEAD
         WHERE email = :email
-=======
-        WHERE user_email = :user_email
->>>>>>> 4a855e303e7b33998066ec5349f2ed04d39fa71d
         ";
  
         $statement = $this->connect->prepare($query);
  
-<<<<<<< HEAD
         $statement->bindParam(':email', $this->email);
-=======
-        $statement->bindParam(':user_email', $this->email);
->>>>>>> 4a855e303e7b33998066ec5349f2ed04d39fa71d
  
         if ($statement->execute()) {
             $user_data = $statement->fetch(PDO::FETCH_ASSOC);
         }
         return $user_data;
-<<<<<<< HEAD
-=======
-
-        
->>>>>>> 4a855e303e7b33998066ec5349f2ed04d39fa71d
     }
 
     public function updateUserStatus()

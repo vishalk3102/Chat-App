@@ -58,6 +58,20 @@
 
 <body>
     <div class="container reg-container">
+        <?php
+            if($error != '')
+            {
+                echo '<div class="alert alert-danger" role="alert">
+                '.$error.'
+                </div>';
+            }
+            if($success_message != '')
+            {
+                echo '<div class="alert alert-success" role="alert">
+                '.$success_message.'
+                </div>';
+            }
+        ?>
         <div class="title">Registration</div>
         <div class="content">
             <form action="#">

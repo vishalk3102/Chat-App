@@ -15,7 +15,6 @@ body {
   background-color: #030617;
 }
 .container {
-  max-width: 700px;
   width: 100%;
   background-color: #fff;
   padding: 25px 30px;
@@ -37,13 +36,22 @@ body {
   border-radius: 5px;
   background: linear-gradient(135deg, #71b7e6, #9b59b6);
 }
-.content form .user-details {
+.reg-container{
+  max-width: 700px;
+}
+.log-container{
+  max-width: 400px;
+}
+.fields{
   display: flex;
+}
+
+.content form .user-details {
   flex-wrap: wrap;
   justify-content: space-between;
   margin: 20px 0 12px 0;
 }
-form .user-details .input-box {
+.reg-container form .user-details .input-box {
   margin-bottom: 15px;
   width: calc(100% / 2 - 20px);
 }

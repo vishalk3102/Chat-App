@@ -80,8 +80,9 @@ if(isset($_POST['email'],$_POST['password']))
                 <div class="button">
                     <input type="submit" value="Login">
                 </div>
-                <p> Forgot Password ! <a href="forgetPass.php">Click</a> </p>
+                
                 <div class="log">
+                        <p> Forgot Password ? <a  href="forgetPass.php">Click</a> </p>
                         New User !  
                         <a href="registration.php"> Register </a>
                 </div>

@@ -20,7 +20,6 @@
     }
 
     .profile-card {
-        /* border: 2px solid red; */
         width: 50%;
         border-radius: 10px;
         display: flex;
@@ -30,12 +29,10 @@
     }
 
     .left-side-box {
-        /* border: 2px solid red; */
         margin: 1rem;
     }
 
     .left-side-box img {
-        /* border: 2px solid red; */
         border-radius: 10px;
         height: 250px;
         width: 300px;
@@ -47,7 +44,6 @@
     }
 
     .right-side-box {
-        /* border: 2px solid red; */
         display: flex;
         flex-direction: column;
         margin-left: 1rem;
@@ -55,7 +51,6 @@
     }
 
     .input-box {
-        /* border: 2px solid red; */
         margin-bottom: 5px;
     }
 
@@ -75,7 +70,6 @@
     }
 
     .button-box {
-        /* border: 2px solid black; */
         margin-top: 1rem;
     }
 
@@ -109,7 +103,7 @@
                 <div class="button-box">
                     <button>
                         <a href="editProfile.php">
-                            upload Avatar
+                            Change Avatar
                         </a>
                     </button>
                 </div>
@@ -137,13 +131,12 @@
                         <input type="text" placeholder="Enter your user name" required>
                     </div>
                     <div class="button-box">
-                        <button>
+                        <button id="change-avatar-btn">
                             Update Profile
                         </button>
                     </div>
                 </form>
             </div>
-
         </div>
     </section>
 </body>

@@ -49,25 +49,27 @@ $user_obj = $_SESSION['user_data'];
 
             </div>
             <div class="user-chat-box">
-                <div class="users-box">
-                    <?php
-                    foreach ($user_data as $key => $user) {
-                        if ($user['user_id'] != $login_user_id) {
-                            echo "
-                            <div class='user-text-box' id='chat11_user'  data-userid = '" . $user['user_id'] . "' onclick='loadChat()'>
-                                <div class='profile'>
-                                    <img src='./assets/avatar.png' alt='avatar'>
-                                </div>
-                                <div class='text-box'>
-                                    <p class='username-box' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "</p>
-                                    <p class='status-box' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
-                                </div>
-                            </div>
-                        ";
-                        }
+                <div class="users-box" id="users-box">
+                                            
+                        <!-- <?php
 
-                    }
-                    ?>
+                        foreach ($user_data as $key => $user) {
+                            if ($user['user_id'] != $login_user_id) {
+                                echo "
+                                <div class='user-text-box' id='chat11_user'  data-userid = '" . $user['user_id'] . "' onclick='loadChat()'>
+                                    <div class='profile'>
+                                        <img src='./assets/avatar.png' alt='avatar'>
+                                    </div>
+                                    <div class='text-box'>
+                                        <p class='username-box' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "</p>
+                                        <p class='status-box' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
+                                    </div>
+                                </div>
+                            ";
+                            }
+
+                        }
+                        ?> -->
                 </div>
                 <div class="chat-box" id="chatpart">
 
@@ -296,6 +298,75 @@ $user_obj = $_SESSION['user_data'];
             });
         inputmsg.value='';
     }
+
+    function userStatus()
+    {
+        var xhr = new XMLHttpRequest();
+        
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    document.getElementById('users-box').innerHTML = xhr.responseText;
+                } else {
+                    console.error('Error fetching user data:', xhr.status, xhr.statusText);
+                }
+            }
+        };
+        
+        xhr.open('GET', 'fetchUsers.php', true);
+        xhr.send();
+    }
+
+//         function updateUsers() {
+//             var userId = document.getElementById('login_user_id').value;
+
+//             fetch('action.php', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/x-www-form-urlencoded'
+//                 },
+//                 body: new URLSearchParams({
+//                     'user_id': userId,
+//                     'action': 'get_users',
+//                 })
+//             })
+//             .then(response => response.json()) // Parse response as JSON
+//             .then(data => {
+//                 console.log("Response received: ", data);
+//                 // Check if data is valid
+//                 if (Array.isArray(data)) {
+//                     // Construct HTML for users
+//                     let userHTML = '';
+//                     data.forEach(user => {
+//                         userHTML += `
+//                             <div class='user-text-box' data-userid='${user.user_id}' onclick='loadChat(${user.user_id}'>
+//                                 <div class='profile'>
+//                                     <img src='./assets/avatar.png' alt='avatar'>
+//                                 </div>
+//                                 <div class='text-box'>
+//                                     <p class='username-box' id='list_user_name_${user.user_id}'>${user.fname} ${user.lname}</p>
+//                                     <p class='status-box' id='list_user_status_${user.user_id}'>${user.status}</p>
+//                                 </div>
+//                             </div>
+//                         `;
+//                     });
+//                     // Update the users-box element
+//                     document.getElementById('users-box').innerHTML = userHTML;
+//                 } else {
+//                     console.error('Invalid data format received.');
+//                 }
+//             })
+//             .catch(error => {
+//                 console.error("Fetch Error:", error);
+//             });
+// }
+
+
+userStatus();
+setInterval(userStatus, 3000);
+
+ 
 </script>
 
 </html>
+

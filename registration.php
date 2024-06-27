@@ -85,7 +85,7 @@
                     </div>
                     <div class="input-box">
                         <span class="details">Middle Name</span>
-                        <input type="text" placeholder="Enter your name" name="middle_name" id="middleName" required>
+                        <input type="text" placeholder="Enter your name" name="middle_name" id="middleName" >
                     </div>
                     <div class="input-box">
                         <span class="details">Last Name</span>
@@ -97,11 +97,11 @@
                     </div>
                     <div class="input-box">
                         <span class="details">Password</span>
-                        <input type="text" placeholder="Enter your password" name="password" id="password" required>
+                        <input type="password" placeholder="Enter your password" name="password" id="password" required>
                     </div>
                     <div class="input-box">
                         <span class="details">Confirm Password</span>
-                        <input type="text" placeholder="Confirm your password" name="cpassword" id="confirmPassword" required>
+                        <input type="password" placeholder="Confirm your password" name="cpassword" id="confirmPassword" required>
                     </div>
                 </div>
                 <div class="button">

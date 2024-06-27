@@ -1,4 +1,4 @@
-INSERT_USER:
+INSERT_USER:-
 DELIMITER //
 
 CREATE PROCEDURE `insert_user` (
@@ -26,3 +26,33 @@ END //
 DELIMITER ;
 
 
+
+GET_USER_BY_EMAIL:-
+DELIMITER //
+
+CREATE PROCEDURE `get_user_by_email` (
+    IN p_email VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM `User`
+    WHERE `email` = p_email;
+END //
+
+DELIMITER ;
+
+
+
+UPDATE_USER_STATUS:-
+DELIMITER //
+
+CREATE PROCEDURE `update_user_status` (
+    IN p_user_id INT,
+    IN p_user_status ENUM('Active', 'Inactive')
+)
+BEGIN
+    UPDATE `user`
+    SET `status` = p_user_status
+    WHERE `user_id` = p_user_id;
+END //
+
+DELIMITER ;

@@ -150,34 +150,51 @@ class ChatUser{
 
     public function getUserByEmail()
     {
-        $query = "
-        SELECT * FROM User
-        WHERE email = :email
-        ";
- 
-        $statement = $this->connection->prepare($query);
-        $statement->bindParam(':email', $this->email);
- 
-        if ($statement->execute()) {
+        try {
+            $query = "CALL get_user_by_email(:email)";
+            $statement = $this->connection->prepare($query);
+            
+            $statement->bindParam(':email', $this->email, PDO::PARAM_STR);
+            
+            $statement->execute();
+            
             $user_data = $statement->fetch(PDO::FETCH_ASSOC);
+
+            return $user_data;
+            
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
         }
-        return $user_data;
     }
 
     public function updateUserLoginStatus()
     {
-        $query = "
-            UPDATE user
-            SET status= :user_status
-            WHERE user_id = :user_id
-        ";
-        $statement = $this->connection->prepare($query);
-        $statement->bindParam(":user_status", $this->status);
-        $statement->bindParam(':user_id',$this->user_id);
-        if ($statement->execute()) {
-            return true;
+        // $query = "
+        //     UPDATE user
+        //     SET status= :user_status
+        //     WHERE user_id = :user_id
+        // ";
+        // $statement = $this->connection->prepare($query);
+        // $statement->bindParam(":user_status", $this->status);
+        // $statement->bindParam(':user_id',$this->user_id);
+        // if ($statement->execute()) {
+        //     return true;
+        // }
+        // return false;
+        try {
+            $query = "CALL update_user_status(:user_id, :user_status)";
+            $statement = $this->connection->prepare($query);
+
+            $statement->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
+            $statement->bindParam(':user_status', $this->status, PDO::PARAM_STR);
+
+            $result = $statement->execute();
+
+            return $result;
+            
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
         }
-        return false;
     }
 
 }

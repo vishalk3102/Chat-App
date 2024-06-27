@@ -6,6 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password recovery</title>
     <link rel="stylesheet" href="style/style.css">
+
+    <script>
+        function validateForm() {
+           
+            var email = document.getElementById('email').value.trim();
+           
+            // Validate email format
+            var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
+            var errorMessage = "Please enter a valid email address";
+            if (!emailRegex.test(email)) {
+                document.getElementById('emailError').textContent = errorMessage;
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+
 </head>
 <style>
     .button {
@@ -46,11 +64,12 @@
     <div class="container log-container">
         <div class="title">Password recovery</div>
         <div class="content">
-            <form action="sendOTP.php" method="post">
+            <form action="sendOTP.php" method="post" onsubmit="return validateForm()">
                 <div class="user-details">
                     <div class="input-box">
                         <span class="details">Email</span>
-                        <input type="text" name="email" placeholder="Enter your email" required>
+                        <input type="text" id="email" name="email" placeholder="Enter your email" required>
+                        <div id="emailError" class="error-message"></div>
                     </div>
                 </div>
                 <div class="button">

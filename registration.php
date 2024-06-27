@@ -10,7 +10,7 @@
         session_start();
         if(isset($_SESSION['user_data']))
         {
-            header('location:profile.php');
+            header('location:dashboard.php');
         }
 
         require_once('database/ChatUser.php');
@@ -54,8 +54,7 @@
     <title>ChatApp - Registration</title>
     <link rel="stylesheet" href="style/style.css">
 
-   
-   
+
 </head>
 
 <body>
@@ -94,14 +93,17 @@
                     <div class="input-box">
                         <span class="details">Email</span>
                         <input type="text" placeholder="Enter your email" name="email" id="email" required>
+                        <div id="emailError" class="error-message"></div>
                     </div>
                     <div class="input-box">
                         <span class="details">Password</span>
                         <input type="password" placeholder="Enter your password" name="password" id="password" required>
+                        <div id="passwordError" class="error-message"></div>
                     </div>
                     <div class="input-box">
                         <span class="details">Confirm Password</span>
                         <input type="password" placeholder="Confirm your password" name="cpassword" id="confirmPassword" required>
+                        <div id="confError" class="error-message"></div>
                     </div>
                 </div>
                 <div class="button">
@@ -123,25 +125,29 @@
             var confirmPassword = document.getElementById('confirmPassword').value;
 
           
-
         
             // Validate email format
             var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
+            var errorMessage = "Please enter a valid email address";
             if (!emailRegex.test(email)) {
-                alert("Please enter a valid email address.");
-                // $('.toast-body').html('Please enter a valid email address.');
-                // $('.toast').toast('show');
-                console.log("abcdefghijklmnopqrstuvwxyz");
+                document.getElementById('emailError').textContent = errorMessage;
                 return false;
             }
 
             // Validate password and confirm password match
-            if(password.length<6){
-                alert("Password length should be at least 6");
+        
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            var errorMessage = "Password must contain at least one letter, one number, one special character, and be at least 8 characters long.";
+
+            // Check if password matches the regex
+            if (!passwordRegex.test(password)) {
+                document.getElementById('passwordError').textContent = errorMessage;
                 return false;
-            }
+            } 
+
+            var errorMessage = "Password and Confirm Password do not match";
             if (password !== confirmPassword) {
-                alert("Passwords do not match.");
+                document.getElementById('confError').textContent = errorMessage;
                 return false;
             }
 

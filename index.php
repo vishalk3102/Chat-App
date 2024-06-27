@@ -3,7 +3,7 @@ session_start();
 $error = '';
 if (isset($_SESSION['user_data']))
 {
-    header('location:profile.php');
+    header('location:dashboard.php');
 } 
 
 if(isset($_POST['email'],$_POST['password']))
@@ -29,7 +29,7 @@ if(isset($_POST['email'],$_POST['password']))
                     'email' => $user_data['email'],
                     'username' => $user_data['username'],
                 ];
-                header('location:profile.php');
+                header('location:dashboard.php');
             }
         }
         else
@@ -53,12 +53,43 @@ if(isset($_POST['email'],$_POST['password']))
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login-page</title>
     <link rel="stylesheet" href="style/style.css">
+
+     <script>
+        function validateForm() {
+           
+            var email = document.getElementById('email').value.trim();
+            var password = document.getElementById('password').value;
+            
+            // Validate email format
+            var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
+            var errorMessage = "Please enter a valid email address";
+            if (!emailRegex.test(email)) {
+                document.getElementById('emailError').textContent = errorMessage;
+                return false;
+            }
+
+            // Validate password and confirm password match
+        
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            var errorMessage = "Wrong password format";
+
+            // Check if password matches the regex
+            if (!passwordRegex.test(password)) {
+                document.getElementById('passwordError').textContent = errorMessage;
+                return false;
+            } 
+
+            return true;
+        }
+    </script> 
+
 </head>
+
 <body>
 <div class="container log-container">
         <div class="title">Login</div>
         <div class="content">
-            <form method="POST">
+            <form method="POST" onsubmit="return validateForm()">
                 <div class="user-details">
                     <?php
                       if($error != '')
@@ -71,10 +102,12 @@ if(isset($_POST['email'],$_POST['password']))
                     <div class="input-box">
                         <span class="details">Email</span>
                         <input type="text" name="email" id="email" placeholder="Enter your email" required>
+                        <div id="emailError" class="error-message"></div>
                     </div>
                     <div class="input-box">
                         <span class="details">Password</span>
-                        <input type="text" name="password" id="password" placeholder="Enter your password" required>
+                        <input type="password" name="password" id="password" placeholder="Enter your password" required>
+                        <div id="passwordError" class="error-message"></div>
                     </div>
                    
                 </div>

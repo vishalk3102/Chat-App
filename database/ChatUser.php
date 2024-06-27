@@ -1,16 +1,17 @@
 <?php
 require_once 'DatabaseConnection.php';
-class ChatUser{
+class ChatUser
+{
     private $user_id;
-    private $fname ;
-    private $mname ;
+    private $fname;
+    private $mname;
     private $lname;
     private $username;
     private $password;
-    private $email ;
-    private $photo ;
-    private $registration_date ;
-    private $status ;
+    private $email;
+    private $photo;
+    private $registration_date;
+    private $status;
     private $password_update_date;
     private $connection;
 
@@ -113,7 +114,8 @@ class ChatUser{
         return $this->password_update_date;
     }
 
-    public function saveUser() {
+    public function saveUser()
+    {
         try {
             // calling INSERT_USER stored procedure
             $query = "CALL insert_user(:fname, :mname, :lname, :username, :password, :email, :photo, :registration_date, :status, :password_update_date)";
@@ -130,9 +132,9 @@ class ChatUser{
             $statement->bindParam(':registration_date', $this->registration_date);
             $statement->bindParam(':status', $this->status);
             $statement->bindParam(':password_update_date', $this->password_update_date, PDO::PARAM_NULL);
-    
+
             $result = $statement->execute();
-    
+
             if ($result) {
                 return true;
             } else {
@@ -142,6 +144,7 @@ class ChatUser{
             die('Error: ' . $e->getMessage());
         }
     }
+    
 
     public function resetPassword()
     {
@@ -222,6 +225,31 @@ class ChatUser{
         } catch (PDOException $e) {
             die('Error: ' . $e->getMessage());
         }
+        return false;
+    }
+
+
+    function getAllUsersDataWithStatus()
+    {
+        $query = "
+            SELECT user_id, fname, lname, photo, status,
+            (
+                SELECT COUNT(*)
+                FROM chatting
+                WHERE receiver_id = :user_id
+                AND sender_id = user.user_id
+                AND message_status = 'send'
+            ) AS count_status
+            FROM user
+            ";
+        $stmt = $this->connection->prepare($query);
+
+        $stmt->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
     }
 
 }

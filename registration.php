@@ -10,7 +10,7 @@
         session_start();
         if(isset($_SESSION['user_data']))
         {
-            header('location:profile.php');
+            header('location:dashboard.php');
         }
 
         require_once('database/ChatUser.php');

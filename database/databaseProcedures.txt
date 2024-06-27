@@ -1,0 +1,28 @@
+INSERT_USER:
+DELIMITER //
+
+CREATE PROCEDURE `insert_user` (
+    IN p_fname VARCHAR(255),
+    IN p_mname VARCHAR(255),
+    IN p_lname VARCHAR(255),
+    IN p_username VARCHAR(100),
+    IN p_password VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_photo VARCHAR(110),
+    IN p_registration_date DATETIME,
+    IN p_status ENUM('Active', 'Inactive'),
+    IN p_password_update_date DATETIME
+)
+BEGIN
+    INSERT INTO `user` (
+        `fname`, `mname`, `lname`, `username`, `password`, `email`,
+        `photo`, `registration_date`, `status`, `password_update_date`
+    ) VALUES (
+        p_fname, p_mname, p_lname, p_username, p_password, p_email,
+        p_photo, p_registration_date, p_status, p_password_update_date
+    );
+END //
+
+DELIMITER ;
+
+

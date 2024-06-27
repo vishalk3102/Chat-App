@@ -9,24 +9,24 @@
     <script>
         function validateForm() {
            
-            var email = document.getElementById('email').value.trim();
             var password = document.getElementById('password').value;
             var confirmPassword = document.getElementById('confirmPassword').value;
 
-            // Validate email format
-            var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
-            if (!emailRegex.test(email)) {
-                alert("Please enter a valid email address.");
-                return false;
-            }
-
+           
             // Validate password and confirm password match
-            if(password.length<6){
-                alert("Password length should be at least 6");
+        
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            var errorMessage = "Password must contain at least one letter, one number, one special character, and be at least 8 characters long.";
+
+            // Check if password matches the regex
+            if (!passwordRegex.test(password)) {
+                document.getElementById('passwordError').textContent = errorMessage;
                 return false;
-            }
+            } 
+
+            var errorMessage = "Password and Confirm Password do not match";
             if (password !== confirmPassword) {
-                alert("Passwords do not match.");
+                document.getElementById('confError').textContent = errorMessage;
                 return false;
             }
 
@@ -49,10 +49,12 @@
                     <div class="input-box">
                         <span class="details">New Password</span>
                         <input type="password" id="password" placeholder="Enter your password" required>
+                        <div id="passwordError" class="error-message"></div>
                     </div>
                     <div class="input-box">
                         <span class="details">Confirm New Password</span>
                         <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                        <div id="confError" class="error-message"></div>
                     </div>
                     <div class="input-box">
                         <span class="details">OTP</span>
@@ -62,7 +64,7 @@
                 <div class="button">
                     <input type="submit" value="Submit">
                 </div>
-                
+               
             </form>
         </div>
     </div>

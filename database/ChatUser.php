@@ -145,7 +145,33 @@ class ChatUser{
 
     public function resetPassword()
     {
+        // $query = "
+        //     UPDATE user
+        //     SET password = :password
+        //     WHERE email = :email
+        // ";
+        // $statement = $this->connection->prepare($query);
+        // $statement->bindParam(":password", $this->password);
+        // $statement->bindParam(':email',$this->email);
+        // if ($statement->execute()) {
+        //     return true;
+        // }
+        // return false;
 
+        try {
+            $query = "CALL update_user_password(:email, :password)";
+            $statement = $this->connection->prepare($query);
+
+            $statement->bindParam(':email', $this->email, PDO::PARAM_STR);
+            $statement->bindParam(':password', $this->password, PDO::PARAM_STR);
+
+            $result = $statement->execute();
+
+            return $result;
+            
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
     }
 
     public function getUserByEmail()
@@ -181,12 +207,13 @@ class ChatUser{
         //     return true;
         // }
         // return false;
+
         try {
-            $query = "CALL update_user_status(:user_id, :user_status)";
+            $query = "CALL update_user_status(:user_id, :status)";
             $statement = $this->connection->prepare($query);
 
             $statement->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
-            $statement->bindParam(':user_status', $this->status, PDO::PARAM_STR);
+            $statement->bindParam(':status', $this->status, PDO::PARAM_STR);
 
             $result = $statement->execute();
 

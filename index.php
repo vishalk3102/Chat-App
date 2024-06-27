@@ -3,7 +3,7 @@ session_start();
 $error = '';
 if (isset($_SESSION['user_data']))
 {
-    header('location:profile.php');
+    header('location:dashboard.php');
 } 
 
 if(isset($_POST['email'],$_POST['password']))
@@ -29,7 +29,7 @@ if(isset($_POST['email'],$_POST['password']))
                     'email' => $user_data['email'],
                     'username' => $user_data['username'],
                 ];
-                header('location:profile.php');
+                header('location:dashboard.php');
             }
         }
         else

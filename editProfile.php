@@ -93,6 +93,46 @@
     .button-box button:hover {
         cursor: pointer;
     }
+
+
+    /* MODAL BOX STYLING  */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 500px;
+        max-height: 80vh;
+        overflow-y: auto;
+        background-color: #ebeef3;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .modal h4 {
+        font-size: 1.2rem;
+        text-align: center;
+        padding: 5px;
+        margin: 1rem 0px;
+    }
+
+    .avatar-options {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+
+    .avatar-options .avatar-option {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 1px solid black;
+        margin: 10px;
+        transition: border-color 0.3s ease;
+    }
 </style>
 
 <body>
@@ -107,6 +147,31 @@
                         </a>
                     </button>
                 </div>
+                <div id="avatarModal" class="modal">
+                    <div class="modal-content">
+                        <h4>Select Your New Avatar</h4>
+                        <div class="avatar-options">
+                            <img src="./assets/avatar1.jpg" onclick="selectAvatar(this)" alt="Avatar 1"
+                                class="avatar-option">
+                            <img src="./assets/avatar2.jpg" onclick="selectAvatar(this)" alt="Avatar 2"
+                                class="avatar-option">
+                            <img src="./assets/avatar3.png" onclick="selectAvatar(this)" alt="Avatar 3"
+                                class="avatar-option">
+                            <img src="./assets/avatar4.jpg" onclick="selectAvatar(this)" alt="Avatar 4"
+                                class="avatar-option">
+                            <img src="./assets/avatar5.jpg" onclick="selectAvatar(this)" alt="Avatar 4"
+                                class="avatar-option">
+                            <img src="./assets/avatar6.png" onclick="selectAvatar(this)" alt="Avatar 4"
+                                class="avatar-option">
+                        </div>
+                        <div class="modal-footer button-box">
+                            <button id="closeBtn">Close</button>
+                            <button id="saveBtn">Save</button>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
             <div class="right-side-box">
                 <form action="#">
@@ -140,5 +205,39 @@
         </div>
     </section>
 </body>
+<script>
+    // Function to open the modal
+    function openModal() {
+        const modal = document.getElementById('avatarModal');
+        modal.style.display = 'block';
+    }
+
+    // Function to select an avatar
+    function selectAvatar(imgElement) {
+        updateAvatarImage(imgElement.src);
+    }
+
+    // Function to close the modal
+    function closeModal() {
+        const modal = document.getElementById('avatarModal');
+        modal.style.display = 'none';
+    }
+
+    // Function to update the avatar image
+    function updateAvatarImage(src) {
+        const avatarImage = document.querySelector('.left-side-box img');
+        avatarImage.src = src;
+        console.log('Selected Avatar:', src);
+    }
+
+    // Attach event listeners
+    document.querySelector('.button-box').addEventListener('click', openModal);
+    document.getElementById('closeBtn').addEventListener('click', closeModal);
+    document.getElementById('saveBtn').addEventListener('click', () => {
+        // Save logic here
+        closeModal();
+    });
+
+</script>
 
 </html>

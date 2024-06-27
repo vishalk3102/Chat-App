@@ -1,0 +1,58 @@
+INSERT_USER:-
+DELIMITER //
+
+CREATE PROCEDURE `insert_user` (
+    IN p_fname VARCHAR(255),
+    IN p_mname VARCHAR(255),
+    IN p_lname VARCHAR(255),
+    IN p_username VARCHAR(100),
+    IN p_password VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_photo VARCHAR(110),
+    IN p_registration_date DATETIME,
+    IN p_status ENUM('Active', 'Inactive'),
+    IN p_password_update_date DATETIME
+)
+BEGIN
+    INSERT INTO `user` (
+        `fname`, `mname`, `lname`, `username`, `password`, `email`,
+        `photo`, `registration_date`, `status`, `password_update_date`
+    ) VALUES (
+        p_fname, p_mname, p_lname, p_username, p_password, p_email,
+        p_photo, p_registration_date, p_status, p_password_update_date
+    );
+END //
+
+DELIMITER ;
+
+
+
+GET_USER_BY_EMAIL:-
+DELIMITER //
+
+CREATE PROCEDURE `get_user_by_email` (
+    IN p_email VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM `User`
+    WHERE `email` = p_email;
+END //
+
+DELIMITER ;
+
+
+
+UPDATE_USER_STATUS:-
+DELIMITER //
+
+CREATE PROCEDURE `update_user_status` (
+    IN p_user_id INT,
+    IN p_user_status ENUM('Active', 'Inactive')
+)
+BEGIN
+    UPDATE `user`
+    SET `status` = p_user_status
+    WHERE `user_id` = p_user_id;
+END //
+
+DELIMITER ;

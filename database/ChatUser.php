@@ -6,7 +6,6 @@ class ChatUser
     private $fname;
     private $mname;
     private $lname;
-
     private $username;
     private $password;
     private $email;
@@ -118,11 +117,9 @@ class ChatUser
     public function saveUser()
     {
         try {
-            $query = "
-                INSERT INTO `user` (fname, mname, lname, username, password, email, photo, registration_date, status, password_update_date) 
-                VALUES (:fname, :mname, :lname, :username, :password, :email, :photo, :registration_date, :status, :password_update_date)
-            ";
-
+            // calling INSERT_USER stored procedure
+            $query = "CALL insert_user(:fname, :mname, :lname, :username, :password, :email, :photo, :registration_date, :status, :password_update_date)";
+    
             $statement = $this->connection->prepare($query);
 
             $statement->bindParam(':fname', $this->fname);
@@ -147,7 +144,7 @@ class ChatUser
             die('Error: ' . $e->getMessage());
         }
     }
-
+    
 
     public function resetPassword()
     {
@@ -156,18 +153,21 @@ class ChatUser
 
     public function getUserByEmail()
     {
-        $query = "
-        SELECT * FROM User
-        WHERE email = :email
-        ";
-
-        $statement = $this->connection->prepare($query);
-        $statement->bindParam(':email', $this->email);
-
-        if ($statement->execute()) {
+        try {
+            $query = "CALL get_user_by_email(:email)";
+            $statement = $this->connection->prepare($query);
+            
+            $statement->bindParam(':email', $this->email, PDO::PARAM_STR);
+            
+            $statement->execute();
+            
             $user_data = $statement->fetch(PDO::FETCH_ASSOC);
+
+            return $user_data;
+            
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
         }
-        return $user_data;
     }
 
     public function updateUserLoginStatus()
@@ -179,7 +179,7 @@ class ChatUser
         ";
         $statement = $this->connection->prepare($query);
         $statement->bindParam(":user_status", $this->status);
-        $statement->bindParam(':user_id', $this->user_id);
+        $statement->bindParam(':user_id',$this->user_id);
         if ($statement->execute()) {
             return true;
         }

@@ -5,7 +5,6 @@ class ChatUser{
     private $fname ;
     private $mname ;
     private $lname;
-
     private $username;
     private $password;
     private $email ;
@@ -116,13 +115,11 @@ class ChatUser{
 
     public function saveUser() {
         try {
-            $query = "
-                INSERT INTO `user` (fname, mname, lname, username, password, email, photo, registration_date, status, password_update_date) 
-                VALUES (:fname, :mname, :lname, :username, :password, :email, :photo, :registration_date, :status, :password_update_date)
-            ";
+            // calling INSERT_USER stored procedure
+            $query = "CALL insert_user(:fname, :mname, :lname, :username, :password, :email, :photo, :registration_date, :status, :password_update_date)";
     
             $statement = $this->connection->prepare($query);
-    
+
             $statement->bindParam(':fname', $this->fname);
             $statement->bindParam(':mname', $this->mname, PDO::PARAM_NULL);
             $statement->bindParam(':lname', $this->lname);
@@ -145,7 +142,6 @@ class ChatUser{
             die('Error: ' . $e->getMessage());
         }
     }
-    
 
     public function resetPassword()
     {

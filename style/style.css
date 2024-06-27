@@ -135,6 +135,14 @@ form .button input:hover {
   font-weight: 700;
   color: #030617;
 }
+.log a:hover{
+  color: #10B982;
+}
+.error-message{
+  color: red ;
+  font-size: 12px;
+} 
+
 @media (max-width: 584px) {
   .container {
     max-width: 100%;

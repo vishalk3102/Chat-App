@@ -149,7 +149,38 @@ class ChatUser{
 
     public function resetPassword()
     {
+        
+    }
 
+    public function isEmailExisted($email)
+    {
+        return true;
+        // try 
+        // {
+        //     $query = "
+        //     SELECT * FROM User
+        //     WHERE email = :email
+        //     ";
+        
+        //     $statement = $this->connection->prepare($query);
+        //     $statement->bindParam(':email', $this->email);
+        
+        //     if ($statement->execute()) {
+                
+        //         $user_data = $statement->fetch(PDO::FETCH_ASSOC);
+        //         if ($user_data) {
+        //             return true; 
+        //         } else {
+        //             return false; 
+        //         }
+        //     } else {
+        //         return false;
+        //     }
+
+        // } 
+        // catch (PDOException $e) {
+        //     die(''. $e->getMessage());
+        // }
     }
 
     public function getUserByEmail()

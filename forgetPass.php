@@ -11,7 +11,7 @@
         <div class="title">Password recovery</div>
         <div class="content">
             <form action="sendOTP.php" method="post">
-                <div class="user-details fields">
+                <div class="user-details">
                     <div class="input-box">
                         <span class="details">Email</span>
                         <input type="text" name="email" placeholder="Enter your email" required>

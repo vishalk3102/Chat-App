@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_data'])) {
+    header('location:index.php');
+}
+
+$user_data = $_SESSION['user_data'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,20 +22,26 @@
         <div class="container">
             <div class="navbar">
                 <h1 class="logo">ChatApp</h1>
+                <?php
+
+                $login_user_id = $user_data['id'];
+                ?>
                 <div class="profile">
                     <p>
                         <a href="profile.php">
-                            Vishalk3102
+                            <?php echo $user_data['username'] ?>
                         </a>
                     </p>
                     <span>
                         <img src="./assets/avatar.png" alt="avatar">
                     </span>
+                    <input type="hidden" id="login_user_id" name="login_user_id" value="<?php echo $login_user_id ?>">
                     <div class="dropdown-content">
                         <a href="profile.php">Profile</a>
-                        <a href="#">Logout</a>
+                        <a id="logout" onclick="logoutUser()">Logout</a>
                     </div>
                 </div>
+
             </div>
             <div class="user-chat-box">
                 <div class="users-box">
@@ -253,7 +267,50 @@
 
         profileIcon.addEventListener('click', toggleDropdown);
         document.addEventListener('click', closeDropdown);
+
+
+
     });
+    function logoutUser() {
+        var userId = document.getElementById("login_user_id").value;
+        console.log(userId);
+        if (userId) {
+            fetch('action.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'user_id': userId,
+                    'action': 'leave'
+                })
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log("Response received: " + data);
+                    let response;
+                    try {
+                        response = JSON.parse(data);
+                    } catch (e) {
+                        console.log("Failed to parse JSON response: " + e);
+                        return;
+                    }
+
+                    if (response.status == 1) {
+                        console.log("Logout successful, redirecting...");
+                        location.href = "index.php";
+                    } else {
+                        console.log("Logout failed");
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch Error: " + error);
+                });
+        } else {
+            console.warn("User ID not found");
+        }
+
+    }
 </script>
 
 </html>

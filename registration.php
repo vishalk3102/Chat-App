@@ -66,8 +66,7 @@
             var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
             if (!emailRegex.test(email)) {
                 alert("Please enter a valid email address.");
-                $('.toast-body').html('Please enter a valid email address.');
-                $('.toast').toast('show');
+                
                 return false;
             }
 
@@ -105,7 +104,7 @@
         ?>
         <div class="title">Registration</div>
         <div class="content">
-            <form  method="POST">
+            <form  method="POST" onsubmit="return validateForm()">
                 <div class="user-details fields">
                     <div class="input-box">
                         <span class="details">First Name</span>
@@ -113,7 +112,7 @@
                     </div>
                     <div class="input-box">
                         <span class="details">Middle Name</span>
-                        <input type="text" placeholder="Enter your name" name="middle_name" id="middleName" required>
+                        <input type="text" placeholder="Enter your name" name="middle_name" id="middleName" >
                     </div>
                     <div class="input-box">
                         <span class="details">Last Name</span>
@@ -125,15 +124,15 @@
                     </div>
                     <div class="input-box">
                         <span class="details">Password</span>
-                        <input type="text" placeholder="Enter your password" name="password" id="password" required>
+                        <input type="password" placeholder="Enter your password" name="password" id="password" required>
                     </div>
                     <div class="input-box">
                         <span class="details">Confirm Password</span>
-                        <input type="text" placeholder="Confirm your password" name="cpassword" id="confirmPassword" required>
+                        <input type="password" placeholder="Confirm your password" name="cpassword" id="confirmPassword" required>
                     </div>
                 </div>
                 <div class="button">
-                    <input type="submit" id="registerBtn" value="Register" onclick="validateForm()">
+                    <input type="submit" id="registerBtn" value="Register">
                 </div>
                 <div class="log">
                     Already Registered ? <a href="index.php">Login</a>
@@ -144,5 +143,4 @@
 
 
 </body>
-
 </html>

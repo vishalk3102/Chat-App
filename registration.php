@@ -1,10 +1,11 @@
 <?php
 
+    
     $error ='';
     $success_message = '';
 
 
-    if($_SERVER['REQUEST_METHOD'] == 'POST') 
+    if($_SERVER['REQUEST_METHOD'] == 'POST' ) 
     {
         session_start();
         if(isset($_SESSION['user_data']))
@@ -53,36 +54,7 @@
     <title>ChatApp - Registration</title>
     <link rel="stylesheet" href="style/style.css">
 
-    <script>
-        function validateForm() {
-            var firstName = document.getElementById('firstName').value.trim();
-            var lastName = document.getElementById('lastName').value.trim();
-            var email = document.getElementById('email').value.trim();
-            var password = document.getElementById('password').value;
-            var confirmPassword = document.getElementById('confirmPassword').value;
-
-          
-            // Validate email format
-            var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
-            if (!emailRegex.test(email)) {
-                alert("Please enter a valid email address.");
-                
-                return false;
-            }
-
-            // Validate password and confirm password match
-            if(password.length<6){
-                alert("Password length should be at least 6");
-                return false;
-            }
-            if (password !== confirmPassword) {
-                alert("Passwords do not match.");
-                return false;
-            }
-
-            return true;
-        }
-    </script>
+   
    
 </head>
 
@@ -104,7 +76,8 @@
         ?>
         <div class="title">Registration</div>
         <div class="content">
-            <form  method="POST" onsubmit="return validateForm()">
+            
+        <form  method="POST"  onsubmit="return validateForm()">
                 <div class="user-details fields">
                     <div class="input-box">
                         <span class="details">First Name</span>
@@ -141,6 +114,41 @@
         </div>
     </div>
 
+    <script>
+        function validateForm() {
+            var firstName = document.getElementById('firstName').value.trim();
+            var lastName = document.getElementById('lastName').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
 
+          
+
+        
+            // Validate email format
+            var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
+            if (!emailRegex.test(email)) {
+                alert("Please enter a valid email address.");
+                // $('.toast-body').html('Please enter a valid email address.');
+                // $('.toast').toast('show');
+                console.log("abcdefghijklmnopqrstuvwxyz");
+                return false;
+            }
+
+            // Validate password and confirm password match
+            if(password.length<6){
+                alert("Password length should be at least 6");
+                return false;
+            }
+            if (password !== confirmPassword) {
+                alert("Passwords do not match.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </body>
+
+
 </html>

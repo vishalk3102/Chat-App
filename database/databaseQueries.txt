@@ -26,3 +26,16 @@ CREATE TABLE Chatting (
 ALTER TABLE Chatting
     ADD CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) REFERENCES User(user_id),
     ADD CONSTRAINT fk_receiver_id FOREIGN KEY (receiver_id) REFERENCES User(user_id);
+
+ALTER TABLE `user`
+ADD CONSTRAINT `unique_username` UNIQUE (`username`),
+ADD CONSTRAINT `unique_email` UNIQUE (`email`);
+
+ALTER TABLE `user`
+MODIFY COLUMN `registration_date` DATETIME NOT NULL;
+
+ALTER TABLE `Chatting`
+MODIFY COLUMN `message` TEXT NOT NULL;
+
+ALTER TABLE `user`
+MODIFY COLUMN `photo` VARCHAR(110) NOT NULL;

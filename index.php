@@ -27,6 +27,7 @@ if(isset($_POST['email'],$_POST['password']))
                     'lname'=> $user_data['lname'],
                     'photo'=> $user_data['photo'],
                     'email' => $user_data['email'],
+                    'username' => $user_data['username'],
                 ];
                 header('location:profile.php');
             }

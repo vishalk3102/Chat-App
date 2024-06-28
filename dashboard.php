@@ -50,12 +50,12 @@ $user_obj = $_SESSION['user_data'];
             </div>
             <div class="user-chat-box">
                 <div class="users-box" id="users-box">
-                                            
-                        <!-- <?php
 
-                        foreach ($user_data as $key => $user) {
-                            if ($user['user_id'] != $login_user_id) {
-                                echo "
+                    <!-- <?php
+
+                    foreach ($user_data as $key => $user) {
+                        if ($user['user_id'] != $login_user_id) {
+                            echo "
                                 <div class='user-text-box' id='chat11_user'  data-userid = '" . $user['user_id'] . "' onclick='loadChat()'>
                                     <div class='profile'>
                                         <img src='./assets/avatar.png' alt='avatar'>
@@ -66,10 +66,10 @@ $user_obj = $_SESSION['user_data'];
                                     </div>
                                 </div>
                             ";
-                            }
-
                         }
-                        ?> -->
+
+                    }
+                    ?> -->
                 </div>
                 <div class="chat-box" id="chatpart">
 
@@ -174,7 +174,7 @@ $user_obj = $_SESSION['user_data'];
 
                     <div class="chat-message-box">
                     <form method="POST" onsubmit="event.preventDefault(); handleMessage();">
-                        <input type="text" id="user_text_message" placeholder="Type a message...">
+                        <textarea  type="text" id="user_text_message" placeholder="Type a message..."></textarea>
                         <button type="submit" ><span><i class="fa fa-send-o"></i></span></button>
                     </form>
                     </div>
@@ -188,7 +188,7 @@ $user_obj = $_SESSION['user_data'];
         var userId = document.getElementById('login_user_id').value;
         var receiver_name = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
         var receiver_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
-        console.log(userId,receiver_userid);
+        console.log(userId, receiver_userid);
         make_chat_area(receiver_name, receiver_status);
 
         fetch('action.php', {
@@ -212,50 +212,46 @@ $user_obj = $_SESSION['user_data'];
                     console.log("Failed to parse JSON response: " + e);
                     return;
                 }
-                if(response.length > 0)
-                {
+                if (response.length > 0) {
                     var html_data = '';
-                    for(var count =0;count < response.length;count++)
-                    {
-                        if(response[count].sender_id == userId)
-                        {
+                    for (var count = 0; count < response.length; count++) {
+                        if (response[count].sender_id == userId) {
                             html_data += `<div class="sender-message">
                                 <p>
-                                    `+response[count].message+`
+                                    `+ response[count].message + `
                                 </p>
-                                <span>`+response[count].timestamp+`</span>
+                                <span>`+ response[count].timestamp + `</span>
                             </div>`
                         }
-                        else
-                        {
-                            html_data +=`
+                        else {
+                            html_data += `
                             <div class="receiver-message">
                                 <p>
-                                    `+response[count].message+`
+                                    `+ response[count].message + `
                                 </p>
-                                <span>`+response[count].timestamp+`</span>
+                                <span>`+ response[count].timestamp + `</span>
                             </div>
                             `
                         }
-                        
+
                     }
-                    document.getElementById('message_text_box').innerHTML+=html_data;
+                    document.getElementById('message_text_box').innerHTML += html_data;
+                    setTimeout(scrollToBottom, 100);
                 }
-                
+
             })
             .catch(error => {
                 console.error("Fetch Error: " + error);
             });
 
     }
-    function handleMessage()
-    {
-        
-        var inputmsg =document.getElementById('user_text_message');
+    function handleMessage() {
+
+        var inputmsg = document.getElementById('user_text_message');
         var message = inputmsg.value.trim();
         var receiver_userid = document.getElementById('chat11_user').getAttribute('data-userid');
         var userId = document.getElementById('login_user_id').value;
-        console.log(receiver_userid,userId);
+        console.log(receiver_userid, userId);
         fetch('action.php', {
             method: 'POST',
             headers: {
@@ -264,7 +260,7 @@ $user_obj = $_SESSION['user_data'];
             body: new URLSearchParams({
                 'to_user_id': receiver_userid,
                 'from_user_id': userId,
-                'message':message,
+                'message': message,
                 'action': 'send_message',
             })
         })
@@ -278,32 +274,31 @@ $user_obj = $_SESSION['user_data'];
                     console.log("Failed to parse JSON response: " + e);
                     return;
                 }
-                if( response && parseInt(response.status) > 0)
-                {
+                if (response && parseInt(response.status) > 0) {
                     var html_data = '';
-                    
+
                     html_data += `<div class="sender-message">
                         <p>
-                            `+message+`
+                            `+ message + `
                         </p>
-                        <span>`+response.timestamp+`</span>
+                        <span>`+ response.timestamp + `</span>
                     </div>`
-                       
-                    document.getElementById('message_text_box').innerHTML+=html_data;
+
+                    document.getElementById('message_text_box').innerHTML += html_data;
+                    setTimeout(scrollToBottom, 100);
                 }
-                
+
             })
             .catch(error => {
                 console.error("Fetch Error: " + error);
             });
-        inputmsg.value='';
+        inputmsg.value = '';
     }
 
-    function userStatus()
-    {
+    function userStatus() {
         var xhr = new XMLHttpRequest();
-        
-        xhr.onreadystatechange = function() {
+
+        xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
                     document.getElementById('users-box').innerHTML = xhr.responseText;
@@ -312,61 +307,65 @@ $user_obj = $_SESSION['user_data'];
                 }
             }
         };
-        
+
         xhr.open('GET', 'fetchUsers.php', true);
         xhr.send();
     }
 
-//         function updateUsers() {
-//             var userId = document.getElementById('login_user_id').value;
+    function scrollToBottom() {
+        var chatBox = document.getElementById('message_text_box');
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-//             fetch('action.php', {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/x-www-form-urlencoded'
-//                 },
-//                 body: new URLSearchParams({
-//                     'user_id': userId,
-//                     'action': 'get_users',
-//                 })
-//             })
-//             .then(response => response.json()) // Parse response as JSON
-//             .then(data => {
-//                 console.log("Response received: ", data);
-//                 // Check if data is valid
-//                 if (Array.isArray(data)) {
-//                     // Construct HTML for users
-//                     let userHTML = '';
-//                     data.forEach(user => {
-//                         userHTML += `
-//                             <div class='user-text-box' data-userid='${user.user_id}' onclick='loadChat(${user.user_id}'>
-//                                 <div class='profile'>
-//                                     <img src='./assets/avatar.png' alt='avatar'>
-//                                 </div>
-//                                 <div class='text-box'>
-//                                     <p class='username-box' id='list_user_name_${user.user_id}'>${user.fname} ${user.lname}</p>
-//                                     <p class='status-box' id='list_user_status_${user.user_id}'>${user.status}</p>
-//                                 </div>
-//                             </div>
-//                         `;
-//                     });
-//                     // Update the users-box element
-//                     document.getElementById('users-box').innerHTML = userHTML;
-//                 } else {
-//                     console.error('Invalid data format received.');
-//                 }
-//             })
-//             .catch(error => {
-//                 console.error("Fetch Error:", error);
-//             });
-// }
+    //         function updateUsers() {
+    //             var userId = document.getElementById('login_user_id').value;
+
+    //             fetch('action.php', {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'Content-Type': 'application/x-www-form-urlencoded'
+    //                 },
+    //                 body: new URLSearchParams({
+    //                     'user_id': userId,
+    //                     'action': 'get_users',
+    //                 })
+    //             })
+    //             .then(response => response.json()) // Parse response as JSON
+    //             .then(data => {
+    //                 console.log("Response received: ", data);
+    //                 // Check if data is valid
+    //                 if (Array.isArray(data)) {
+    //                     // Construct HTML for users
+    //                     let userHTML = '';
+    //                     data.forEach(user => {
+    //                         userHTML += `
+    //                             <div class='user-text-box' data-userid='${user.user_id}' onclick='loadChat(${user.user_id}'>
+    //                                 <div class='profile'>
+    //                                     <img src='./assets/avatar.png' alt='avatar'>
+    //                                 </div>
+    //                                 <div class='text-box'>
+    //                                     <p class='username-box' id='list_user_name_${user.user_id}'>${user.fname} ${user.lname}</p>
+    //                                     <p class='status-box' id='list_user_status_${user.user_id}'>${user.status}</p>
+    //                                 </div>
+    //                             </div>
+    //                         `;
+    //                     });
+    //                     // Update the users-box element
+    //                     document.getElementById('users-box').innerHTML = userHTML;
+    //                 } else {
+    //                     console.error('Invalid data format received.');
+    //                 }
+    //             })
+    //             .catch(error => {
+    //                 console.error("Fetch Error:", error);
+    //             });
+    // }
 
 
-userStatus();
-setInterval(userStatus, 3000);
+    userStatus();
+    setInterval(userStatus, 3000);
 
- 
+
 </script>
 
 </html>
-

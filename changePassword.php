@@ -51,6 +51,35 @@
     <link rel="stylesheet" href="style/style.css">
 </head>
 
+<script>
+        function validateForm() {
+
+           
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirmPassword').value;
+
+           
+            // Validate password and confirm password match
+        
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            var errorMessage = "Password must contain at least one letter, one number, one special character, and be at least 8 characters long";
+
+            // Check if password matches the regex
+            if (!passwordRegex.test(password)) {
+                document.getElementById('passwordError').textContent = errorMessage;
+                return false;
+            } 
+
+            var errorMessage = "Password and Confirm Password do not match";
+            if (password !== confirmPassword) {
+                document.getElementById('confError').textContent = errorMessage;
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+
 <body>
     <div class="container log-container">
     <?php

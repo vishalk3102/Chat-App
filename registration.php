@@ -93,17 +93,17 @@
                     <div class="input-box">
                         <span class="details">Email</span>
                         <input type="text" placeholder="Enter your email" name="email" id="email" required>
-                        <div id="emailError" class="error-message"></div>
+                        <div id="emailError" style="display:inline" class="error-message"></div>
                     </div>
                     <div class="input-box">
                         <span class="details">Password</span>
                         <input type="password" placeholder="Enter your password" name="password" id="password" required>
-                        <div id="passwordError" class="error-message"></div>
+                        <div id="passwordError" style="display:inline" class="error-message"></div>
                     </div>
                     <div class="input-box">
                         <span class="details">Confirm Password</span>
                         <input type="password" placeholder="Confirm your password" name="cpassword" id="confirmPassword" required>
-                        <div id="confError" class="error-message"></div>
+                        <div id="confError" style="display:inline" class="error-message"></div>
                     </div>
                 </div>
                 <div class="button">
@@ -128,11 +128,14 @@
         
             // Validate email format
             var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
-            var errorMessage = "Please enter a valid email address";
+            var errorMessage = "Please enter a valid email address, like example@contata.in";
+
+            var target=document.getElementById('emailError');
             if (!emailRegex.test(email)) {
-                document.getElementById('emailError').textContent = errorMessage;
+                target.style.display="inline";
+                target.textContent = errorMessage;
                 return false;
-            }
+            }target.style.display="none";
 
             // Validate password and confirm password match
         
@@ -140,16 +143,21 @@
             var errorMessage = "Password must contain at least one letter, one number, one special character, and be at least 8 characters long.";
 
             // Check if password matches the regex
+            var target=document.getElementById('passwordError')
             if (!passwordRegex.test(password)) {
-                document.getElementById('passwordError').textContent = errorMessage;
+                target.style.display="inline";
+                target.textContent = errorMessage;
                 return false;
-            } 
+            }target.style.display="none";
 
             var errorMessage = "Password and Confirm Password do not match";
+
+            var target= document.getElementById('confError')
             if (password !== confirmPassword) {
-                document.getElementById('confError').textContent = errorMessage;
+                target.style.display="inline";
+                target.textContent = errorMessage;
                 return false;
-            }
+            } target.style.display="none";
 
             return true;
         }

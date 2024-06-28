@@ -19,6 +19,7 @@
 .container {
   border-radius: 10px;
   width: 70%;
+  height: 70vh;
   background-color: #ebeef3;
   color: #000;
 }
@@ -109,8 +110,7 @@
 /* USER SIDE STYLING(LEFT) */
 .user-chat-box {
   display: flex;
-  height: 100%;
-  margin: 0px 5px 5px 5px;
+  height: 85%;
 }
 
 .users-box {
@@ -118,6 +118,7 @@
   width: 30%;
   background-color: #ebeef3;
   padding: 12px;
+  border-right: 1px solid black;
 }
 
 .user-text-box {
@@ -161,11 +162,12 @@
 
 /* CHAT SIDE STYLING(RIGHT)  */
 .chat-box {
-  border-left: 1px solid black;
   width: 70%;
+  height: 100%;
   background-color: #ebeef3;
   display: flex;
   flex-direction: column;
+  border-left: 1px solid black;
 }
 
 .chat-navbar {
@@ -182,6 +184,9 @@
   flex-grow: 1;
   overflow: auto;
   max-height: 500px;
+}
+.chat-content::-webkit-scrollbar {
+  display: none;
 }
 
 .chat-text-box {
@@ -208,6 +213,7 @@
   width: 40%;
   padding: 10px;
   margin: 10px 5px 2px 5px;
+  word-break: break-all;
 }
 
 .chat-text-box .receiver-message span,
@@ -216,8 +222,7 @@
 }
 
 .chat-text-box .receiver-message p {
-  background-color: #030617;
-  color: #fff;
+  background-color: #10b982;
 }
 
 .chat-text-box .sender-message p {
@@ -235,37 +240,50 @@
 
 .chat-message-box {
   border-radius: 5px;
-  height: 3rem;
-  display: flex;
-  align-items: center;
   margin: 5px;
 }
+.chat-message-box form {
+  height: 3rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
 
-.chat-message-box input {
+.chat-message-box form textarea {
   background-color: transparent;
   border: none;
   border-radius: 5px;
   height: 100%;
   width: 100%;
+  resize: none;
   outline: none;
   background-color: #fff;
   color: #000;
   font-size: 16px;
   padding: 4px 8px;
+  vertical-align: center;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.chat-message-box form textarea::-webkit-scrollbar {
+  display: none;
 }
 
-.chat-message-box span {
-  background-color: #030617;
+.chat-message-box form button {
+  border: none;
+  height: 100%;
+}
+.chat-message-box form button span {
+  background-color: #10b982;
   border-radius: 5px;
   border-start-start-radius: 0px;
   border-end-start-radius: 0px;
-  height: 100%;
+
   display: flex;
   align-items: center;
   padding: 10px 15px;
 }
 
-.chat-message-box span i {
+.chat-message-box form button span i {
   font-size: 22px;
-  color: #fff;
 }

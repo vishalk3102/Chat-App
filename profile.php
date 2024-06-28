@@ -70,6 +70,9 @@
     .button-box {
         /* border: 2px solid black; */
         margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .button-box button {
@@ -121,6 +124,11 @@
                     <button>
                         <a href="changePassword.php">
                             Change Password
+                        </a>
+                    </button>
+                    <button>
+                        <a href="dashboard.php">
+                            Let's Chat
                         </a>
                     </button>
                 </div>

@@ -86,19 +86,29 @@ if(isset($_POST['email'],$_POST['password']))
 </head>
 
 <body>
+<!-- <div class="box">
+<div class="logo">
+            <img src="assets\mobile-chat.png" alt="logo"/> ChatApp
+ </div> -->
 <div class="container log-container">
+       
         <div class="title">Login</div>
         <div class="content">
             <form method="POST" onsubmit="return validateForm()">
+           
                 <div class="user-details">
+                    <div class="input-box">
                     <?php
                       if($error != '')
                       {
-                        echo '<div class="alert alert-danger>
+                        echo '<div class="error-message er">
                         '.$error.'</div>
                         ';
                       }
                       ?>
+
+                     
+                    </div>
                     <div class="input-box">
                         <span class="details">Email</span>
                         <input type="text" name="email" id="email" placeholder="Enter your email" required>
@@ -123,5 +133,6 @@ if(isset($_POST['email'],$_POST['password']))
             </form>
         </div>
     </div>
+    <!-- </div> -->
 </body>
 </html>

@@ -1,6 +1,7 @@
 <?php
 require_once 'DatabaseConnection.php';
-class ChatMessage{
+class ChatMessage
+{
 
     private $message_id;
     private $sender_id;      // (Foreign Key referencing Users table)
@@ -10,7 +11,7 @@ class ChatMessage{
     private $message_status;  //(“send” and “received”)   
     private $connection;
 
-    public function _contruct()
+    public function __construct()
     {
         $database = new DatabaseConnection();
         $this->connection = $database->connect();
@@ -40,7 +41,7 @@ class ChatMessage{
 
     public function getReceiverId()
     {
-            return $this->receiver_id;
+        return $this->receiver_id;
     }
 
     public function setMessage($message)
@@ -57,7 +58,7 @@ class ChatMessage{
     {
         $this->timestamp = $timestamp;
     }
-            
+
     public function getTimestamp()
     {
         return $this->timestamp;
@@ -75,18 +76,62 @@ class ChatMessage{
 
     public function save_chat()
     {
+        $query = "INSERT INTO chatting (sender_id, receiver_id, message, timestamp, message_status) 
+        VALUES (:sender_id, :receiver_id, AES_ENCRYPT(:message, 'contatadshfsk'), :timestamp, :message_status)";
+        $stmt = $this->connection->prepare($query);
 
+        $stmt->bindParam(':sender_id', $this->sender_id);
+        $stmt->bindParam(':receiver_id', $this->receiver_id);
+        $stmt->bindParam(':message', $this->message);
+        $stmt->bindParam(':timestamp', $this->timestamp);
+        $stmt->bindParam(':message_status', $this->message_status);
+
+        $stmt->execute();
+
+        return $this->connection->lastInsertId();
     }
 
     public function fetch_chat()
     {
+        $query = "
+        SELECT 
+            m.sender_id,
+            m.receiver_id,
+            CAST(AES_DECRYPT(m.message, 'contatadshfsk')AS CHAR) as message,
+            m.timestamp,
+            m.message_status, 
+            CONCAT(u1.fname, ' ', u1.lname) AS from_user_name, 
+            CONCAT(u2.fname, ' ', u2.lname) AS to_user_name
+        FROM 
+            chatting m
+        INNER JOIN 
+            user u1 ON m.sender_id = u1.user_id
+        INNER JOIN 
+            user u2 ON m.receiver_id = u2.user_id
+        WHERE 
+            (m.sender_id = :sender_id AND m.receiver_id = :receiver_id) 
+            OR 
+            (m.sender_id = :receiver_id AND m.receiver_id = :sender_id)
+        ORDER BY 
+            m.timestamp ASC";
+            $conn = new PDO("mysql:host=localhost;dbname=chatapp", "root", "");
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $conn->prepare( $query );
 
+        $stmt->bindParam(':sender_id', $this->sender_id);
+        $stmt->bindParam(':receiver_id', $this->receiver_id);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function update_chat()
     {
-        
+
     }
 
+
 }
+
 ?>

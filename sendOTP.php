@@ -1,36 +1,97 @@
 <?php
 session_start();
+require 'bin\vendor\autoload.php';
+require_once('database/ChatUser.php');
+use Dotenv\Dotenv;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use  PHPMailer\PHPMailer\SMTP;
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate and sanitize email input
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
 
-    // Generate OTP (you can adjust length and complexity as needed)
-    $otp = mt_rand(100000, 999999); // 6-digit OTP
+        $user = new ChatUser();
+        $user->setRegistrationEmail($_POST['email']);
+        $user_data = $user->getUserByEmail();
+        if(is_array( $user_data) && count($user_data) > 0)
+        {
+            sendOtp($email);
+        }
+        else
+        {
+            echo 'error';
+        }
+}
 
-    // Store OTP in session for verification
-    $_SESSION['otp'] = $otp;
-    $_SESSION['email'] = $email;
 
-    // Email details
-    $to = $email;
-    $subject = 'Password Reset OTP';
-    $message = 'Your OTP for password reset is: ' . $otp;
-    $headers = 'From: hrishabh.2024cse1171@kiet.edu'; // Replace with your actual email address
+function generateOTP() {
+    // Generate a random 6-digit OTP
+    return mt_rand(100000, 999999);
+}
 
-    echo 'this is otp'. $otp ;
-    
-    // Send email using PHP's mail() function
-    if (mail($to, $subject, $message, $headers)) {
-        // Email sent successfully
-        echo "Email sent successfully. Check your inbox for OTP.";
-    } else {
-        // Email sending failed
-        echo "Failed to send email. Please try again.";
+
+function sendOtp($email)
+{
+    try{
+        $mail = new PHPMailer();
+      
+        $mail->isSMTP();
+        
+        $mail->Host = 'smtp.gmail.com';  
+        $mail->SMTPAuth = true;
+        $mail->Username = $_ENV['sender_mail']; 
+        $mail->Password = $_ENV['password'];    
+        $mail->Port = 587;
+        // $mail->SMTPDebug = true;
+        $mail->SMTPSecure = 'tls';
+      
+        $mail->setFrom($_ENV['sender_mail']);
+        $mail->addAddress($email); 
+
+        // Content
+        $otp = generateOTP(); // Function to generate OTP
+
+        $mail->isHTML(true); // Set email format to HTML
+        $mail->Subject = 'Your OTP for verification';
+        $mail->Body    = 'Your OTP is: ' . $otp;
+
+        // $mail -> SMTPOptions = array('ssl'=>array(
+        //     'verify_peer'=> false,
+        //     'verify_peer_name'=> false,
+        //     'allow_self_signed'=> false
+        // ));
+       
+        if(!$mail->send())
+        {
+            echo $mail->ErrorInfo;
+        }
+        else
+        {
+            header('location:resetPassword.php');
+            // echo 'sent';
+        }
+
     }
 
-    // Redirect to resetPassword.php (optional)
-     header("Location: resetPassword.php");
-     exit;
+    catch(Exception $e)
+    {
+        echo 'error $e';
+    }
+
+           
+        
+            //     $to = "harshs@contata.in";
+            //     $subject = "Password Reset OTP";
+            //     $message = "Your OTP for password reset is: xxxxxx ";
+            //     $headers = "From: harshzoro001@gmail.com"; // Replace with your actual email address
+            // // // Send email
+            // if (mail($to, $subject, $message, $headers)) {
+            //     echo "Email sent successfully to $to. Check your inbox.";
+            // } else {
+            //     echo "Failed to send email. Please try again.";
+            // }
+
 }
 ?>

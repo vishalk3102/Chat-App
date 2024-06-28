@@ -118,8 +118,8 @@
 
     <script>
         function validateForm() {
-            var firstName = document.getElementById('firstName').value.trim();
-            var lastName = document.getElementById('lastName').value.trim();
+            // var firstName = document.getElementById('firstName').value.trim();
+            // var lastName = document.getElementById('lastName').value.trim();
             var email = document.getElementById('email').value.trim();
             var password = document.getElementById('password').value;
             var confirmPassword = document.getElementById('confirmPassword').value;

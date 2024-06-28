@@ -76,19 +76,24 @@ class ChatMessage
 
     public function save_chat()
     {
-        $query = "INSERT INTO chatting (sender_id, receiver_id, message, timestamp, message_status) 
-        VALUES (:sender_id, :receiver_id, AES_ENCRYPT(:message, 'contatadshfsk'), :timestamp, :message_status)";
-        $stmt = $this->connection->prepare($query);
-
-        $stmt->bindParam(':sender_id', $this->sender_id);
-        $stmt->bindParam(':receiver_id', $this->receiver_id);
-        $stmt->bindParam(':message', $this->message);
-        $stmt->bindParam(':timestamp', $this->timestamp);
-        $stmt->bindParam(':message_status', $this->message_status);
-
-        $stmt->execute();
-
-        return $this->connection->lastInsertId();
+        try {
+            $query = "CALL insert_chat_message(:sender_id, :receiver_id, :message, :timestamp, :message_status)";
+            $stmt = $this->connection->prepare($query);
+ 
+            $stmt->bindParam(':sender_id', $this->sender_id);
+            $stmt->bindParam(':receiver_id', $this->receiver_id);
+            $stmt->bindParam(':message', $this->message);
+            $stmt->bindParam(':timestamp', $this->timestamp);
+            $stmt->bindParam(':message_status', $this->message_status);
+ 
+            $stmt->execute();
+   
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['chat_id'];
+ 
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
     }
 
     public function fetch_chat()

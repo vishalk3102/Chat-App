@@ -208,28 +208,24 @@ class ChatUser
     }
 
 
-    function getAllUsersDataWithStatus()
+    public function getAllUsersDataWithStatus()
     {
-        $query = "
-            SELECT user_id, fname, lname, photo, status,
-            (
-                SELECT COUNT(*)
-                FROM chatting
-                WHERE receiver_id = :user_id
-                AND sender_id = user.user_id
-                AND message_status = 'send'
-            ) AS count_status
-            FROM user
-            ";
-        $stmt = $this->connection->prepare($query);
-
-        $stmt->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
-
-        $stmt->execute();
-
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $data;
+        try {
+            $query = "CALL get_all_users_data_with_status(:user_id)";
+            $stmt = $this->connection->prepare($query);
+            
+            $stmt->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
+            
+            $stmt->execute();
+            
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            return $data;
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
     }
+
 
 }
 ?>

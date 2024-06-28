@@ -113,3 +113,30 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
+GET ALL USERS DATA  WITH STATUS
+DELIMITER //
+
+CREATE PROCEDURE get_all_users_data_with_status(
+    IN p_user_id INT
+)
+BEGIN
+    SELECT 
+        u.user_id, 
+        u.fname, 
+        u.lname, 
+        u.photo, 
+        u.status,
+        (
+            SELECT COUNT(*)
+            FROM chatting c
+            WHERE c.receiver_id = p_user_id
+            AND c.sender_id = u.user_id
+            AND c.message_status = 'send'
+        ) AS count_status
+    FROM 
+        user u;
+END //
+
+DELIMITER ;

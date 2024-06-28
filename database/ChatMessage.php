@@ -98,37 +98,19 @@ class ChatMessage
 
     public function fetch_chat()
     {
-        $query = "
-        SELECT 
-            m.sender_id,
-            m.receiver_id,
-            CAST(AES_DECRYPT(m.message, 'contatadshfsk')AS CHAR) as message,
-            m.timestamp,
-            m.message_status, 
-            CONCAT(u1.fname, ' ', u1.lname) AS from_user_name, 
-            CONCAT(u2.fname, ' ', u2.lname) AS to_user_name
-        FROM 
-            chatting m
-        INNER JOIN 
-            user u1 ON m.sender_id = u1.user_id
-        INNER JOIN 
-            user u2 ON m.receiver_id = u2.user_id
-        WHERE 
-            (m.sender_id = :sender_id AND m.receiver_id = :receiver_id) 
-            OR 
-            (m.sender_id = :receiver_id AND m.receiver_id = :sender_id)
-        ORDER BY 
-            m.timestamp ASC";
-            $conn = new PDO("mysql:host=localhost;dbname=chatapp", "root", "");
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $conn->prepare( $query );
-
-        $stmt->bindParam(':sender_id', $this->sender_id);
-        $stmt->bindParam(':receiver_id', $this->receiver_id);
-
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->connection->prepare("CALL fetch_chat_messages(:sender_id, :receiver_id)");
+   
+            $stmt->bindParam(':sender_id', $this->sender_id);
+            $stmt->bindParam(':receiver_id', $this->receiver_id);
+ 
+            $stmt->execute();
+   
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
 
     public function update_chat()

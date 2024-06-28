@@ -65,20 +65,37 @@ $user_obj = $_SESSION['user_data'];
                                         <p class='status-box' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
                                     </div>
                                 </div>
+                                
                             ";
                         }
 
                     }
                     ?> -->
+
                 </div>
                 <div class="chat-box" id="chatpart">
 
                 </div>
             </div>
+            <div class="back-button" id="backButton">
+                <button onclick="backToUserPage()">
+                    <i class="fa fa-arrow-left"></i>
+                    <span>
+                        Back
+                    </span>
+                </button>
+            </div>
         </div>
     </section>
 </body>
 <script>
+
+    // VARIABLE FOR MAINTAINING VIEW STATUS FOR BACK BUTTON (MOBILE DEVICE)
+    const VIEW_MODE_USER_LIST = 'user_list';
+    const VIEW_MODE_CHAT = 'chat';
+    let currentViewMode = VIEW_MODE_USER_LIST;
+
+
     var receiver_userid = '';
     document.addEventListener('DOMContentLoaded', () => {
         const profileIcon = document.querySelector('.profile span');
@@ -141,7 +158,7 @@ $user_obj = $_SESSION['user_data'];
         }
 
     }
-    function make_chat_area(user_name, user_status) {
+    function make_chat_area(user_name, user_status, chatStarted) {
         var htmlcode = `
                     <div class="chat-navbar user-text-box">
                         <div class="profile">
@@ -154,33 +171,27 @@ $user_obj = $_SESSION['user_data'];
                     </div>
                     <div class="chat-content">
                         <div class="chat-text-box" id="message_text_box">
-                            <div class="receiver-message">
-                                <p>
-                                    hii how are you
-                                    hii how are you
-                                    hii how are you
-                                    hii how are you
-                                </p>
-                                <span>12:49 pm</span>
-                            </div>
-                            <div class="sender-message">
-                                <p>
-                                    Fine
-                                </p>
-                                <span>12:49 pm</span>
-                            </div>
+                            
                         </div>
                     </div>
 
                     <div class="chat-message-box">
-                    <form method="POST" onsubmit="event.preventDefault(); handleMessage();">
-                        <textarea  type="text" id="user_text_message" placeholder="Type a message..."></textarea>
-                        <button type="submit" ><span><i class="fa fa-send-o"></i></span></button>
-                    </form>
+                        <form method="POST" onsubmit="event.preventDefault(); handleMessage();">
+                            <textarea  type="text" id="user_text_message" placeholder="Type a message..."></textarea>
+                            <button type="submit" ><span><i class="fa fa-send-o"></i></span></button>
+                        </form>
                     </div>
+                    
                 </div>
         `;
         document.getElementById('chatpart').innerHTML = htmlcode;
+        var backButton = document.getElementById('backButton');
+        var screenWidth = window.innerWidth;
+        if (chatStarted && screenWidth <= 768) {
+            backButton.style.display = 'block';
+        } else {
+            backButton.style.display = 'none';
+        }
     }
 
     function loadChat() {
@@ -189,7 +200,15 @@ $user_obj = $_SESSION['user_data'];
         var receiver_name = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
         var receiver_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
         console.log(userId, receiver_userid);
-        make_chat_area(receiver_name, receiver_status);
+        make_chat_area(receiver_name, receiver_status, true);
+
+
+        if (window.innerWidth <= 768) {
+            document.querySelector('.users-box').classList.add('hidden');
+            document.querySelector('.chat-box').classList.add('active');
+        }
+
+
 
         fetch('action.php', {
             method: 'POST',
@@ -236,7 +255,7 @@ $user_obj = $_SESSION['user_data'];
 
                     }
                     document.getElementById('message_text_box').innerHTML += html_data;
-                    setTimeout(scrollToBottom, 100);
+                    setTimeout(scrollToBottom, 2000);
                 }
 
             })
@@ -285,7 +304,7 @@ $user_obj = $_SESSION['user_data'];
                     </div>`
 
                     document.getElementById('message_text_box').innerHTML += html_data;
-                    setTimeout(scrollToBottom, 100);
+                    setTimeout(scrollToBottom, 2000);
                 }
 
             })
@@ -312,10 +331,47 @@ $user_obj = $_SESSION['user_data'];
         xhr.send();
     }
 
+
+    // FUNCTION TO HIDE USER-BOX (MOBILE DEVICE)
+    function showUsersList() {
+        document.querySelector('.users-box').classList.remove('hidden');
+        document.querySelector('.chat-box').classList.remove('active');
+    }
+
+    // FUNCTION TO AUTO SCROLL MESSAGE TO BOTTOM 
     function scrollToBottom() {
         var chatBox = document.getElementById('message_text_box');
-        chatBox.scrollTop = chatBox.scrollHeight;
+        if (chatBox) {
+            console.log('Scrolling to bottom. ScrollHeight:', chatBox.scrollHeight);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        } else {
+            console.error('Chat box element not found');
+        }
     }
+
+    // FUNCTION TO HANDLE BACK BUTTON  CLICK(MOBILE DEVICE)
+    function backToUserPage() {
+        currentViewMode = VIEW_MODE_USER_LIST;
+        toggleBackButtonVisibility();
+        showUsersList();
+    }
+
+    // FUNCTION TO HANDLE HIDE/SHOW OF BACK BUTTON (MOBILE DEVICE)
+    function toggleBackButtonVisibility() {
+        var backButton = document.getElementById('backButton');
+        if (currentViewMode === VIEW_MODE_CHAT) {
+            backButton.style.display = 'block';
+        } else {
+            backButton.style.display = 'none';
+        }
+    }
+
+
+    // Initial check on page load
+    toggleBackButtonVisibility();
+
+    // Listen for visibility changes
+    document.addEventListener('visibilitychange', toggleBackButtonVisibility);
 
     //         function updateUsers() {
     //             var userId = document.getElementById('login_user_id').value;

@@ -30,7 +30,7 @@ $user_obj = $_SESSION['user_data'];
 
     .profile-card {
         /* border: 2px solid red; */
-        width: 40%;
+        /* width: 40%; */
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -103,6 +103,19 @@ $user_obj = $_SESSION['user_data'];
 
     .button-box button:hover {
         cursor: pointer;
+    }
+
+    
+    @media (max-width: 459px) {
+        .profile-card {
+       
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        padding: 2rem;
+    }
     }
 </style>
 

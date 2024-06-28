@@ -186,7 +186,8 @@ $user_obj = $_SESSION['user_data'];
         `;
         document.getElementById('chatpart').innerHTML = htmlcode;
         var backButton = document.getElementById('backButton');
-        if (chatStarted) {
+        var screenWidth = window.innerWidth;
+        if (chatStarted && screenWidth <= 768) {
             backButton.style.display = 'block';
         } else {
             backButton.style.display = 'none';

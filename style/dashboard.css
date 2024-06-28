@@ -183,7 +183,7 @@
 .chat-content {
   flex-grow: 1;
   overflow: auto;
-  max-height: 500px;
+  height: 500px;
 }
 .chat-content::-webkit-scrollbar {
   display: none;
@@ -191,8 +191,8 @@
 
 .chat-text-box {
   flex-grow: 1;
-  overflow-y: auto;
   padding: 10px;
+  min-height: 100%;
 }
 
 .chat-text-box .receiver-message {
@@ -286,4 +286,80 @@
 
 .chat-message-box form button span i {
   font-size: 22px;
+}
+
+/* BACK BUTTON STYLING  */
+.back-button {
+  margin-top: 5px;
+  display: none;
+}
+.back-button button {
+  width: 100%;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: #f1f1f1;
+}
+.back-button button i {
+  font-size: 20px;
+  padding: 5px 10px;
+}
+.back-button button span {
+  font-size: 16px;
+}
+
+/* RESPONSIVE CODE  */
+@media screen and (max-width: 768px) {
+  .container {
+    width: 100%;
+    height: 100vh;
+  }
+
+  .user-chat-box {
+    flex-direction: column;
+    /* border: 2px solid black; */
+  }
+
+  .users-box {
+    width: 100%;
+    height: 100%;
+    display: block;
+    /* border: 2px solid red; */
+  }
+
+  .chat-box {
+    width: 100%;
+    height: 100%;
+    display: none;
+    /* border: 2px solid green; */
+  }
+
+  .chat-box.active {
+    display: flex;
+  }
+
+  .users-box.hidden {
+    display: none;
+  }
+
+  /* .back-button { */
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* } */
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .users-box {
+    width: 40%;
+    display: block;
+    /* border: 2px solid red; */
+  }
+
+  .chat-box {
+    width: 60%;
+    /* border: 2px solid green; */
+  }
 }

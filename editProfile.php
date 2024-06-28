@@ -1,3 +1,41 @@
+<?php
+
+    
+    $error ='';
+    $success_message = '';
+
+
+    if($_SERVER['REQUEST_METHOD'] == 'POST' ) 
+    {
+        session_start();
+        if (!isset($_SESSION['user_data'])) {
+            header('location:index.php');
+        }
+        
+
+        require_once('database/ChatUser.php');
+
+        $user = new ChatUser();
+        $user->setfname($_POST['first_name']);
+        $user->setmname($_POST['middle_name']);
+        $user->setlname($_POST['last_name']);
+        $user->setUsername($_POST['username']);
+       
+        $checkuser = $user->getUserByEmail();
+
+            if ($user->updateUser()) {
+                $success_message = "Registration successful!";
+            } else {
+                $error =  "Error: " . $db->errorInfo()[2];
+            }
+        
+
+    }
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <style>

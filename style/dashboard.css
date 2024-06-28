@@ -222,8 +222,7 @@
 }
 
 .chat-text-box .receiver-message p {
-  background-color: #030617;
-  color: #fff;
+  background-color: #10b982;
 }
 
 .chat-text-box .sender-message p {
@@ -245,6 +244,7 @@
 }
 .chat-message-box form {
   height: 3rem;
+  width: 100%;
   display: flex;
   align-items: center;
 }
@@ -270,15 +270,15 @@
 }
 
 .chat-message-box form button {
-  outline: none;
   border: none;
+  height: 100%;
 }
 .chat-message-box form button span {
-  background-color: #030617;
+  background-color: #10b982;
   border-radius: 5px;
   border-start-start-radius: 0px;
   border-end-start-radius: 0px;
-  height: 100%;
+
   display: flex;
   align-items: center;
   padding: 10px 15px;
@@ -286,5 +286,4 @@
 
 .chat-message-box form button span i {
   font-size: 22px;
-  color: #fff;
 }

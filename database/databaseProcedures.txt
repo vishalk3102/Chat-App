@@ -56,3 +56,60 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
+SAVE_CHAT:-
+DELIMITER //
+ 
+CREATE PROCEDURE `insert_chat_message` (
+    IN p_sender_id INT,
+    IN p_receiver_id INT,
+    IN p_message VARCHAR(255),
+    IN p_timestamp DATETIME,
+    IN p_message_status VARCHAR(50)
+)
+BEGIN
+    DECLARE v_encrypted_message blob;
+ 
+    SET v_encrypted_message = AES_ENCRYPT(p_message, 'contatadshfsk');
+ 
+    INSERT INTO chatting (sender_id, receiver_id, message, timestamp, message_status)
+    VALUES (p_sender_id, p_receiver_id, v_encrypted_message, p_timestamp, p_message_status);
+ 
+    SELECT LAST_INSERT_ID() AS chat_id;
+END //
+ 
+DELIMITER ;
+
+
+FETCH CHAT :-
+DELIMITER //
+
+CREATE PROCEDURE fetch_chat_messages(
+    IN p_sender_id INT,
+    IN p_receiver_id INT
+)
+BEGIN
+    SELECT 
+        m.sender_id,
+        m.receiver_id,
+        CAST(AES_DECRYPT(m.message, 'contatadshfsk') AS CHAR) AS message,
+        m.timestamp,
+        m.message_status, 
+        CONCAT(u1.fname, ' ', u1.lname) AS from_user_name, 
+        CONCAT(u2.fname, ' ', u2.lname) AS to_user_name
+    FROM 
+        chatting m
+    INNER JOIN 
+        user u1 ON m.sender_id = u1.user_id
+    INNER JOIN 
+        user u2 ON m.receiver_id = u2.user_id
+    WHERE 
+        (m.sender_id = p_sender_id AND m.receiver_id = p_receiver_id) 
+        OR 
+        (m.sender_id = p_receiver_id AND m.receiver_id = p_sender_id)
+    ORDER BY 
+        m.timestamp ASC;
+END //
+
+DELIMITER ;

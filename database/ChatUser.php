@@ -148,19 +148,6 @@ class ChatUser
 
     public function resetPassword()
     {
-        // $query = "
-        //     UPDATE user
-        //     SET password = :password
-        //     WHERE email = :email
-        // ";
-        // $statement = $this->connection->prepare($query);
-        // $statement->bindParam(":password", $this->password);
-        // $statement->bindParam(':email',$this->email);
-        // if ($statement->execute()) {
-        //     return true;
-        // }
-        // return false;
-
         try {
             $query = "CALL update_user_password(:email, :password)";
             $statement = $this->connection->prepare($query);
@@ -198,19 +185,6 @@ class ChatUser
 
     public function updateUserLoginStatus()
     {
-        // $query = "
-        //     UPDATE user
-        //     SET status= :user_status
-        //     WHERE user_id = :user_id
-        // ";
-        // $statement = $this->connection->prepare($query);
-        // $statement->bindParam(":user_status", $this->status);
-        // $statement->bindParam(':user_id',$this->user_id);
-        // if ($statement->execute()) {
-        //     return true;
-        // }
-        // return false;
-
         try {
             $query = "CALL update_user_status(:user_id, :status)";
             $statement = $this->connection->prepare($query);

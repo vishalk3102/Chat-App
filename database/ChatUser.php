@@ -123,7 +123,12 @@ class ChatUser
             $statement = $this->connection->prepare($query);
 
             $statement->bindParam(':fname', $this->fname);
-            $statement->bindParam(':mname', $this->mname, PDO::PARAM_NULL);
+            // $statement->bindParam(':mname', $this->mname, PDO::PARAM_NULL);
+            if ($this->mname === '') {
+                $statement->bindValue(':mname', null, PDO::PARAM_NULL);
+            } else {
+                $statement->bindParam(':mname', $this->mname, PDO::PARAM_STR);
+            }
             $statement->bindParam(':lname', $this->lname);
             $statement->bindParam(':username', $this->username);
             $statement->bindParam(':password', $this->password);
@@ -148,7 +153,20 @@ class ChatUser
 
     public function resetPassword()
     {
-        
+        try {
+            $query = "CALL update_user_password(:email, :password)";
+            $statement = $this->connection->prepare($query);
+
+            $statement->bindParam(':email', $this->email);
+            $statement->bindParam(':password', $this->password);
+
+            $result = $statement->execute();
+
+            return $result;
+            
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
     }
 
     public function getUserByEmail()
@@ -157,7 +175,7 @@ class ChatUser
             $query = "CALL get_user_by_email(:email)";
             $statement = $this->connection->prepare($query);
             
-            $statement->bindParam(':email', $this->email, PDO::PARAM_STR);
+            $statement->bindParam(':email', $this->email);
             
             $statement->execute();
             
@@ -172,43 +190,42 @@ class ChatUser
 
     public function updateUserLoginStatus()
     {
-        $query = "
-            UPDATE user
-            SET status= :user_status
-            WHERE user_id = :user_id
-        ";
-        $statement = $this->connection->prepare($query);
-        $statement->bindParam(":user_status", $this->status);
-        $statement->bindParam(':user_id',$this->user_id);
-        if ($statement->execute()) {
-            return true;
+        try {
+            $query = "CALL update_user_status(:user_id, :status)";
+            $statement = $this->connection->prepare($query);
+
+            $statement->bindParam(':user_id', $this->user_id);
+            $statement->bindParam(':status', $this->status);
+
+            $result = $statement->execute();
+
+            return $result;
+            
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
         }
         return false;
     }
 
 
-    function getAllUsersDataWithStatus()
+    public function getAllUsersDataWithStatus()
     {
-        $query = "
-            SELECT user_id, fname, lname, photo, status,
-            (
-                SELECT COUNT(*)
-                FROM chatting
-                WHERE receiver_id = :user_id
-                AND sender_id = user.user_id
-                AND message_status = 'send'
-            ) AS count_status
-            FROM user
-            ";
-        $stmt = $this->connection->prepare($query);
-
-        $stmt->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
-
-        $stmt->execute();
-
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $data;
+        try {
+            $query = "CALL get_all_users_data_with_status(:user_id)";
+            $stmt = $this->connection->prepare($query);
+            
+            $stmt->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
+            
+            $stmt->execute();
+            
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            return $data;
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
     }
+
 
 }
 ?>

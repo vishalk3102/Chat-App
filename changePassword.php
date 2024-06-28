@@ -89,30 +89,30 @@
 <script>
         function validateForm() {
 
-           
-            var password = document.getElementById('password').value;
-            var confirmPassword = document.getElementById('confirmPassword').value;
+          
+            var password = document.getElementById('new-password').value;
+            var confirmPassword = document.getElementById('cnew-password').value;
 
-           
+        
             // Validate password and confirm password match
         
             var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
             var errorMessage = "Password must contain at least one letter, one number, one special character, and be at least 8 characters long";
 
             // Check if password matches the regex
-            var target=document.getElementById('passwordError');
+            var target=document.getElementById('newPasswordError');
 
             if (!passwordRegex.test(password)) {
-                target.textContent = errorMessage;
                 target.style.display="inline";
+                target.textContent = errorMessage;
                 return false;
             }target.style.display="none"; 
 
             var errorMessage = "Password and Confirm Password do not match";
             var target=document.getElementById('confError');
             if (password !== confirmPassword) {
-                target.textContent = errorMessage;
                 target.style.display="inline";
+                target.textContent = errorMessage;
                 return false;
             }target.style.display="none";
 
@@ -142,8 +142,8 @@
                 <div class="user-details fileds">
                     <div class="input-box">
                         <span class="details">Old Password</span>
-                        <input type="text" placeholder="Enter your old password" id="old-password" name="opassword" required>
-                        <div id="oldPasswordError" class="error-message"></div>
+                        <input type="password" placeholder="Enter your old password" id="old-password" name="opassword" required>
+                        
                     </div>
                     <div class="input-box">
                         <span class="details">New Password</span>
@@ -152,7 +152,7 @@
                     </div>
                     <div class="input-box">
                         <span class="details">Confirm New Password</span>
-                        <input type="text" placeholder="Confirm your new password" id="cnew-password" name="cnpassword" required>
+                        <input type="password" placeholder="Confirm your new password" id="cnew-password" name="cnpassword" required>
                         <div id="confError" class="error-message"></div>
                     </div>
                 </div>

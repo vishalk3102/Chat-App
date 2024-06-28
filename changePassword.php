@@ -8,6 +8,41 @@
     <link rel="stylesheet" href="style/style.css">
 </head>
 
+<style>
+    .button {
+        margin-bottom: 2px !important;
+    }
+
+    .back-to-login a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px 0px;
+        text-decoration: none;
+        color: #000;
+
+    }
+
+    .back-to-login a span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+    .back-to-login a span img {
+        height: 20px;
+        width: 30px;
+        padding: 4px;
+        margin-right: 4px;
+    }
+
+    .back-to-login a p {
+        font-size: 12px;
+        font-weight: 600;
+    }
+</style> 
+
 <script>
         function validateForm() {
 
@@ -22,16 +57,21 @@
             var errorMessage = "Password must contain at least one letter, one number, one special character, and be at least 8 characters long";
 
             // Check if password matches the regex
+            var target=document.getElementById('passwordError');
+
             if (!passwordRegex.test(password)) {
-                document.getElementById('passwordError').textContent = errorMessage;
+                target.textContent = errorMessage;
+                target.style.display="inline";
                 return false;
-            } 
+            }target.style.display="none"; 
 
             var errorMessage = "Password and Confirm Password do not match";
+            var target=document.getElementById('confError');
             if (password !== confirmPassword) {
-                document.getElementById('confError').textContent = errorMessage;
+                target.textContent = errorMessage;
+                target.style.display="inline";
                 return false;
-            }
+            }target.style.display="none";
 
             return true;
         }
@@ -61,7 +101,12 @@
                 <div class="button">
                     <input type="submit" value="Submit">
                 </div>
-
+                <div class="back-to-login">
+                    <a href="profile.php">
+                        <span><img src="./assets/arrow.png" alt=""></span>
+                        <p>Back</p>
+                    </a>
+                </div>
             </form>
         </div>
     </div>

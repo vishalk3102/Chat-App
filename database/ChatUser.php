@@ -68,7 +68,6 @@ class ChatUser
     public function setPassword($password)
     {
         $this->password = password_hash($password, PASSWORD_DEFAULT);
-        // $this->password = $password;
     }
     public function getPassword()
     {
@@ -154,9 +153,21 @@ class ChatUser
 
     public function resetPassword()
     {
-        
-    }
+        try {
+            $query = "CALL update_user_password(:email, :password)";
+            $statement = $this->connection->prepare($query);
 
+            $statement->bindParam(':email', $this->email);
+            $statement->bindParam(':password', $this->password);
+
+            $result = $statement->execute();
+
+            return $result;
+            
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
 
     public function getUserByEmail()
     {

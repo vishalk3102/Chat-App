@@ -236,6 +236,7 @@ $user_obj = $_SESSION['user_data'];
 
                     }
                     document.getElementById('message_text_box').innerHTML += html_data;
+                    setTimeout(scrollToBottom, 100);
                 }
 
             })
@@ -284,6 +285,7 @@ $user_obj = $_SESSION['user_data'];
                     </div>`
 
                     document.getElementById('message_text_box').innerHTML += html_data;
+                    setTimeout(scrollToBottom, 100);
                 }
 
             })
@@ -308,6 +310,11 @@ $user_obj = $_SESSION['user_data'];
 
         xhr.open('GET', 'fetchUsers.php', true);
         xhr.send();
+    }
+
+    function scrollToBottom() {
+        var chatBox = document.getElementById('message_text_box');
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     //         function updateUsers() {

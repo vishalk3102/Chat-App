@@ -113,10 +113,6 @@ class ChatMessage
         }
     }
 
-    public function update_chat()
-    {
-
-    }
 
 
 }

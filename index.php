@@ -59,14 +59,18 @@ if(isset($_POST['email'],$_POST['password']))
            
             var email = document.getElementById('email').value.trim();
             var password = document.getElementById('password').value;
-            
+
+           
             // Validate email format
             var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
             var errorMessage = "Please enter a valid email address";
+
+            var target= document.getElementById('emailError') ;
             if (!emailRegex.test(email)) {
-                document.getElementById('emailError').textContent = errorMessage;
+                target.style.display="inline";
+                target.textContent=errorMessage;
                 return false;
-            }
+            }target.style.display="none";
 
             // Validate password and confirm password match
         
@@ -74,13 +78,16 @@ if(isset($_POST['email'],$_POST['password']))
             var errorMessage = "Wrong password format";
 
             // Check if password matches the regex
+            var target= document.getElementById('passwordError') ;
             if (!passwordRegex.test(password)) {
-                document.getElementById('passwordError').textContent = errorMessage;
+                target.style.display="inline";
+                target.textContent=errorMessage;
                 return false;
-            } 
+            }target.style.display="none";
 
             return true;
         }
+       
     </script> 
 
 </head>
@@ -101,9 +108,10 @@ if(isset($_POST['email'],$_POST['password']))
                     <?php
                       if($error != '')
                       {
-                        echo '<div class="error-message er">
+                        echo '<div class="error-message er" id="server_error" >
                         '.$error.'</div>
                         ';
+                        $error="";
                       }
                       ?>
 
@@ -112,12 +120,12 @@ if(isset($_POST['email'],$_POST['password']))
                     <div class="input-box">
                         <span class="details">Email</span>
                         <input type="text" name="email" id="email" placeholder="Enter your email" required>
-                        <div id="emailError" class="error-message"></div>
+                        <div id="emailError" style="display:inline" class="error-message"></div>
                     </div>
                     <div class="input-box">
                         <span class="details">Password</span>
                         <input type="password" name="password" id="password" placeholder="Enter your password" required>
-                        <div id="passwordError" class="error-message"></div>
+                        <div id="passwordError" style="display:inline" class="error-message"></div>
                     </div>
                    
                 </div>

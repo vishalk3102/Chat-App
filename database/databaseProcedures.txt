@@ -115,7 +115,7 @@ END //
 DELIMITER ;
 
 
-GET ALL USERS DATA  WITH STATUS
+GET ALL USERS DATA  WITH STATUS:-
 DELIMITER //
 
 CREATE PROCEDURE get_all_users_data_with_status(
@@ -139,4 +139,21 @@ BEGIN
         user u;
 END //
 
+DELIMITER ;
+
+
+
+UPDATE_USER_STATUS:-
+DELIMITER //
+ 
+CREATE PROCEDURE `update_user_password` (
+    IN p_email VARCHAR(255),
+    IN p_password VARCHAR(255)
+)
+BEGIN
+    UPDATE `user`
+    SET `password` = p_password
+    WHERE `email` = p_email;
+END //
+ 
 DELIMITER ;

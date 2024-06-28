@@ -25,7 +25,7 @@
     </script>
 
 </head>
-<style>
+ <style>
     .button {
         margin-bottom: 2px !important;
     }
@@ -58,7 +58,7 @@
         font-size: 12px;
         font-weight: 600;
     }
-</style>
+</style> 
 
 <body>
     <div class="container log-container">

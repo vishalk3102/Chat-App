@@ -20,17 +20,22 @@
             var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
             var errorMessage = "Password must contain at least one letter, one number, one special character, and be at least 8 characters long.";
 
+            var target=document.getElementById('passwordError');
             // Check if password matches the regex
             if (!passwordRegex.test(password)) {
-                document.getElementById('passwordError').textContent = errorMessage;
+                target.style.display="inline";
+                target.textContent = errorMessage;
                 return false;
-            } 
+            }target.style.display="none"; 
 
             var errorMessage = "Password and Confirm Password do not match";
+            var target=document.getElementById('confError');
+
             if (password !== confirmPassword) {
-                document.getElementById('confError').textContent = errorMessage;
+                target.style.display="inline";
+                target.textContent = errorMessage;
                 return false;
-            }
+            }target.style.display="none";
 
             return true;
         }

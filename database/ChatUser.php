@@ -123,7 +123,12 @@ class ChatUser
             $statement = $this->connection->prepare($query);
 
             $statement->bindParam(':fname', $this->fname);
-            $statement->bindParam(':mname', $this->mname, PDO::PARAM_NULL);
+            // $statement->bindParam(':mname', $this->mname, PDO::PARAM_NULL);
+            if ($this->mname === '') {
+                $statement->bindValue(':mname', null, PDO::PARAM_NULL);
+            } else {
+                $statement->bindParam(':mname', $this->mname, PDO::PARAM_STR);
+            }
             $statement->bindParam(':lname', $this->lname);
             $statement->bindParam(':username', $this->username);
             $statement->bindParam(':password', $this->password);
@@ -152,8 +157,8 @@ class ChatUser
             $query = "CALL update_user_password(:email, :password)";
             $statement = $this->connection->prepare($query);
 
-            $statement->bindParam(':email', $this->email, PDO::PARAM_STR);
-            $statement->bindParam(':password', $this->password, PDO::PARAM_STR);
+            $statement->bindParam(':email', $this->email);
+            $statement->bindParam(':password', $this->password);
 
             $result = $statement->execute();
 
@@ -170,7 +175,7 @@ class ChatUser
             $query = "CALL get_user_by_email(:email)";
             $statement = $this->connection->prepare($query);
             
-            $statement->bindParam(':email', $this->email, PDO::PARAM_STR);
+            $statement->bindParam(':email', $this->email);
             
             $statement->execute();
             
@@ -189,8 +194,8 @@ class ChatUser
             $query = "CALL update_user_status(:user_id, :status)";
             $statement = $this->connection->prepare($query);
 
-            $statement->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
-            $statement->bindParam(':status', $this->status, PDO::PARAM_STR);
+            $statement->bindParam(':user_id', $this->user_id);
+            $statement->bindParam(':status', $this->status);
 
             $result = $statement->execute();
 

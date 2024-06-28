@@ -13,6 +13,7 @@ body {
   align-items: center;
   padding: 10px;
   background-color: #030617;
+  
 }
 .container {
   width: 100%;
@@ -42,6 +43,16 @@ body {
 .log-container{
   max-width: 400px;
 }
+/* .logo{
+  width: 700px ;
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  color: #fff;
+}
+.logo img{
+  width: 100px;
+} */
 .fields{
   display: flex;
 }
@@ -140,8 +151,11 @@ form .button input:hover {
 }
 .error-message{
   color: red ;
-  font-size: 12px;
+  font-size: 14px;
 } 
+.er{
+  margin-bottom: 5px;
+}
 
 @media (max-width: 584px) {
   .container {

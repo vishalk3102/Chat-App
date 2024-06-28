@@ -148,7 +148,7 @@ class ChatUser
 
     public function resetPassword()
     {
-
+        
     }
 
     public function getUserByEmail()

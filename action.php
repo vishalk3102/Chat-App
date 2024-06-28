@@ -46,4 +46,32 @@ if(isset($_POST["action"]) && $_POST["action"] == "send_message")
     echo json_encode($response);
 }
 
+// if(isset($_POST["action"]) && $_POST["action"] == "get_users")
+// {
+    
+//     $user_id = $_POST["user_id"];
+//     require_once 'database/ChatUser.php';
+//     $chatuser = new ChatUser();
+//     $chatuser->setUserId($user_id);
+//     $user_data = $chatuser->getAllUsersDataWithStatus();
+
+
+//     $user_html = [];
+//     foreach ($user_data as $user) {
+       
+//         if ($user['user_id'] != $user_id) {
+//             $user_html[] = [
+//                 'user_id' => $user['user_id'],
+//                 'fname' => $user['fname'],
+//                 'lname' => $user['lname'],
+//                 'status' => $user['status']
+//             ];
+//         }
+//     }
+   
+//     echo json_encode($user_html);
+   
+// }
+
 ?>
+

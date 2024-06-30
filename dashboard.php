@@ -45,22 +45,22 @@ $user_obj = $_SESSION['user_data'];
                 <h1 class="logo">ChatApp</h1>
                 <?php
 
-                    require 'bin\vendor\autoload.php';
-                        
-                    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-                    $dotenv->load();
+                require 'bin\vendor\autoload.php';
 
-                    $imageFolder =$_ENV['imgpath'] ;
-                    if (!$imageFolder) {
-                        die('IMAGE_FOLDER environment variable is not set.');
-                    }
+                $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+                $dotenv->load();
+
+                $imageFolder = $_ENV['imgpath'];
+                if (!$imageFolder) {
+                    die('IMAGE_FOLDER environment variable is not set.');
+                }
 
 
-                    $login_user_id = $user_obj['id'];
-                    require_once 'database/ChatUser.php';
-                    $chatuser = new ChatUser();
-                    $chatuser->setUserId($login_user_id);
-                    $user_data = $chatuser->getAllUsersDataWithStatus();
+                $login_user_id = $user_obj['id'];
+                require_once 'database/ChatUser.php';
+                $chatuser = new ChatUser();
+                $chatuser->setUserId($login_user_id);
+                $user_data = $chatuser->getAllUsersDataWithStatus();
 
                 ?>
                 <div class="profile">
@@ -70,7 +70,7 @@ $user_obj = $_SESSION['user_data'];
                         </a>
                     </p>
                     <span>
-                        <img src="<?php echo $imageFolder.$user_obj['photo']?>" alt="avatar">
+                        <img src="<?php echo $imageFolder . $user_obj['photo'] ?>" alt="avatar">
                     </span>
                     <input type="hidden" id="login_user_id" name="login_user_id" value="<?php echo $login_user_id ?>">
                     <div class="dropdown-content">
@@ -87,13 +87,13 @@ $user_obj = $_SESSION['user_data'];
                     foreach ($user_data as $key => $user) {
                         if ($user['user_id'] != $login_user_id) {
                             echo "
-                                <div class='user-text-box chat_triggered_class' id='chat11_user'  data-userid = '" . $user['user_id'] . "' onclick='loadChat()'>
+                                <div class='user-text-box chat_triggered_class' id='chat11_user_" . $user['user_id'] . "'  data-user-id='" . $user['user_id'] . "' onclick='loadChat(this)'>
                                     <div class='profile'>
-                                        <img src='./assets/avatar.png' alt='avatar'>
+                                        <img src='" . $imageFolder . $user['photo'] . "' alt='avatar'>
                                     </div>
                                     <div class='text-box'>
                                         <p class='username-box notification' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "
-                                            ".($user['count_status'] != 0 ? "<span class='badge'>" . $user['count_status'] . "</span>":"")."   
+                                            " . ($user['count_status'] != 0 ? "<span class='badge'>" . $user['count_status'] . "</span>" : "") . "   
                                         </p>
                                         <p class='status-box ' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
                                     </div>
@@ -228,8 +228,8 @@ $user_obj = $_SESSION['user_data'];
         }
     }
 
-    function loadChat() {
-        receiver_userid = document.getElementById('chat11_user').getAttribute('data-userid');
+    function loadChat(element) {
+        receiver_userid = element.getAttribute('data-user-id');
         var receiver_name = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
         var receiver_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
         make_chat_area(receiver_name, receiver_status, true);
@@ -245,8 +245,8 @@ $user_obj = $_SESSION['user_data'];
 
         console.log('Triggered');
         // Call loadChat immediately and then every 2 seconds
-        fetchChat();
-        chatInterval = setInterval(fetchChat, 2000);
+        fetchChat(receiver_userid);
+        chatInterval = setInterval(() => fetchChat(receiver_userid), 2000);
 
     }
 
@@ -261,8 +261,8 @@ $user_obj = $_SESSION['user_data'];
         }
     }
 
-    function fetchChat() {
-        receiver_userid = document.getElementById('chat11_user').getAttribute('data-userid');
+    function fetchChat(recUserId) {
+        receiver_userid = recUserId
         var userId = document.getElementById('login_user_id').value;
         fetch('action.php', {
             method: 'POST',
@@ -322,7 +322,11 @@ $user_obj = $_SESSION['user_data'];
 
         var inputmsg = document.getElementById('user_text_message');
         var message = inputmsg.value.trim();
-        var receiver_userid = document.getElementById('chat11_user').getAttribute('data-userid');
+        if(receiver_userid == '')
+        {
+            window.alert('something went wrong');
+            return ;
+        }
         var userId = document.getElementById('login_user_id').value;
         console.log(receiver_userid, userId);
         fetch('action.php', {
@@ -466,7 +470,7 @@ $user_obj = $_SESSION['user_data'];
     userStatus();
     setInterval(userStatus, 3000);
 
-
+    
 </script>
 
 </html>

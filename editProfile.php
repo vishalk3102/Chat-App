@@ -43,10 +43,11 @@
         } else {
             $user->setUsername($_POST['username']);
         }
-        if (empty($_POST['photo'])) {
+
+        if (empty($_POST['avatar_src'])) {
             $user->setPhoto($user_obj['photo']);
         } else {
-            $user->setPhoto('avatar3');
+            $user->setPhoto($_POST['avatar_src']);
         }
 
             if ($user->updateUser()) {
@@ -61,6 +62,16 @@
             }
         
 
+    }
+
+    require 'bin\vendor\autoload.php';
+                        
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+
+    $imageFolder =$_ENV['imgpath'] ;
+    if (!$imageFolder) {
+        die('IMAGE_FOLDER environment variable is not set.');
     }
 
 
@@ -222,7 +233,7 @@
                 </div>';
             }
         ?>
-                <img src="./assets/avatar.png" alt="avatar">
+                <img src="<?php echo $imageFolder.$_SESSION['user_data']['photo'] ?>" alt="avatar">
                 <div class="button-box">
                     <button>
                         <a href="editProfile.php">
@@ -234,17 +245,17 @@
                     <div class="modal-content">
                         <h4>Select Your New Avatar</h4>
                         <div class="avatar-options">
-                            <img src="./assets/avatar1.jpg" onclick="selectAvatar(this)" alt="Avatar 1"
+                            <img src="<?php echo $imageFolder.'avatar1.jpg'?>" onclick="selectAvatar(this)" alt="Avatar 1"
                                 class="avatar-option">
-                            <img src="./assets/avatar2.jpg" onclick="selectAvatar(this)" alt="Avatar 2"
+                            <img src="<?php echo $imageFolder.'avatar2.jpg'?>" onclick="selectAvatar(this)" alt="Avatar 2"
                                 class="avatar-option">
-                            <img src="./assets/avatar3.png" onclick="selectAvatar(this)" alt="Avatar 3"
+                            <img src="<?php echo $imageFolder.'avatar3.png'?>" onclick="selectAvatar(this)" alt="Avatar 3"
                                 class="avatar-option">
-                            <img src="./assets/avatar4.jpg" onclick="selectAvatar(this)" alt="Avatar 4"
+                            <img src="<?php echo $imageFolder.'avatar4.jpg'?>" onclick="selectAvatar(this)" alt="Avatar 4"
                                 class="avatar-option">
-                            <img src="./assets/avatar5.jpg" onclick="selectAvatar(this)" alt="Avatar 4"
+                            <img src="<?php echo $imageFolder.'avatar5.jpg'?>" onclick="selectAvatar(this)" alt="Avatar 4"
                                 class="avatar-option">
-                            <img src="./assets/avatar6.png" onclick="selectAvatar(this)" alt="Avatar 4"
+                            <img src="<?php echo $imageFolder.'avatar6.png'?>" onclick="selectAvatar(this)" alt="Avatar 4"
                                 class="avatar-option">
                         </div>
                         <div class="modal-footer button-box">
@@ -281,6 +292,9 @@
                         <span>Username : </span>
                         <input type="text" placeholder="Enter your user name" name='username'>
                     </div>
+
+                    <input type="hidden" id="avatar_src" name="avatar_src" value="">
+
                     <div class="button-box">
                         <button id="change-avatar-btn" type="submit">
                             Update Profile
@@ -318,8 +332,15 @@
     // Function to update the avatar image
     function updateAvatarImage(src) {
         const avatarImage = document.querySelector('.left-side-box img');
-        avatarImage.src = src;
-        console.log('Selected Avatar:', src);
+      
+        avatarImage.src = src; // Assign new src
+       
+        var filename = src.substring(src.lastIndexOf('/') + 1);
+        var avatarSrcInput = document.getElementById('avatar_src');
+        avatarSrcInput.value = filename;
+        console.log('Selected Avatar: ', src);
+        console.log('filename: ', filename);
+        console.log('avatar src: ',avatarImage.src);
     }
 
     // Attach event listeners

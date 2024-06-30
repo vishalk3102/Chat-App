@@ -226,6 +226,46 @@ class ChatUser
         }
     }
 
+    public function updateUser()
+    {
+        try{
+             $query = "
+            UPDATE user
+            SET fname= :fname,
+            mname = :mname,
+            lname = :lname,
+            username = :username,
+            photo = :photo
+            WHERE user_id = :user_id
+            ";
+            $statement = $this->connection->prepare($query);
+
+            $statement->bindParam(':fname', $this->fname);
+            
+            if ($this->mname === '') {
+                $statement->bindValue(':mname', null, PDO::PARAM_NULL);
+            } else {
+                $statement->bindParam(':mname', $this->mname, PDO::PARAM_STR);
+            }
+            $statement->bindParam(':lname', $this->lname);
+            $statement->bindParam(':username', $this->username);       
+            $statement->bindParam(':photo', $this->photo);
+            $statement->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
+           
+            $result = $statement->execute();
+
+            if ($result) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+        catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
+
 
 }
-?>
+?> 

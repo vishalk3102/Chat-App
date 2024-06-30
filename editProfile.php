@@ -1,30 +1,61 @@
 <?php
-
+     session_start();
     
     $error ='';
     $success_message = '';
+   
+    if (!isset($_SESSION['user_data'])) {
+        header('location:index.php');
+    }
 
+    $user_obj = $_SESSION['user_data'];
+  
 
     if($_SERVER['REQUEST_METHOD'] == 'POST' ) 
     {
-        session_start();
-        if (!isset($_SESSION['user_data'])) {
-            header('location:index.php');
-        }
-        
-
+    
         require_once('database/ChatUser.php');
 
         $user = new ChatUser();
-        $user->setfname($_POST['first_name']);
+
+        $user->setUserId($user_obj['id']);
+        if (empty($_POST['first_name'])) {
+            $user->setfname($user_obj['fname']);
+        } else {
+            $user->setfname($_POST['first_name']);
+        }
+        // if (empty($_POST['middle_name'])) {
+        //     $user->setmname($user_obj['mname']);
+        // } else {
+        //     $user->setmname($_POST['middle_name']);
+        // }
+
         $user->setmname($_POST['middle_name']);
-        $user->setlname($_POST['last_name']);
-        $user->setUsername($_POST['username']);
-       
-        $checkuser = $user->getUserByEmail();
+        
+        if (empty($_POST['last_name'])) {
+            $user->setlname($user_obj['lname']);
+        } else {
+            $user->setlname($_POST['last_name']);
+        }
+        
+        if (empty($_POST['username'])) {
+            $user->setUsername($user_obj['username']);
+        } else {
+            $user->setUsername($_POST['username']);
+        }
+        if (empty($_POST['photo'])) {
+            $user->setPhoto($user_obj['photo']);
+        } else {
+            $user->setPhoto('avatar3');
+        }
 
             if ($user->updateUser()) {
-                $success_message = "Registration successful!";
+                $_SESSION['user_data']['fname']=$user->getfname();
+                $_SESSION['user_data']['mname']=$user->getmname();
+                $_SESSION['user_data']['lname']=$user->getlname();
+                $_SESSION['user_data']['photo']=$user->getPhoto();
+                $_SESSION['user_data']['username']=$user->getUsername();
+                $success_message = "Profile Updated! :)";
             } else {
                 $error =  "Error: " . $db->errorInfo()[2];
             }
@@ -177,6 +208,20 @@
     <section id="profile" class="container">
         <div class="profile-card">
             <div class="left-side-box">
+            <?php
+            if($error != '')
+            {
+                echo '<div class="alert alert-danger" role="alert">
+                '.$error.'
+                </div>';
+            }
+            if($success_message != '')
+            {
+                echo '<div class="alert alert-success" role="alert">
+                '.$success_message.'
+                </div>';
+            }
+        ?>
                 <img src="./assets/avatar.png" alt="avatar">
                 <div class="button-box">
                     <button>
@@ -212,33 +257,42 @@
 
             </div>
             <div class="right-side-box">
-                <form action="#">
+                
+                <form method="POST">
+                    <div class="input-box">
+                        <span>Email : </span>
+                        <input type="text" placeholder="<?php echo $user_obj['email'] ?>" disabled>
+                    </div>
+
                     <div class="input-box">
                         <span>First Name : </span>
-                        <input type="text" placeholder="Enter your first name" required>
+                        <input type="text" placeholder="Enter if you want to change first name" name='first_name'>
                     </div>
                     <div class="input-box">
                         <span>Middle Name : </span>
-                        <input type="text" placeholder="Enter your middle name" required>
+                        <input type="text" placeholder="Enter your middle name" name='middle_name'>
                     </div>
                     <div class="input-box">
                         <span>Last Name : </span>
-                        <input type="text" placeholder="Enter your last name" required>
+                        <input type="text" placeholder="Enter your last name" name='last_name'>
                     </div>
-                    <div class="input-box">
-                        <span>Email : </span>
-                        <input type="text" placeholder="Enter your email" required>
-                    </div>
+                    
                     <div class="input-box">
                         <span>Username : </span>
-                        <input type="text" placeholder="Enter your user name" required>
+                        <input type="text" placeholder="Enter your user name" name='username'>
                     </div>
                     <div class="button-box">
-                        <button id="change-avatar-btn">
+                        <button id="change-avatar-btn" type="submit">
                             Update Profile
                         </button>
                     </div>
                 </form>
+
+                <div class="back-to-login">
+                    <a href="profile.php">
+                        <p>Back to Profile</p>
+                    </a>
+                </div>
             </div>
         </div>
     </section>

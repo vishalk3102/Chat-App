@@ -266,7 +266,81 @@ class ChatUser
         }
     }
 
+    public function saveOtp($otp,$email)
+    {
+        $query = "
+        INSERT INTO otp_table (email, otp, timestamp)
+        VALUES (:email, :otp, NOW())
+        ";
 
+    //$statement = $connection->prepare($query);
+    $statement = $this->connection->prepare($query);
+    // Bind parameters
+   
+    $statement->bindParam(':email', $email, PDO::PARAM_STR);
+    $statement->bindParam(':otp', $otp, PDO::PARAM_STR);
 
+    // Execute the statement
+    $result = $statement->execute();
+
+    // Return true if insertion was successful, false otherwise
+    return $result;
+
+    }
+
+    public function newPassword($otp,$email,$password)
+    {
+        try {
+           
+            $query = "
+                SELECT otp,UNIX_TIMESTAMP(timestamp) AS timestamp
+                FROM otp_table
+                WHERE email = :email
+                ORDER BY timestamp DESC
+                LIMIT 1
+            ";
+            $statement = $this->connection->prepare($query);
+            $statement->bindParam(':email', $email, PDO::PARAM_STR);
+            $statement->execute();
+    
+           
+            $row = $statement->fetch(PDO::FETCH_ASSOC);
+            if (!$row) {
+                return false; 
+            }
+    
+            $dbOtp = $row['otp'];
+           // $timestamp = strtotime($row['timestamp']);
+           $timestamp =$row['timestamp'];
+            $currentTime = time();
+    
+            if ($otp === $dbOtp && ($currentTime - $timestamp) <= 60) {
+                
+                $this->setRegistrationEmail($email);
+                $this->setPassword($password);
+                if($this->resetPassword())
+                {
+                    return true;
+                }
+                       
+                else
+                    {
+                        return false;
+                    }
+            
+            } else {
+                return false; // OTP is invalid or expired
+            }
+        } catch (PDOException $e) {
+            // Handle PDO exceptions
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+
+    }
 }
+
+
+
+
 ?> 

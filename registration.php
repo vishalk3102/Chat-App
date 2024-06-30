@@ -80,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>ChatApp - Registration</title>
     <link rel="stylesheet" href="style/style.css">
 
-
 </head>
 
 <body>

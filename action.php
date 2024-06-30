@@ -28,7 +28,7 @@ if(isset($_POST["action"]) && $_POST["action"] == 'fetch_chat')
     $chat_object = new ChatMessage();
     $chat_object->setSenderId($_POST["to_user_id"]);
     $chat_object->setReceiverId($_POST["from_user_id"]);
-    // $private_chat_object->change_chat_status();
+    $chat_object->change_chat_status();
     echo json_encode($chat_object->fetch_chat());
 }
 

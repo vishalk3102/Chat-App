@@ -15,6 +15,27 @@ $user_obj = $_SESSION['user_data'];
     <title>ChatApp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style/dashboard.css">
+    <style>
+        .notification {
+            background-color: #555;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+        }
+
+        .notification .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 5px 10px;
+            border-radius: 50%;
+            background: red;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
@@ -50,19 +71,20 @@ $user_obj = $_SESSION['user_data'];
             </div>
             <div class="user-chat-box">
                 <div class="users-box" id="users-box">
-
-                    <!-- <?php
+                    <?php
 
                     foreach ($user_data as $key => $user) {
                         if ($user['user_id'] != $login_user_id) {
                             echo "
-                                <div class='user-text-box' id='chat11_user'  data-userid = '" . $user['user_id'] . "' onclick='loadChat()'>
+                                <div class='user-text-box chat_triggered_class' id='chat11_user'  data-userid = '" . $user['user_id'] . "' onclick='loadChat()'>
                                     <div class='profile'>
                                         <img src='./assets/avatar.png' alt='avatar'>
                                     </div>
                                     <div class='text-box'>
-                                        <p class='username-box' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "</p>
-                                        <p class='status-box' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
+                                        <p class='username-box notification' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "
+                                            ".($user['count_status'] != 0 ? "<span class='badge'>" . $user['count_status'] . "</span>":"")."   
+                                        </p>
+                                        <p class='status-box ' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
                                     </div>
                                 </div>
                                 
@@ -70,7 +92,7 @@ $user_obj = $_SESSION['user_data'];
                         }
 
                     }
-                    ?> -->
+                    ?>
 
                 </div>
                 <div class="chat-box" id="chatpart">
@@ -89,7 +111,7 @@ $user_obj = $_SESSION['user_data'];
     </section>
 </body>
 <script>
-
+    var chatInterval;
     // VARIABLE FOR MAINTAINING VIEW STATUS FOR BACK BUTTON (MOBILE DEVICE)
     const VIEW_MODE_USER_LIST = 'user_list';
     const VIEW_MODE_CHAT = 'chat';
@@ -115,9 +137,10 @@ $user_obj = $_SESSION['user_data'];
         profileIcon.addEventListener('click', toggleDropdown);
         document.addEventListener('click', closeDropdown);
 
-
-
     });
+
+
+
     function logoutUser() {
         var userId = document.getElementById("login_user_id").value;
         console.log(userId);
@@ -196,10 +219,8 @@ $user_obj = $_SESSION['user_data'];
 
     function loadChat() {
         receiver_userid = document.getElementById('chat11_user').getAttribute('data-userid');
-        var userId = document.getElementById('login_user_id').value;
         var receiver_name = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
         var receiver_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
-        console.log(userId, receiver_userid);
         make_chat_area(receiver_name, receiver_status, true);
 
 
@@ -207,9 +228,31 @@ $user_obj = $_SESSION['user_data'];
             document.querySelector('.users-box').classList.add('hidden');
             document.querySelector('.chat-box').classList.add('active');
         }
+        if (chatInterval) {
+            clearInterval(chatInterval);
+        }
 
+        console.log('Triggered');
+        // Call loadChat immediately and then every 2 seconds
+        fetchChat();
+        chatInterval = setInterval(fetchChat, 2000);
 
+    }
 
+    // FUNCTION TO AUTO SCROLL MESSAGE TO BOTTOM 
+    function scrollToBottom() {
+        var chatBox = document.getElementById('message_text_box');
+        if (chatBox) {
+            console.log('Scrolling to bottom. ScrollHeight:', chatBox.scrollHeight);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        } else {
+            console.error('Chat box element not found');
+        }
+    }
+
+    function fetchChat() {
+        receiver_userid = document.getElementById('chat11_user').getAttribute('data-userid');
+        var userId = document.getElementById('login_user_id').value;
         fetch('action.php', {
             method: 'POST',
             headers: {
@@ -254,16 +297,16 @@ $user_obj = $_SESSION['user_data'];
                         }
 
                     }
-                    document.getElementById('message_text_box').innerHTML += html_data;
-                    setTimeout(scrollToBottom, 2000);
+                    document.getElementById('message_text_box').innerHTML = html_data;
+                    setTimeout(scrollToBottom, 100);
                 }
 
             })
             .catch(error => {
                 console.error("Fetch Error: " + error);
             });
-
     }
+
     function handleMessage() {
 
         var inputmsg = document.getElementById('user_text_message');
@@ -338,16 +381,7 @@ $user_obj = $_SESSION['user_data'];
         document.querySelector('.chat-box').classList.remove('active');
     }
 
-    // FUNCTION TO AUTO SCROLL MESSAGE TO BOTTOM 
-    function scrollToBottom() {
-        var chatBox = document.getElementById('message_text_box');
-        if (chatBox) {
-            console.log('Scrolling to bottom. ScrollHeight:', chatBox.scrollHeight);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        } else {
-            console.error('Chat box element not found');
-        }
-    }
+
 
     // FUNCTION TO HANDLE BACK BUTTON  CLICK(MOBILE DEVICE)
     function backToUserPage() {

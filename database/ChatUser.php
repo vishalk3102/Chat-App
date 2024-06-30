@@ -227,5 +227,6 @@ class ChatUser
     }
 
 
+
 }
 ?>

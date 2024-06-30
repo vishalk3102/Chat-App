@@ -15,15 +15,18 @@ if (isset($_SESSION['user_data'])) {
     foreach ($user_data as $user) {
         if ($user['user_id'] != $login_user_id) {
             $user_html .= "
-            <div class='user-text-box' id='chat11_user' data-userid='" . $user['user_id'] . "' onclick='loadChat()'>
-                <div class='profile'>
-                    <img src='./assets/avatar.png' alt='avatar'>
-                </div>
-                <div class='text-box'>
-                    <p class='username-box' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "</p>
-                    <p class='status-box' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
-                </div>
-            </div>
+                        <div class='user-text-box chat_triggered_class' id='chat11_user'  data-userid = '" . $user['user_id'] . "' onclick='loadChat()'>
+                            <div class='profile'>
+                                <img src='./assets/avatar.png' alt='avatar'>
+                            </div>
+                            <div class='text-box'>
+                                <p class='username-box notification' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . " 
+                                    ".($user['count_status'] != 0 ? "<span class='badge'>" . $user['count_status'] . "</span>":"")."  
+                                </p>
+                                <p class='status-box ' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
+                            </div>
+
+                        </div>
             ";
         }
     }
@@ -35,4 +38,3 @@ if (isset($_SESSION['user_data'])) {
     echo 'Session data not found';
 }
 ?>
-

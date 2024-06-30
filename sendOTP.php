@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user_data = $user->getUserByEmail();
         if(is_array( $user_data) && count($user_data) > 0)
         {
-            sendOtp($email);
+            sendOtp($_POST['email']);
         }
         else
         {
@@ -39,16 +39,16 @@ function sendOtp($email)
       
         $mail->isSMTP();
         
-        $mail->Host = 'smtp.gmail.com';  
-        $mail->SMTPAuth = true;
-        $mail->Username = $_ENV['sender_mail']; 
-        $mail->Password = $_ENV['password'];    
-        $mail->Port = 587;
-        // $mail->SMTPDebug = true;
-        $mail->SMTPSecure = 'tls';
+        $mail->Host = 'smtp.office365.com';  
+        $mail->SMTPAuth = false;
+        // $mail->Username = $_ENV['sender_mail']; 
+        // $mail->Password = $_ENV['password'];    
+        $mail->Port = 993;
+        $mail->SMTPDebug = true;
+       // $mail->SMTPSecure = 'smtp';
       
         $mail->setFrom($_ENV['sender_mail']);
-        $mail->addAddress($email); 
+        $mail->addAddress('nikhilgautam@contata.in'); 
 
         // Content
         $otp = generateOTP(); // Function to generate OTP

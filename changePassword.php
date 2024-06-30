@@ -23,17 +23,33 @@
             {
                 if(password_verify($_POST['opassword'],$userData['password']))
                 {
+                    if($_POST['npassword'] !== $_POST['cnpassword'])
+                    {
+                        $error = "Password and confirm password did not matched";
+                    }
+                    else if(password_verify($_POST['npassword'],$userData['password']))
+                    {
+                        $error = "New password must be different from old password";
+                    }
+                    else
+                    {
                         $user-> setPassword($_POST['npassword']);
                         if ($user->resetPassword()) {
                             $success_message = "Password updated ! Enjoy your safe & secure chatting :)";
                         } else {
                             $error =  "Error: " . $db->errorInfo()[2];
                         }
+                    }
+                        
                 }
                 else
                 {
                     $error = "Are you confident you remember your password?";
                 }
+            }
+            else
+            {
+                $error = "No user exist with this provided email id";
             }
       }
     }
@@ -147,7 +163,7 @@
                     </div>
                     <div class="input-box">
                         <span class="details">New Password</span>
-                        <input type="text" placeholder="Enter your new password" id="new-password" name="npassword" required>
+                        <input type="password" placeholder="Enter your new password" id="new-password" name="npassword" required>
                         <div id="newPasswordError" class="error-message"></div>
                     </div>
                     <div class="input-box">

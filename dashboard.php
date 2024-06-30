@@ -186,6 +186,7 @@ $user_obj = $_SESSION['user_data'];
                 })
                 .catch(error => {
                     console.error("Fetch Error: " + error);
+                    window.alert("Fetch Error: " + error);
                 });
         } else {
             console.warn("User ID not found");
@@ -314,6 +315,7 @@ $user_obj = $_SESSION['user_data'];
 
             })
             .catch(error => {
+                window.alert("Fetch Error: " + error);
                 console.error("Fetch Error: " + error);
             });
     }

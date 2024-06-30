@@ -1,78 +1,65 @@
 <?php
-     session_start();
-    
-    $error ='';
-    $success_message = '';
-   
-    if (!isset($_SESSION['user_data'])) {
-        header('location:index.php');
+session_start();
+
+$error = '';
+$success_message = '';
+
+if (!isset($_SESSION['user_data'])) {
+    header('location:index.php');
+}
+
+$user_obj = $_SESSION['user_data'];
+function allFieldsFilled($data)
+{
+    return isset($data['first_name']) && $data['first_name'] !== "" && isset($data['last_name']) && $data['last_name']!== "" &&
+        isset($data['username']) && $data['username'] !== "" && isset($data['avatar_src']) && $data['avatar_src'] !== "";
+}
+function validateNameLength($name, $maxLength = 50)
+{
+    return strlen($name) <= $maxLength;
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    require_once ('database/ChatUser.php');
+
+    $user = new ChatUser();
+    if (!allFieldsFilled($_POST)) {
+        $error = "First Name, Last Name and Username are required Fields.";
+    } elseif (!validateNameLength($_POST['first_name']) || !validateNameLength($_POST['middle_name']) || !validateNameLength($_POST['last_name'])) {
+        $error = "First name, middle name, and last name must each be no more than 50 characters long.";
     }
-
-    $user_obj = $_SESSION['user_data'];
-  
-
-    if($_SERVER['REQUEST_METHOD'] == 'POST' ) 
+    else
     {
-    
-        require_once('database/ChatUser.php');
-
-        $user = new ChatUser();
-
         $user->setUserId($user_obj['id']);
-        if (empty($_POST['first_name'])) {
-            $user->setfname($user_obj['fname']);
-        } else {
-            $user->setfname($_POST['first_name']);
-        }
-        // if (empty($_POST['middle_name'])) {
-        //     $user->setmname($user_obj['mname']);
-        // } else {
-        //     $user->setmname($_POST['middle_name']);
-        // }
-
+        $user->setfname($_POST['first_name']);
         $user->setmname($_POST['middle_name']);
-        
-        if (empty($_POST['last_name'])) {
-            $user->setlname($user_obj['lname']);
+        $user->setlname($_POST['last_name']);
+        $user->setUsername($_POST['username']);
+        $user->setPhoto($_POST['avatar_src']);
+        if ($user->updateUser()) {
+            $_SESSION['user_data']['fname'] = $user->getfname();
+            $_SESSION['user_data']['mname'] = $user->getmname();
+            $_SESSION['user_data']['lname'] = $user->getlname();
+            $_SESSION['user_data']['photo'] = $user->getPhoto();
+            $_SESSION['user_data']['username'] = $user->getUsername();
+            $success_message = "Profile Updated! :)";
         } else {
-            $user->setlname($_POST['last_name']);
+            $error = "Error: " . $db->errorInfo()[2];
         }
-        
-        if (empty($_POST['username'])) {
-            $user->setUsername($user_obj['username']);
-        } else {
-            $user->setUsername($_POST['username']);
-        }
-
-        if (empty($_POST['avatar_src'])) {
-            $user->setPhoto($user_obj['photo']);
-        } else {
-            $user->setPhoto($_POST['avatar_src']);
-        }
-
-            if ($user->updateUser()) {
-                $_SESSION['user_data']['fname']=$user->getfname();
-                $_SESSION['user_data']['mname']=$user->getmname();
-                $_SESSION['user_data']['lname']=$user->getlname();
-                $_SESSION['user_data']['photo']=$user->getPhoto();
-                $_SESSION['user_data']['username']=$user->getUsername();
-                $success_message = "Profile Updated! :)";
-            } else {
-                $error =  "Error: " . $db->errorInfo()[2];
-            }
-        
-
     }
+  
+}
 
-    require 'bin\vendor\autoload.php';
-                        
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-    $dotenv->load();
+require 'bin\vendor\autoload.php';
 
-    $imageFolder =$_ENV['imgpath'] ;
-    if (!$imageFolder) {
-        die('IMAGE_FOLDER environment variable is not set.');
-    }
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$imageFolder = $_ENV['imgpath'];
+if (!$imageFolder) {
+    die('IMAGE_FOLDER environment variable is not set.');
+}
 
 
 ?>
@@ -219,21 +206,19 @@
     <section id="profile" class="container">
         <div class="profile-card">
             <div class="left-side-box">
-            <?php
-            if($error != '')
-            {
-                echo '<div class="alert alert-danger" role="alert">
-                '.$error.'
+                <?php
+                if ($error != '') {
+                    echo '<div class="alert alert-danger" role="alert">
+                ' . $error . '
                 </div>';
-            }
-            if($success_message != '')
-            {
-                echo '<div class="alert alert-success" role="alert">
-                '.$success_message.'
+                }
+                if ($success_message != '') {
+                    echo '<div class="alert alert-success" role="alert">
+                ' . $success_message . '
                 </div>';
-            }
-        ?>
-                <img src="<?php echo $imageFolder.$_SESSION['user_data']['photo'] ?>" alt="avatar">
+                }
+                ?>
+                <img src="<?php echo $imageFolder . $_SESSION['user_data']['photo'] ?>" alt="avatar">
                 <div class="button-box">
                     <button>
                         <a href="editProfile.php">
@@ -245,18 +230,18 @@
                     <div class="modal-content">
                         <h4>Select Your New Avatar</h4>
                         <div class="avatar-options">
-                            <img src="<?php echo $imageFolder.'avatar1.jpg'?>" onclick="selectAvatar(this)" alt="Avatar 1"
-                                class="avatar-option">
-                            <img src="<?php echo $imageFolder.'avatar2.jpg'?>" onclick="selectAvatar(this)" alt="Avatar 2"
-                                class="avatar-option">
-                            <img src="<?php echo $imageFolder.'avatar3.png'?>" onclick="selectAvatar(this)" alt="Avatar 3"
-                                class="avatar-option">
-                            <img src="<?php echo $imageFolder.'avatar4.jpg'?>" onclick="selectAvatar(this)" alt="Avatar 4"
-                                class="avatar-option">
-                            <img src="<?php echo $imageFolder.'avatar5.jpg'?>" onclick="selectAvatar(this)" alt="Avatar 4"
-                                class="avatar-option">
-                            <img src="<?php echo $imageFolder.'avatar6.png'?>" onclick="selectAvatar(this)" alt="Avatar 4"
-                                class="avatar-option">
+                            <img src="<?php echo $imageFolder . 'avatar1.jpg' ?>" onclick="selectAvatar(this)"
+                                alt="Avatar 1" class="avatar-option">
+                            <img src="<?php echo $imageFolder . 'avatar2.jpg' ?>" onclick="selectAvatar(this)"
+                                alt="Avatar 2" class="avatar-option">
+                            <img src="<?php echo $imageFolder . 'avatar3.png' ?>" onclick="selectAvatar(this)"
+                                alt="Avatar 3" class="avatar-option">
+                            <img src="<?php echo $imageFolder . 'avatar4.jpg' ?>" onclick="selectAvatar(this)"
+                                alt="Avatar 4" class="avatar-option">
+                            <img src="<?php echo $imageFolder . 'avatar5.jpg' ?>" onclick="selectAvatar(this)"
+                                alt="Avatar 4" class="avatar-option">
+                            <img src="<?php echo $imageFolder . 'avatar6.png' ?>" onclick="selectAvatar(this)"
+                                alt="Avatar 4" class="avatar-option">
                         </div>
                         <div class="modal-footer button-box">
                             <button id="closeBtn">Close</button>
@@ -268,7 +253,7 @@
 
             </div>
             <div class="right-side-box">
-                
+
                 <form method="POST">
                     <div class="input-box">
                         <span>Email : </span>
@@ -277,23 +262,23 @@
 
                     <div class="input-box">
                         <span>First Name : </span>
-                        <input type="text" placeholder="Enter if you want to change first name" name='first_name'>
+                        <input type="text" value="<?php echo $user_obj['fname'] ?>" name='first_name'>
                     </div>
                     <div class="input-box">
                         <span>Middle Name : </span>
-                        <input type="text" placeholder="Enter your middle name" name='middle_name'>
+                        <input type="text" value="<?php echo $user_obj['mname'] ?>" name='middle_name'>
                     </div>
                     <div class="input-box">
                         <span>Last Name : </span>
-                        <input type="text" placeholder="Enter your last name" name='last_name'>
-                    </div>
-                    
-                    <div class="input-box">
-                        <span>Username : </span>
-                        <input type="text" placeholder="Enter your user name" name='username'>
+                        <input type="text" value="<?php echo $user_obj['lname'] ?>" name='last_name'>
                     </div>
 
-                    <input type="hidden" id="avatar_src" name="avatar_src" value="">
+                    <div class="input-box">
+                        <span>Username : </span>
+                        <input type="text" value="<?php echo $user_obj['username'] ?>" name='username'>
+                    </div>
+
+                    <input type="hidden" id="avatar_src" name="avatar_src" value="<?php echo $user_obj['photo'] ?>">
 
                     <div class="button-box">
                         <button id="change-avatar-btn" type="submit">
@@ -332,15 +317,15 @@
     // Function to update the avatar image
     function updateAvatarImage(src) {
         const avatarImage = document.querySelector('.left-side-box img');
-      
+
         avatarImage.src = src; // Assign new src
-       
+
         var filename = src.substring(src.lastIndexOf('/') + 1);
         var avatarSrcInput = document.getElementById('avatar_src');
         avatarSrcInput.value = filename;
         console.log('Selected Avatar: ', src);
         console.log('filename: ', filename);
-        console.log('avatar src: ',avatarImage.src);
+        console.log('avatar src: ', avatarImage.src);
     }
 
     // Attach event listeners

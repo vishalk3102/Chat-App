@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     require_once ('database/ChatUser.php');
     if (!allFieldsFilled($_POST)) {
-        $error = "All fields are required.";
+        $error = "All fields except middle name are required.";
     } elseif (!validateNameLength($_POST['first_name']) || !validateNameLength($_POST['middle_name']) || !validateNameLength($_POST['last_name'])) {
         $error = "First name, middle name, and last name must each be no more than 50 characters long.";
     } elseif (!validateEmail($_POST['email'])) {

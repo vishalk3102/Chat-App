@@ -24,7 +24,7 @@
         $user->setUsername(explode('@', $_POST['email'])[0]);
         $user->setPasswordUpdateDate(date('Y-m-d H:i:s'));
         $user->setRegistrationDate(date('Y-m-d H:i:s'));
-        $user->setPhoto('avtar1');
+        $user->setPhoto('avatar');
         $user->setStatus('Inactive');
         $checkuser = $user->getUserByEmail();
         if(is_array( $checkuser) && count($checkuser) > 0)

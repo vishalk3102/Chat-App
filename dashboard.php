@@ -45,11 +45,22 @@ $user_obj = $_SESSION['user_data'];
                 <h1 class="logo">ChatApp</h1>
                 <?php
 
-                $login_user_id = $user_obj['id'];
-                require_once 'database/ChatUser.php';
-                $chatuser = new ChatUser();
-                $chatuser->setUserId($login_user_id);
-                $user_data = $chatuser->getAllUsersDataWithStatus();
+                    require 'bin\vendor\autoload.php';
+                        
+                    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+                    $dotenv->load();
+
+                    $imageFolder =$_ENV['imgpath'] ;
+                    if (!$imageFolder) {
+                        die('IMAGE_FOLDER environment variable is not set.');
+                    }
+
+
+                    $login_user_id = $user_obj['id'];
+                    require_once 'database/ChatUser.php';
+                    $chatuser = new ChatUser();
+                    $chatuser->setUserId($login_user_id);
+                    $user_data = $chatuser->getAllUsersDataWithStatus();
 
                 ?>
                 <div class="profile">
@@ -59,7 +70,7 @@ $user_obj = $_SESSION['user_data'];
                         </a>
                     </p>
                     <span>
-                        <img src="./assets/avatar.png" alt="avatar">
+                        <img src="<?php echo $imageFolder.$user_obj['photo']?>" alt="avatar">
                     </span>
                     <input type="hidden" id="login_user_id" name="login_user_id" value="<?php echo $login_user_id ?>">
                     <div class="dropdown-content">

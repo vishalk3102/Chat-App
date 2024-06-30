@@ -5,6 +5,16 @@ if (!isset($_SESSION['user_data'])) {
 }
 
 $user_obj = $_SESSION['user_data'];
+
+require 'bin\vendor\autoload.php';
+                        
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$imageFolder =$_ENV['imgpath'] ;
+if (!$imageFolder) {
+    die('IMAGE_FOLDER environment variable is not set.');
+}
 ?>
 
 <!DOCTYPE html>
@@ -123,7 +133,7 @@ $user_obj = $_SESSION['user_data'];
     <section id="profile" class="container">
 
         <div class="profile-card">
-            <div class="left-side-box"><img src="./assets/avatar.png" alt="avatar"></div>
+            <div class="left-side-box"><img src="<?php echo $imageFolder.$user_obj['photo']?>" alt="avatar"></div>
             <div class="right-side-box">
                 <div class="text-box">
                     <h3 class="">Full Name :</h3>

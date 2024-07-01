@@ -154,14 +154,13 @@
 .user-text-box .text-box .username-box {
   font-size: 14px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
 }
-
 
 .user-text-box .text-box .status-box {
   font-size: 12px;
 }
-
-
 
 /* CHAT SIDE STYLING(RIGHT)  */
 .chat-box {

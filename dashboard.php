@@ -89,7 +89,7 @@ $user_obj = $_SESSION['user_data'];
                             echo "
                                 <div class='user-text-box chat_triggered_class' id='chat11_user_" . $user['user_id'] . "'  data-user-id='" . $user['user_id'] . "' onclick='loadChat(this)'>
                                     <div class='profile'>
-                                        <img src='" . $imageFolder . $user['photo'] . "' alt='avatar'>
+                                        <img src='" . $imageFolder . $user['photo'] . "' id='selected_user_image_". $user['user_id'] . "' alt='avatar'>
                                     </div>
                                     <div class='text-box'>
                                         <p class='username-box notification' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "
@@ -193,11 +193,11 @@ $user_obj = $_SESSION['user_data'];
         }
 
     }
-    function make_chat_area(user_name, user_status, chatStarted) {
+    function make_chat_area(user_name, user_status, chatStarted,user_photo) {
         var htmlcode = `
                     <div class="chat-navbar user-text-box">
                         <div class="profile">
-                            <img src="./assets/avatar.png" alt="avatar">
+                            <img src="`+ user_photo+`" alt="avatar">
                         </div>
                         <div class="text-box">
                             <p class="username-box">`+ user_name + `</p>
@@ -212,7 +212,7 @@ $user_obj = $_SESSION['user_data'];
 
                     <div class="chat-message-box">
                         <form method="POST" onsubmit="event.preventDefault(); handleMessage();">
-                            <textarea  type="text" id="user_text_message" placeholder="Type a message..."></textarea>
+                            <textarea  type="text" id="user_text_message" placeholder="Type a message..." maxLength="255"></textarea>
                             <button type="submit" ><span><i class="fa fa-send-o"></i></span></button>
                         </form>
                     </div>
@@ -233,7 +233,8 @@ $user_obj = $_SESSION['user_data'];
         receiver_userid = element.getAttribute('data-user-id');
         var receiver_name = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
         var receiver_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
-        make_chat_area(receiver_name, receiver_status, true);
+        var user_photo = document.getElementById('selected_user_image_'+receiver_userid).src;
+        make_chat_area(receiver_name, receiver_status, true,user_photo);
 
 
         if (window.innerWidth <= 768) {
@@ -324,9 +325,15 @@ $user_obj = $_SESSION['user_data'];
 
         var inputmsg = document.getElementById('user_text_message');
         var message = inputmsg.value.trim();
+        console.log();
         if(receiver_userid == '')
         {
             window.alert('something went wrong');
+            return ;
+        }
+        else if(message==='')
+        {
+            window.alert('message must not be empty');
             return ;
         }
         var userId = document.getElementById('login_user_id').value;

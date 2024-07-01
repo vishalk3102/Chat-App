@@ -38,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user->setUsername($_POST['username']);
         $user->setPhoto($_POST['avatar_src']);
         if ($user->updateUser()) {
-            $_SESSION['user_data']['fname'] = $user->getfname();
-            $_SESSION['user_data']['mname'] = $user->getmname();
-            $_SESSION['user_data']['lname'] = $user->getlname();
-            $_SESSION['user_data']['photo'] = $user->getPhoto();
-            $_SESSION['user_data']['username'] = $user->getUsername();
+            $_SESSION['user_data']['fname'] = $_POST['first_name'];
+            $_SESSION['user_data']['mname'] = $_POST['middle_name'];
+            $_SESSION['user_data']['lname'] = $_POST['last_name'];
+            $_SESSION['user_data']['photo'] = $_POST['avatar_src'];
+            $_SESSION['user_data']['username'] = $_POST['username'];
             $success_message = "Profile Updated! :)";
         } else {
             $error = "Error: " . $db->errorInfo()[2];
@@ -221,7 +221,7 @@ if (!$imageFolder) {
                 <img src="<?php echo $imageFolder . $_SESSION['user_data']['photo'] ?>" alt="avatar">
                 <div class="button-box">
                     <button>
-                        <a href="editProfile.php">
+                        <a >
                             Change Avatar
                         </a>
                     </button>
@@ -262,20 +262,20 @@ if (!$imageFolder) {
 
                     <div class="input-box">
                         <span>First Name : </span>
-                        <input type="text" value="<?php echo $user_obj['fname'] ?>" name='first_name'>
+                        <input type="text" value="<?php echo $_SESSION['user_data']['fname'] ?>" name='first_name'>
                     </div>
                     <div class="input-box">
                         <span>Middle Name : </span>
-                        <input type="text" value="<?php echo $user_obj['mname'] ?>" name='middle_name'>
+                        <input type="text" value="<?php echo  $_SESSION['user_data']['mname'] ?>" name='middle_name'>
                     </div>
                     <div class="input-box">
                         <span>Last Name : </span>
-                        <input type="text" value="<?php echo $user_obj['lname'] ?>" name='last_name'>
+                        <input type="text" value="<?php echo $_SESSION['user_data']['lname'] ?>" name='last_name'>
                     </div>
 
                     <div class="input-box">
                         <span>Username : </span>
-                        <input type="text" value="<?php echo $user_obj['username'] ?>" name='username'>
+                        <input type="text" value="<?php echo $_SESSION['user_data']['username'] ?>" name='username'>
                     </div>
 
                     <input type="hidden" id="avatar_src" name="avatar_src" value="<?php echo $user_obj['photo'] ?>">

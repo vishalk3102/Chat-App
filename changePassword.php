@@ -67,41 +67,6 @@
     <link rel="stylesheet" href="style/style.css">
 </head>
 
-<style>
-    .button {
-        margin-bottom: 2px !important;
-    }
-
-    .back-to-login a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 5px 0px;
-        text-decoration: none;
-        color: #000;
-
-    }
-
-    .back-to-login a span {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-    }
-
-    .back-to-login a span img {
-        height: 20px;
-        width: 30px;
-        padding: 4px;
-        margin-right: 4px;
-    }
-
-    .back-to-login a p {
-        font-size: 12px;
-        font-weight: 600;
-    }
-</style> 
-
 <script>
         function validateForm() {
 
@@ -109,7 +74,7 @@
             var password = document.getElementById('new-password').value;
             var confirmPassword = document.getElementById('cnew-password').value;
 
-        
+            console.log(password);
             // Validate password and confirm password match
         
             var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -119,14 +84,17 @@
             var target=document.getElementById('newPasswordError');
 
             if (!passwordRegex.test(password)) {
+                console.log("ghg");
                 target.style.display="inline";
                 target.textContent = errorMessage;
                 return false;
             }target.style.display="none"; 
+            console.log("ttt");
 
             var errorMessage = "Password and Confirm Password do not match";
             var target=document.getElementById('confError');
             if (password !== confirmPassword) {
+                console.log("uuu");
                 target.style.display="inline";
                 target.textContent = errorMessage;
                 return false;

@@ -200,6 +200,21 @@ if (!$imageFolder) {
         margin: 10px;
         transition: border-color 0.3s ease;
     }
+
+ .back-to-login a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 0px;
+  text-decoration: none;
+  color: #000;
+
+}
+
+.back-to-login a p {
+  font-size: 14px;
+  font-weight: 600;
+}
 </style>
 
 <body>

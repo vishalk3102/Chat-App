@@ -150,7 +150,7 @@
                         <div id="confError" class="error-message"></div>
                     </div>
                 </div>
-                <div class="button">
+                <div class="button btn">
                     <input type="submit" value="Submit">
                 </div>
                 <div class="back-to-login">

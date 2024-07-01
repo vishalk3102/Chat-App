@@ -274,15 +274,15 @@ if (!$imageFolder) {
 
                 <div class="button-box">
 
-                    <a href="editProfile.php">
+                    <a href="editProfile.php" class="btn">
                         Edit Profile
                     </a>
 
-                    <a href="changePassword.php">
+                    <a href="changePassword.php" class="btn">
                         Change Password
                     </a>
 
-                    <a href="dashboard.php">
+                    <a href="dashboard.php" class="btn">
                         Let's Chat
                     </a>
 

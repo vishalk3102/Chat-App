@@ -33,6 +33,19 @@ $user_obj = $_SESSION['user_data'];
             justify-content: center;
             align-items: center;
         }
+
+      .dot {
+        height: 10px;
+        width: 10px;
+        background-color: red;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 2px;
+        padding-top: 2px;
+        }
+        #green12{
+            background-color: green;
+        }
     </style>
 </head>
 
@@ -94,7 +107,8 @@ $user_obj = $_SESSION['user_data'];
                                             " . ($user['count_status'] != 0 ? "<span class='badge'>" . $user['count_status'] . "</span>" : "") . "   
                                         </p>
                                           <p class='status-box ' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "</p>
-                                          <p class='status-box ' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
+                                          <p class='status-box ' >" . ($user['status'] === 'Active'?"<span class='dot' id='green12'></span>" :"<span class='dot' id='red'></span>" )."<span id='list_user_status_". $user['user_id']."'>".$user['status']."</span> </p>
+                                          
                                     </div>
                                 </div>
                                 
@@ -193,15 +207,20 @@ $user_obj = $_SESSION['user_data'];
 
     }
     function make_chat_area(user_name,username,user_status, chatStarted,user_photo) {
+        var status_style = `<span class='dot' id='red'></span>`;
+        if(user_status=='Active')
+        {
+            status_style = `<span class='dot' id='green12'></span>`;
+        }
         var htmlcode = `
                     <div class="chat-navbar user-text-box">
                         <div class="profile">
                             <img src="`+ user_photo + `" alt="avatar">
                         </div>
                         <div class="text-box">
-                            <p class="username-box">`+ username + `</p>
-                            <p class="status-box">`+ user_name + `</p>
-                            <p class="status-box">`+ user_status + `</p>
+                            <p class="username-box">`+ user_name + `</p>
+                            <p class="status-box">`+ username  + `</p>
+                            <p class="status-box">`+ status_style + user_status + `</p>
 
                         </div>
                     </div>
@@ -393,22 +412,22 @@ $user_obj = $_SESSION['user_data'];
         inputmsg.value = '';
     }
 
-    // function userStatus() {
-    //     var xhr = new XMLHttpRequest();
+    function userStatus() {
+        var xhr = new XMLHttpRequest();
 
-    //     xhr.onreadystatechange = function () {
-    //         if (xhr.readyState === XMLHttpRequest.DONE) {
-    //             if (xhr.status === 200) {
-    //                 document.getElementById('users-box').innerHTML = xhr.responseText;
-    //             } else {
-    //                 console.error('Error fetching user data:', xhr.status, xhr.statusText);
-    //             }
-    //         }
-    //     };
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    document.getElementById('users-box').innerHTML = xhr.responseText;
+                } else {
+                    console.error('Error fetching user data:', xhr.status, xhr.statusText);
+                }
+            }
+        };
 
-    //     xhr.open('GET', 'fetchUsers.php', true);
-    //     xhr.send();
-    // }
+        xhr.open('GET', 'fetchUsers.php', true);
+        xhr.send();
+    }
 
 
     // FUNCTION TO HIDE USER-BOX (MOBILE DEVICE)

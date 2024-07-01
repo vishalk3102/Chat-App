@@ -32,7 +32,9 @@ if (isset($_SESSION['user_data'])) {
                                     " . ($user['count_status'] != 0 ? "<span class='badge'>" . $user['count_status'] . "</span>" : "") . "  
                                 </p>
                                 <p class='status-box ' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] .' ' .  $user['lname'] . "</p>
-                                <p class='status-box ' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
+                              
+                                <p class='status-box ' >" . ($user['status'] === 'Active'?"<span class='dot' id='green12'></span>" :"<span class='dot' id='red'></span> " )."<span id='list_user_status_". $user['user_id']."'>".$user['status']."</span> </p>
+
                             </div>
 
                         </div>

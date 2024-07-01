@@ -379,7 +379,7 @@ $user_obj = $_SESSION['user_data'];
                     </div>`
 
                     document.getElementById('message_text_box').innerHTML += html_data;
-                    setTimeout(scrollToBottom, 2000);
+                    setTimeout(scrollToBottom, 100);
                 }
 
             })

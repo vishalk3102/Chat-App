@@ -25,7 +25,7 @@ if (isset($_SESSION['user_data'])) {
             $user_html .= "
                         <div class='user-text-box chat_triggered_class' id='chat11_user_". $user['user_id'] ."'   data-user-id = '" . $user['user_id'] . "' onclick='loadChat(this)'>
                             <div class='profile'>
-                                <img src='" . $imageFolder . $user['photo'] . "' alt='avatar'>
+                                <img src='" . $imageFolder . $user['photo'] . "' id='selected_user_image_". $user['user_id'] . "' alt='avatar'>
                             </div>
                             <div class='text-box'>
                                 <p class='username-box notification' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . " 

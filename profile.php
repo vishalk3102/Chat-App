@@ -7,11 +7,11 @@ if (!isset($_SESSION['user_data'])) {
 $user_obj = $_SESSION['user_data'];
 
 require 'bin\vendor\autoload.php';
-                        
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$imageFolder =$_ENV['imgpath'] ;
+$imageFolder = $_ENV['imgpath'];
 if (!$imageFolder) {
     die('IMAGE_FOLDER environment variable is not set.');
 }
@@ -133,15 +133,62 @@ if (!$imageFolder) {
         display: flex:
     }
     @media (max-width: 459px) {
+
+    /* RESPONSIVE CODE  */
+    @media screen and (max-width: 768px) {
         .profile-card {
-       
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: #fff;
-        padding: 2rem;
+            width: 70%;
+            flex-direction: column;
+            padding: 0rem;
+        }
+
+        .left-side-box {
+            margin: 1rem;
+        }
+
+        .right-side-box {
+            display: flex;
+            flex-direction: column;
+            margin-left: 0rem;
+            padding: 1rem;
+        }
+
+        h3 {
+            font-size: 1rem;
+        }
+
+        p {
+            font-size: 0.8rem;
+        }
+
+        .button-box a {
+            padding: 10px 10px;
+            font-size: 12px;
+        }
     }
+
+    @media screen and (min-width: 768px) and (max-width: 992px) {
+        .profile-card {
+            width: 90%;
+            padding: 1rem;
+            justify-content: center;
+        }
+
+        .left-side-box img {
+            height: 200px;
+            width: 250px;
+        }
+
+        .right-side-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .button-box a {
+            padding: 10px 10px;
+            font-size: 12px;
+        }
+
     }
 </style>
 
@@ -176,8 +223,9 @@ if (!$imageFolder) {
         </div>
          <div>
         <div class="profile-card">
-        
-            <div class="left-side-box"><img src="<?php echo $imageFolder.$user_obj['photo']?>" alt="avatar">
+            <div class="left-side-box">
+                <img src="<?php echo $imageFolder . $user_obj['photo'] ?>" alt="avatar">
+                <!-- <img src="./assets/avatar1.jpg" alt="avatar"> -->
             </div>
             <div class="right-side-box">
            
@@ -190,7 +238,7 @@ if (!$imageFolder) {
                 <div class="text-box">
                     <h3 class="">Username :</h3>
                     <p class="">
-                            <?php echo $user_obj['username'] ?>
+                        <?php echo $user_obj['username'] ?>
                     </p>
                 </div>
                 <div class="text-box">
@@ -201,18 +249,18 @@ if (!$imageFolder) {
                 </div>
 
                 <div class="button-box">
-                   
-                        <a href="editProfile.php">
-                            Edit Profile
-                        </a>
-                    
-                        <a href="changePassword.php">
-                            Change Password
-                        </a>
-                    
-                        <a href="dashboard.php">
-                            Let's Chat
-                        </a>
+
+                    <a href="editProfile.php">
+                        Edit Profile
+                    </a>
+
+                    <a href="changePassword.php">
+                        Change Password
+                    </a>
+
+                    <a href="dashboard.php">
+                        Let's Chat
+                    </a>
 
                 </div>
             </div>

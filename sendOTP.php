@@ -22,7 +22,7 @@ function sendOtp($email)
         $otp = generateOTP(); // Generate OTP
 
         $user = new ChatUser();
-        $success = $user->saveOtp($otp, $email); 
+        $success = $user->updateOTP($otp, $email); 
 
         if($success)
         {

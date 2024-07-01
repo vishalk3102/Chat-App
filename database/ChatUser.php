@@ -268,8 +268,9 @@ class ChatUser
 
     // }
 
-    public function updateOTP($email, $otp) {
-        $expiry_time = date('Y-m-d H:i:s', strtotime('+2 minutes'));
+    public function updateOTP( $otp,$email) {
+        date_default_timezone_set("ASIA/KOLKATA");
+        $expiry_time = date('Y-m-d H:i:s', strtotime('now +2 minutes'));
 
         try {
             $query = "SELECT id FROM otp_table WHERE email = :email AND used = false";

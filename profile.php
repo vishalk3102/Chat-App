@@ -43,6 +43,7 @@ if (!$imageFolder) {
         /* width: 40%; */
         border-radius: 10px;
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         background-color: #fff;
         padding: 2rem;
@@ -129,10 +130,24 @@ if (!$imageFolder) {
         cursor: pointer;
     }
 
-    .box-con{
-        display: flex:
+    .logout-button {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
     }
-    @media (max-width: 459px) {
+
+
+    .logout-button img {
+        height: 25px;
+        width: 25px;
+    }
+
+    .logout-button img:hover {
+        cursor: pointer;
+    }
+
+
 
     /* RESPONSIVE CODE  */
     @media screen and (max-width: 768px) {
@@ -164,6 +179,10 @@ if (!$imageFolder) {
         .button-box a {
             padding: 10px 10px;
             font-size: 12px;
+        }
+
+        .logout-button {
+            padding: 1rem 1rem 0.5rem 0rem;
         }
     }
 
@@ -218,11 +237,16 @@ if (!$imageFolder) {
         $user_data = $chatuser->getAllUsersDataWithStatus();
 
         ?>
-            <input type="hidden" id="login_user_id" name="login_user_id" value="<?php echo $login_user_id ?>">
-            <a id="logout" onclick="logoutUser()"> Logout </a>
+           
         </div>
          <div>
         <div class="profile-card">
+            <div class="logout-button">
+                <input type="hidden" id="login_user_id" name="login_user_id" value="<?php echo $login_user_id ?>">
+                <a id="logout" onclick="logoutUser()">
+                    <img src="./assets/logout.png" alt="logout">
+                </a>
+            </div>
             <div class="left-side-box">
                 <img src="<?php echo $imageFolder . $user_obj['photo'] ?>" alt="avatar">
                 <!-- <img src="./assets/avatar1.jpg" alt="avatar"> -->
@@ -271,6 +295,49 @@ if (!$imageFolder) {
     </section>
 
 </body>
+<script>
+    function logoutUser() {
+        var userId = document.getElementById("login_user_id").value;
+        console.log(userId);
+        if (userId) {
+            fetch('action.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'user_id': userId,
+                    'action': 'leave'
+                })
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log("Response received: " + data);
+                    let response;
+                    try {
+                        response = JSON.parse(data);
+                    } catch (e) {
+                        console.log("Failed to parse JSON response: " + e);
+                        return;
+                    }
+
+                    if (response.status == 1) {
+                        console.log("Logout successful, redirecting...");
+                        location.href = "index.php";
+                    } else {
+                        console.log("Logout failed");
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch Error: " + error);
+                    window.alert("Fetch Error: " + error);
+                });
+        } else {
+            console.warn("User ID not found");
+        }
+
+    }
+</script>
 
 <script>
          function logoutUser() {

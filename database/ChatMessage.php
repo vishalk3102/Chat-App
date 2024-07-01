@@ -124,23 +124,18 @@ class ChatMessage
 
     public function change_chat_status()
     {
-        try{
-            $query = "Update chatting
-            SET message_status='read'
-            WHERE sender_id= :sender_id AND 
-            receiver_id= :receiver_id AND
-            message_status='send'";
+        try {
+            $query = "CALL update_chat_status(:sender_id, :receiver_id)";
             $stmt = $this->connection->prepare($query);
 
-            $stmt->bindParam(':sender_id',$this->sender_id);
-            $stmt->bindParam(':receiver_id',$this->receiver_id);
+            $stmt->bindParam(':sender_id', $this->sender_id);
+            $stmt->bindParam(':receiver_id', $this->receiver_id);
 
             $stmt->execute();
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
-        
     }
 
 

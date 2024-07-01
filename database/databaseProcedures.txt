@@ -157,3 +157,21 @@ BEGIN
 END //
  
 DELIMITER ;
+
+
+UPDATE CHAT STATUS:-
+DELIMITER //
+
+CREATE PROCEDURE `update_chat_status` (
+    IN p_sender_id INT,
+    IN p_receiver_id INT
+)
+BEGIN
+    UPDATE chatting
+    SET message_status = 'read'
+    WHERE sender_id = p_sender_id AND 
+          receiver_id = p_receiver_id AND
+          message_status = 'send';
+END //
+
+DELIMITER ;

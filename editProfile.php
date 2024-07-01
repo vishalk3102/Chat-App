@@ -220,6 +220,7 @@ if (!$imageFolder) {
         .profile-card {
             width: 70%;
             flex-direction: column;
+            /* flex-direction: column; */
         }
 
 

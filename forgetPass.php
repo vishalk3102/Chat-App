@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require("./sendOTP.php");
@@ -9,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(is_array( $user_data) && count($user_data) > 0)
     {
 
+        $_SESSION['reset_email']=$_POST['email'];
         sendOtp($_POST['email']);
     }
     else

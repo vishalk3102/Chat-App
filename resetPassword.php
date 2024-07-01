@@ -1,15 +1,18 @@
 <?php
-
+    session_start();
     $error ='';
     $success_message = '';
     
+    if (!isset($_SESSION['reset_email'])) {
+        header('location:forgetPass.php');
+    }
     if($_SERVER['REQUEST_METHOD'] == 'POST')
     {
             require_once('database/ChatUser.php');
             
                     $user = new ChatUser();
                     $user-> setPassword($_POST['password']);
-                if($user->newPassword($_POST['otp'],$_POST['email'],$_POST['password']))
+                if($user->newPassword($_POST['otp'],$_SESSION['reset_email'],$_POST['password']))
                 {
                    $success_message = "Password updated ! Enjoy your safe & secure chatting :)";
                       
@@ -87,11 +90,6 @@
         <div class="content">
             <form  method="POST" onsubmit="return validateForm()">
                 <div class="user-details fileds">
-                    <div class="input-box">
-                        <span class="details">Email</span>
-                        <input type="text" name="email" id="email" placeholder="Enter your email" required>
-                        <div id="emailError" style="display:inline" class="error-message"></div>
-                    </div>
                     <div class="input-box">
                         <span class="details">New Password</span>
                         <input type="password" id="password" name="password" placeholder="Enter your password" required>

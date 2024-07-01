@@ -9,9 +9,9 @@
 
     <script>
         function validateForm() {
-           
+
             var email = document.getElementById('email').value.trim();
-           
+
             // Validate email format
             var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
             var errorMessage = "Please enter a valid email address";
@@ -25,7 +25,7 @@
     </script>
 
 </head>
- 
+
 <body>
     <div class="container log-container">
         <div class="title">Password recovery</div>

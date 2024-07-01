@@ -94,7 +94,7 @@ if (!$imageFolder) {
         align-items: center;
     }
 
-    .button-box button {
+    .button-box a {
         border: 2px solid black;
         border-radius: 5px;
         padding: 10px 16px;
@@ -104,14 +104,11 @@ if (!$imageFolder) {
         background-color: #030617;
         color: #fff;
         margin: 10px 5px;
-    }
-
-    .button-box button a {
-        color: #fff;
         text-decoration: none;
     }
 
-    .button-box button:hover {
+
+    .button-box a:hover {
         cursor: pointer;
     }
 
@@ -155,21 +152,19 @@ if (!$imageFolder) {
                 </div>
 
                 <div class="button-box">
-                    <button>
+                   
                         <a href="editProfile.php">
                             Edit Profile
                         </a>
-                    </button>
-                    <button>
+                    
                         <a href="changePassword.php">
                             Change Password
                         </a>
-                    </button>
-                    <button>
+                    
                         <a href="dashboard.php">
                             Let's Chat
                         </a>
-                    </button>
+                   
                 </div>
             </div>
 

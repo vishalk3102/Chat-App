@@ -25,41 +25,7 @@
     </script>
 
 </head>
- <style>
-    .button {
-        margin-bottom: 2px !important;
-    }
-
-    .back-to-login a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 5px 0px;
-        text-decoration: none;
-        color: #000;
-
-    }
-
-    .back-to-login a span {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-    }
-
-    .back-to-login a span img {
-        height: 20px;
-        width: 30px;
-        padding: 4px;
-        margin-right: 4px;
-    }
-
-    .back-to-login a p {
-        font-size: 12px;
-        font-weight: 600;
-    }
-</style> 
-
+ 
 <body>
     <div class="container log-container">
         <div class="title">Password recovery</div>

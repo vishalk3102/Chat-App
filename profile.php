@@ -1,3 +1,22 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_data'])) {
+    header('location:index.php');
+}
+
+$user_obj = $_SESSION['user_data'];
+
+require 'bin\vendor\autoload.php';
+                        
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$imageFolder =$_ENV['imgpath'] ;
+if (!$imageFolder) {
+    die('IMAGE_FOLDER environment variable is not set.');
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <style>
@@ -112,20 +131,27 @@
 
 <body>
     <section id="profile" class="container">
+
         <div class="profile-card">
-            <div class="left-side-box"><img src="./assets/avatar.png" alt="avatar"></div>
+            <div class="left-side-box"><img src="<?php echo $imageFolder.$user_obj['photo']?>" alt="avatar"></div>
             <div class="right-side-box">
                 <div class="text-box">
                     <h3 class="">Full Name :</h3>
-                    <p class="">Vishal Kumar</p>
+                    <p class="">
+                        <?php echo $user_obj['fname'] . ' ' . $user_obj['mname'] . ' ' . $user_obj['lname']; ?>
+                    </p>
                 </div>
                 <div class="text-box">
                     <h3 class="">Username :</h3>
-                    <p class="">vishalk3102</p>
+                    <p class="">
+                            <?php echo $user_obj['username'] ?>
+                    </p>
                 </div>
                 <div class="text-box">
                     <h3 class="">Email :</h3>
-                    <p class="">vishal.k3102@gmail.com</p>
+                    <p class="">
+                        <?php echo $user_obj['email'] ?>
+                    </p>
                 </div>
 
                 <div class="button-box">

@@ -1,12 +1,23 @@
 <?php
+require 'bin\vendor\autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load();
 class DatabaseConnection
 {
-    private $servername = "localhost";
-    private $username = "root";
-    private $password = "";
-    private $dbname = "ChatApp";
+    private $servername;
+    private $username;
+    private $password;
+    private $dbname;
     private $conn;
 
+    public function __construct()
+    {
+        $this->servername = $_ENV['DB_HOST'];
+        $this->username = $_ENV['DB_USER'];
+        $this->password = $_ENV['DB_PASS'];
+        $this->dbname = $_ENV['DB_NAME'];
+
+    }
     public function connect()
     {
         $this->conn = null;

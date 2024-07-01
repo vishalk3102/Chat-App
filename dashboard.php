@@ -15,6 +15,27 @@ $user_obj = $_SESSION['user_data'];
     <title>ChatApp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style/dashboard.css">
+    <style>
+        .notification {
+            background-color: #555;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+        }
+
+        .notification .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 5px 10px;
+            border-radius: 50%;
+            background: red;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
@@ -23,6 +44,17 @@ $user_obj = $_SESSION['user_data'];
             <div class="navbar">
                 <h1 class="logo">ChatApp</h1>
                 <?php
+
+                require 'bin\vendor\autoload.php';
+
+                $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+                $dotenv->load();
+
+                $imageFolder = $_ENV['imgpath'];
+                if (!$imageFolder) {
+                    die('IMAGE_FOLDER environment variable is not set.');
+                }
+
 
                 $login_user_id = $user_obj['id'];
                 require_once 'database/ChatUser.php';
@@ -38,7 +70,7 @@ $user_obj = $_SESSION['user_data'];
                         </a>
                     </p>
                     <span>
-                        <img src="./assets/avatar.png" alt="avatar">
+                        <img src="<?php echo $imageFolder . $user_obj['photo'] ?>" alt="avatar">
                     </span>
                     <input type="hidden" id="login_user_id" name="login_user_id" value="<?php echo $login_user_id ?>">
                     <div class="dropdown-content">
@@ -50,35 +82,53 @@ $user_obj = $_SESSION['user_data'];
             </div>
             <div class="user-chat-box">
                 <div class="users-box" id="users-box">
-
-                    <!-- <?php
+                    <?php
 
                     foreach ($user_data as $key => $user) {
                         if ($user['user_id'] != $login_user_id) {
                             echo "
-                                <div class='user-text-box' id='chat11_user'  data-userid = '" . $user['user_id'] . "' onclick='loadChat()'>
+                                <div class='user-text-box chat_triggered_class' id='chat11_user_" . $user['user_id'] . "'  data-user-id='" . $user['user_id'] . "' onclick='loadChat(this)'>
                                     <div class='profile'>
-                                        <img src='./assets/avatar.png' alt='avatar'>
+                                        <img src='" . $imageFolder . $user['photo'] . "' alt='avatar'>
                                     </div>
                                     <div class='text-box'>
-                                        <p class='username-box' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "</p>
-                                        <p class='status-box' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
+                                        <p class='username-box notification' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "
+                                            " . ($user['count_status'] != 0 ? "<span class='badge'>" . $user['count_status'] . "</span>" : "") . "   
+                                        </p>
+                                        <p class='status-box ' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
                                     </div>
                                 </div>
+                                
                             ";
                         }
 
                     }
-                    ?> -->
+                    ?>
+
                 </div>
                 <div class="chat-box" id="chatpart">
 
                 </div>
             </div>
+            <div class="back-button" id="backButton">
+                <button onclick="backToUserPage()">
+                    <i class="fa fa-arrow-left"></i>
+                    <span>
+                        Back
+                    </span>
+                </button>
+            </div>
         </div>
     </section>
 </body>
 <script>
+    var chatInterval;
+    // VARIABLE FOR MAINTAINING VIEW STATUS FOR BACK BUTTON (MOBILE DEVICE)
+    const VIEW_MODE_USER_LIST = 'user_list';
+    const VIEW_MODE_CHAT = 'chat';
+    let currentViewMode = VIEW_MODE_USER_LIST;
+
+
     var receiver_userid = '';
     document.addEventListener('DOMContentLoaded', () => {
         const profileIcon = document.querySelector('.profile span');
@@ -98,9 +148,10 @@ $user_obj = $_SESSION['user_data'];
         profileIcon.addEventListener('click', toggleDropdown);
         document.addEventListener('click', closeDropdown);
 
-
-
     });
+
+
+
     function logoutUser() {
         var userId = document.getElementById("login_user_id").value;
         console.log(userId);
@@ -135,13 +186,14 @@ $user_obj = $_SESSION['user_data'];
                 })
                 .catch(error => {
                     console.error("Fetch Error: " + error);
+                    window.alert("Fetch Error: " + error);
                 });
         } else {
             console.warn("User ID not found");
         }
 
     }
-    function make_chat_area(user_name, user_status) {
+    function make_chat_area(user_name, user_status, chatStarted) {
         var htmlcode = `
                     <div class="chat-navbar user-text-box">
                         <div class="profile">
@@ -154,43 +206,65 @@ $user_obj = $_SESSION['user_data'];
                     </div>
                     <div class="chat-content">
                         <div class="chat-text-box" id="message_text_box">
-                            <div class="receiver-message">
-                                <p>
-                                    hii how are you
-                                    hii how are you
-                                    hii how are you
-                                    hii how are you
-                                </p>
-                                <span>12:49 pm</span>
-                            </div>
-                            <div class="sender-message">
-                                <p>
-                                    Fine
-                                </p>
-                                <span>12:49 pm</span>
-                            </div>
+                            
                         </div>
                     </div>
 
                     <div class="chat-message-box">
-                    <form method="POST" onsubmit="event.preventDefault(); handleMessage();">
-                        <textarea  type="text" id="user_text_message" placeholder="Type a message..."></textarea>
-                        <button type="submit" ><span><i class="fa fa-send-o"></i></span></button>
-                    </form>
+                        <form method="POST" onsubmit="event.preventDefault(); handleMessage();">
+                            <textarea  type="text" id="user_text_message" placeholder="Type a message..."></textarea>
+                            <button type="submit" ><span><i class="fa fa-send-o"></i></span></button>
+                        </form>
                     </div>
+                    
                 </div>
         `;
         document.getElementById('chatpart').innerHTML = htmlcode;
+        var backButton = document.getElementById('backButton');
+        var screenWidth = window.innerWidth;
+        if (chatStarted && screenWidth <= 768) {
+            backButton.style.display = 'block';
+        } else {
+            backButton.style.display = 'none';
+        }
     }
 
-    function loadChat() {
-        receiver_userid = document.getElementById('chat11_user').getAttribute('data-userid');
-        var userId = document.getElementById('login_user_id').value;
+    function loadChat(element) {
+        receiver_userid = element.getAttribute('data-user-id');
         var receiver_name = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
         var receiver_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
-        console.log(userId, receiver_userid);
-        make_chat_area(receiver_name, receiver_status);
+        make_chat_area(receiver_name, receiver_status, true);
 
+
+        if (window.innerWidth <= 768) {
+            document.querySelector('.users-box').classList.add('hidden');
+            document.querySelector('.chat-box').classList.add('active');
+        }
+        if (chatInterval) {
+            clearInterval(chatInterval);
+        }
+
+        console.log('Triggered');
+        // Call loadChat immediately and then every 2 seconds
+        fetchChat(receiver_userid);
+        chatInterval = setInterval(() => fetchChat(receiver_userid), 2000);
+
+    }
+
+    // FUNCTION TO AUTO SCROLL MESSAGE TO BOTTOM 
+    function scrollToBottom() {
+        var chatBox = document.getElementById('message_text_box');
+        if (chatBox) {
+            console.log('Scrolling to bottom. ScrollHeight:', chatBox.scrollHeight);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        } else {
+            console.error('Chat box element not found');
+        }
+    }
+
+    function fetchChat(recUserId) {
+        receiver_userid = recUserId
+        var userId = document.getElementById('login_user_id').value;
         fetch('action.php', {
             method: 'POST',
             headers: {
@@ -235,21 +309,26 @@ $user_obj = $_SESSION['user_data'];
                         }
 
                     }
-                    document.getElementById('message_text_box').innerHTML += html_data;
+                    document.getElementById('message_text_box').innerHTML = html_data;
                     setTimeout(scrollToBottom, 100);
                 }
 
             })
             .catch(error => {
+                window.alert("Fetch Error: " + error);
                 console.error("Fetch Error: " + error);
             });
-
     }
+
     function handleMessage() {
 
         var inputmsg = document.getElementById('user_text_message');
         var message = inputmsg.value.trim();
-        var receiver_userid = document.getElementById('chat11_user').getAttribute('data-userid');
+        if(receiver_userid == '')
+        {
+            window.alert('something went wrong');
+            return ;
+        }
         var userId = document.getElementById('login_user_id').value;
         console.log(receiver_userid, userId);
         fetch('action.php', {
@@ -285,7 +364,7 @@ $user_obj = $_SESSION['user_data'];
                     </div>`
 
                     document.getElementById('message_text_box').innerHTML += html_data;
-                    setTimeout(scrollToBottom, 100);
+                    setTimeout(scrollToBottom, 2000);
                 }
 
             })
@@ -312,10 +391,38 @@ $user_obj = $_SESSION['user_data'];
         xhr.send();
     }
 
-    function scrollToBottom() {
-        var chatBox = document.getElementById('message_text_box');
-        chatBox.scrollTop = chatBox.scrollHeight;
+
+    // FUNCTION TO HIDE USER-BOX (MOBILE DEVICE)
+    function showUsersList() {
+        document.querySelector('.users-box').classList.remove('hidden');
+        document.querySelector('.chat-box').classList.remove('active');
     }
+
+
+
+    // FUNCTION TO HANDLE BACK BUTTON  CLICK(MOBILE DEVICE)
+    function backToUserPage() {
+        currentViewMode = VIEW_MODE_USER_LIST;
+        toggleBackButtonVisibility();
+        showUsersList();
+    }
+
+    // FUNCTION TO HANDLE HIDE/SHOW OF BACK BUTTON (MOBILE DEVICE)
+    function toggleBackButtonVisibility() {
+        var backButton = document.getElementById('backButton');
+        if (currentViewMode === VIEW_MODE_CHAT) {
+            backButton.style.display = 'block';
+        } else {
+            backButton.style.display = 'none';
+        }
+    }
+
+
+    // Initial check on page load
+    toggleBackButtonVisibility();
+
+    // Listen for visibility changes
+    document.addEventListener('visibilitychange', toggleBackButtonVisibility);
 
     //         function updateUsers() {
     //             var userId = document.getElementById('login_user_id').value;
@@ -365,7 +472,7 @@ $user_obj = $_SESSION['user_data'];
     userStatus();
     setInterval(userStatus, 3000);
 
-
+    
 </script>
 
 </html>

@@ -204,7 +204,6 @@ class ChatUser
         } catch (PDOException $e) {
             die('Error: ' . $e->getMessage());
         }
-        return false;
     }
 
 
@@ -226,6 +225,121 @@ class ChatUser
         }
     }
 
+    public function updateUser()
+    {
+        try{
+             $query = "
+            UPDATE user
+            SET fname= :fname,
+            mname = :mname,
+            lname = :lname,
+            username = :username,
+            photo = :photo
+            WHERE user_id = :user_id
+            ";
+            $statement = $this->connection->prepare($query);
 
+            $statement->bindParam(':fname', $this->fname);
+            
+            if ($this->mname === '') {
+                $statement->bindValue(':mname', null, PDO::PARAM_NULL);
+            } else {
+                $statement->bindParam(':mname', $this->mname, PDO::PARAM_STR);
+            }
+            $statement->bindParam(':lname', $this->lname);
+            $statement->bindParam(':username', $this->username);       
+            $statement->bindParam(':photo', $this->photo);
+            $statement->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
+           
+            $result = $statement->execute();
+
+            if ($result) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+        catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
+
+    public function saveOtp($otp,$email)
+    {
+        $query = "
+        INSERT INTO otp_table (email, otp, timestamp)
+        VALUES (:email, :otp, NOW())
+        ";
+
+    //$statement = $connection->prepare($query);
+    $statement = $this->connection->prepare($query);
+    // Bind parameters
+   
+    $statement->bindParam(':email', $email, PDO::PARAM_STR);
+    $statement->bindParam(':otp', $otp, PDO::PARAM_STR);
+
+    // Execute the statement
+    $result = $statement->execute();
+
+    // Return true if insertion was successful, false otherwise
+    return $result;
+
+    }
+
+    public function newPassword($otp,$email,$password)
+    {
+        try {
+           
+            $query = "
+                SELECT otp,UNIX_TIMESTAMP(timestamp) AS timestamp
+                FROM otp_table
+                WHERE email = :email
+                ORDER BY timestamp DESC
+                LIMIT 1
+            ";
+            $statement = $this->connection->prepare($query);
+            $statement->bindParam(':email', $email, PDO::PARAM_STR);
+            $statement->execute();
+    
+           
+            $row = $statement->fetch(PDO::FETCH_ASSOC);
+            if (!$row) {
+                return false; 
+            }
+    
+            $dbOtp = $row['otp'];
+           // $timestamp = strtotime($row['timestamp']);
+           $timestamp =$row['timestamp'];
+            $currentTime = time();
+    
+            if ($otp === $dbOtp && ($currentTime - $timestamp) <= 60) {
+                
+                $this->setRegistrationEmail($email);
+                $this->setPassword($password);
+                if($this->resetPassword())
+                {
+                    return true;
+                }
+                       
+                else
+                    {
+                        return false;
+                    }
+            
+            } else {
+                return false; // OTP is invalid or expired
+            }
+        } catch (PDOException $e) {
+            // Handle PDO exceptions
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+
+    }
 }
-?>
+
+
+
+
+?> 

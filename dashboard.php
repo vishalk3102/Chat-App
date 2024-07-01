@@ -252,12 +252,24 @@ $user_obj = $_SESSION['user_data'];
 
     // FUNCTION TO AUTO SCROLL MESSAGE TO BOTTOM 
     function scrollToBottom() {
-        var chatBox = document.getElementById('message_text_box');
+        var chatBox = document.querySelector('.chat-text-box');
         if (chatBox) {
-            console.log('Scrolling to bottom. ScrollHeight:', chatBox.scrollHeight);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        } else {
-            console.error('Chat box element not found');
+            const scrollHeight = chatBox.scrollHeight;
+            const height = chatBox.clientHeight;
+            const maxScrollTop = scrollHeight - height;
+
+            // Smooth scroll to bottom
+            chatBox.scrollTo({
+                top: maxScrollTop,
+                behavior: 'smooth'
+            });
+
+            // Double-check scroll position after animation
+            setTimeout(() => {
+                if (chatBox.scrollTop !== maxScrollTop) {
+                    chatBox.scrollTop = maxScrollTop;
+                }
+            }, 300);
         }
     }
 
@@ -479,11 +491,3 @@ $user_obj = $_SESSION['user_data'];
 </script>
 
 </html>
-
-
-
-<!-- <p class='username-box notification' id='list_user_name_" . $user[' user_id'] . "'>" . $user['fname'] . ' ' .
-    $user['lname'] . "
-                                            " . ($user['count_status'] !=0 ? "<span class='badge'>" .
-    $user['count_status'] . "</span>" : "" ) . "   
-                                        </p> -->

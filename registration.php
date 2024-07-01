@@ -81,7 +81,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="style/style.css">
 
 </head>
-
+,<style>
+.alert-danger{
+  color: red ;
+  font-size: 14px;
+}
+.
+.alert-success{
+  color: #104b1e;
+  font-size: 14px;
+}
+</style>
 <body>
     <div class="container reg-container">
         <?php

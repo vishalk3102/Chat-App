@@ -33,6 +33,7 @@ $user_obj = $_SESSION['user_data'];
             justify-content: center;
             align-items: center;
         }
+       
     </style>
 </head>
 

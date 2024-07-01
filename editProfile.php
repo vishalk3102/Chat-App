@@ -426,9 +426,6 @@ if (!$imageFolder) {
         var filename = src.substring(src.lastIndexOf('/') + 1);
         var avatarSrcInput = document.getElementById('avatar_src');
         avatarSrcInput.value = filename;
-        console.log('Selected Avatar: ', src);
-        console.log('filename: ', filename);
-        console.log('avatar src: ', avatarImage.src);
     }
 
     // Attach event listeners

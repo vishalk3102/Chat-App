@@ -287,9 +287,11 @@ if (!$imageFolder) {
 
 <body>
     <section id="profile" class="container">
+        
+             
         <div class="profile-card">
             <div class="left-side-box">
-                <?php
+            <?php
                 if ($error != '') {
                     echo '<div class="alert alert-danger" role="alert">
                 ' . $error . '
@@ -378,6 +380,7 @@ if (!$imageFolder) {
                 </div>
             </div>
         </div>
+        
     </section>
 </body>
 <script>

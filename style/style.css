@@ -148,14 +148,19 @@ form .button input:hover {
 .log a:hover {
   color: #10b982;
 }
-.error-message {
-  color: red;
+.error-message,.alert-danger{
+  color: red ;
   font-size: 14px;
 }
 .er {
   margin-bottom: 5px;
 }
 
+.alert-success{
+  color: #104b1e;
+  /* color: #fff; */
+  font-size: 14px;
+}
 /* Back button */
 
 .button {

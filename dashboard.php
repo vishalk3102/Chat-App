@@ -16,24 +16,22 @@ $user_obj = $_SESSION['user_data'];
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style/dashboard.css">
     <style>
-        .notification {
-            background-color: #555;
-            color: white;
-            text-decoration: none;
-            padding: 15px 20px;
-            position: relative;
-            display: inline-block;
-            border-radius: 2px;
-        }
-
         .notification .badge {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            padding: 5px 10px;
             border-radius: 50%;
             background: red;
             color: white;
+            font-size: 10px;
+            color: #fff;
+            background-color: #030617;
+            display: inline-block;
+            height: 16px;
+            width: 16px;
+            text-align: center;
+            vertical-align: center;
+            margin-left: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     </style>
 </head>
@@ -89,7 +87,7 @@ $user_obj = $_SESSION['user_data'];
                             echo "
                                 <div class='user-text-box chat_triggered_class' id='chat11_user_" . $user['user_id'] . "'  data-user-id='" . $user['user_id'] . "' onclick='loadChat(this)'>
                                     <div class='profile'>
-                                        <img src='" . $imageFolder . $user['photo'] . "' id='selected_user_image_". $user['user_id'] . "' alt='avatar'>
+                                        <img src='" . $imageFolder . $user['photo'] . "' id='selected_user_image_" . $user['user_id'] . "' alt='avatar'>
                                     </div>
                                     <div class='text-box'>
                                         <p class='username-box notification' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "
@@ -193,11 +191,11 @@ $user_obj = $_SESSION['user_data'];
         }
 
     }
-    function make_chat_area(user_name, user_status, chatStarted,user_photo) {
+    function make_chat_area(user_name, user_status, chatStarted, user_photo) {
         var htmlcode = `
                     <div class="chat-navbar user-text-box">
                         <div class="profile">
-                            <img src="`+ user_photo+`" alt="avatar">
+                            <img src="`+ user_photo + `" alt="avatar">
                         </div>
                         <div class="text-box">
                             <p class="username-box">`+ user_name + `</p>
@@ -233,8 +231,8 @@ $user_obj = $_SESSION['user_data'];
         receiver_userid = element.getAttribute('data-user-id');
         var receiver_name = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
         var receiver_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
-        var user_photo = document.getElementById('selected_user_image_'+receiver_userid).src;
-        make_chat_area(receiver_name, receiver_status, true,user_photo);
+        var user_photo = document.getElementById('selected_user_image_' + receiver_userid).src;
+        make_chat_area(receiver_name, receiver_status, true, user_photo);
 
 
         if (window.innerWidth <= 768) {
@@ -254,12 +252,24 @@ $user_obj = $_SESSION['user_data'];
 
     // FUNCTION TO AUTO SCROLL MESSAGE TO BOTTOM 
     function scrollToBottom() {
-        var chatBox = document.getElementById('message_text_box');
+        var chatBox = document.querySelector('.chat-text-box');
         if (chatBox) {
-            console.log('Scrolling to bottom. ScrollHeight:', chatBox.scrollHeight);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        } else {
-            console.error('Chat box element not found');
+            const scrollHeight = chatBox.scrollHeight;
+            const height = chatBox.clientHeight;
+            const maxScrollTop = scrollHeight - height;
+
+            // Smooth scroll to bottom
+            chatBox.scrollTo({
+                top: maxScrollTop,
+                behavior: 'smooth'
+            });
+
+            // Double-check scroll position after animation
+            setTimeout(() => {
+                if (chatBox.scrollTop !== maxScrollTop) {
+                    chatBox.scrollTop = maxScrollTop;
+                }
+            }, 300);
         }
     }
 
@@ -326,15 +336,13 @@ $user_obj = $_SESSION['user_data'];
         var inputmsg = document.getElementById('user_text_message');
         var message = inputmsg.value.trim();
         console.log();
-        if(receiver_userid == '')
-        {
+        if (receiver_userid == '') {
             window.alert('something went wrong');
-            return ;
+            return;
         }
-        else if(message==='')
-        {
+        else if (message === '') {
             window.alert('message must not be empty');
-            return ;
+            return;
         }
         var userId = document.getElementById('login_user_id').value;
         console.log(receiver_userid, userId);
@@ -371,7 +379,7 @@ $user_obj = $_SESSION['user_data'];
                     </div>`
 
                     document.getElementById('message_text_box').innerHTML += html_data;
-                    setTimeout(scrollToBottom, 2000);
+                    setTimeout(scrollToBottom, 100);
                 }
 
             })
@@ -479,7 +487,7 @@ $user_obj = $_SESSION['user_data'];
     userStatus();
     setInterval(userStatus, 3000);
 
-    
+
 </script>
 
 </html>

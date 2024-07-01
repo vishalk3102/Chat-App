@@ -1,3 +1,23 @@
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    require("./sendOTP.php");
+  
+    $user = new ChatUser();
+    $user->setRegistrationEmail($_POST['email']);
+    $user_data = $user->getUserByEmail();
+    if(is_array( $user_data) && count($user_data) > 0)
+    {
+
+        sendOtp($_POST['email']);
+    }
+    else
+    {
+        echo 'error';
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,7 +50,7 @@
     <div class="container log-container">
         <div class="title">Password recovery</div>
         <div class="content">
-            <form action="sendOTP.php" method="post" onsubmit="return validateForm()">
+            <form method="post" onsubmit="return validateForm()">
                 <div class="user-details">
                     <div class="input-box">
                         <span class="details">Email</span>

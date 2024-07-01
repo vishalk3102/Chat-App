@@ -88,9 +88,23 @@ if (!$imageFolder) {
         width: 50%;
         border-radius: 10px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         background-color: #fff;
         padding: 2rem;
+    }
+
+    .profile-card> :nth-child(2) {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .toaster-box {
+        width: 100%;
+        text-align: center;
+        padding: 5px 0px;
+        margin-bottom: 1rem;
     }
 
     .left-side-box {
@@ -288,95 +302,100 @@ if (!$imageFolder) {
 <body>
     <section id="profile" class="container">
         <div class="profile-card">
-            <div class="left-side-box">
+            <div class="toaster-box">
                 <?php
                 if ($error != '') {
-                    echo '<div class="alert alert-danger" role="alert">
+                    echo '<p class=" alert alert-danger" role="alert">
                 ' . $error . '
-                </div>';
+                </p>';
                 }
                 if ($success_message != '') {
-                    echo '<div class="alert alert-success" role="alert">
+                    echo '<p class="alert alert-success" role="alert">
                 ' . $success_message . '
-                </div>';
+                </p>';
                 }
                 ?>
-                <img src="<?php echo $imageFolder . $_SESSION['user_data']['photo'] ?>" alt="avatar">
-                <!-- <img src="./assets/avatar1.jpg" alt="avatar"> -->
-                <div class="button-box">
-                    <button>
-                        <a>
-                            Change Avatar
-                        </a>
-                    </button>
-                </div>
-                <div id="avatarModal" class="modal">
-                    <div class="modal-content">
-                        <h4>Select Your New Avatar</h4>
-                        <div class="avatar-options">
-                            <img src="<?php echo $imageFolder . 'avatar1.jpg' ?>" onclick="selectAvatar(this)"
-                                alt="Avatar 1" class="avatar-option">
-                            <img src="<?php echo $imageFolder . 'avatar2.jpg' ?>" onclick="selectAvatar(this)"
-                                alt="Avatar 2" class="avatar-option">
-                            <img src="<?php echo $imageFolder . 'avatar3.png' ?>" onclick="selectAvatar(this)"
-                                alt="Avatar 3" class="avatar-option">
-                            <img src="<?php echo $imageFolder . 'avatar4.jpg' ?>" onclick="selectAvatar(this)"
-                                alt="Avatar 4" class="avatar-option">
-                            <img src="<?php echo $imageFolder . 'avatar5.jpg' ?>" onclick="selectAvatar(this)"
-                                alt="Avatar 5" class="avatar-option">
-                            <img src="<?php echo $imageFolder . 'avatar6.png' ?>" onclick="selectAvatar(this)"
-                                alt="Avatar 6" class="avatar-option">
-                        </div>
-                        <div class="modal-footer button-box">
-                            <button id="closeBtn">Close</button>
-                            <button id="saveBtn">Save</button>
-                        </div>
-                    </div>
-
-                </div>
-
             </div>
-            <div class="right-side-box">
-
-                <form method="POST">
-                    <div class="input-box">
-                        <span>Email : </span>
-                        <input type="text" placeholder="<?php echo $user_obj['email'] ?>" disabled>
-                    </div>
-
-                    <div class="input-box">
-                        <span>First Name : </span>
-                        <input type="text" value="<?php echo $_SESSION['user_data']['fname'] ?>" name='first_name'>
-                    </div>
-                    <div class="input-box">
-                        <span>Middle Name : </span>
-                        <input type="text" value="<?php echo $_SESSION['user_data']['mname'] ?>" name='middle_name'>
-                    </div>
-                    <div class="input-box">
-                        <span>Last Name : </span>
-                        <input type="text" value="<?php echo $_SESSION['user_data']['lname'] ?>" name='last_name'>
-                    </div>
-
-                    <div class="input-box">
-                        <span>Username : </span>
-                        <input type="text" value="<?php echo $_SESSION['user_data']['username'] ?>" name='username'>
-                    </div>
-
-                    <input type="hidden" id="avatar_src" name="avatar_src" value="<?php echo $user_obj['photo'] ?>">
-
+            <div class="">
+                <div class="left-side-box">
+                    <img src="<?php echo $imageFolder . $_SESSION['user_data']['photo'] ?>" alt="avatar">
+                    <!-- <img src="./assets/avatar1.jpg" alt="avatar"> -->
                     <div class="button-box">
-                        <button id="change-avatar-btn" type="submit">
-                            Update Profile
+                        <button>
+                            <a>
+                                Change Avatar
+                            </a>
                         </button>
                     </div>
-                </form>
+                    <div id="avatarModal" class="modal">
+                        <div class="modal-content">
+                            <h4>Select Your New Avatar</h4>
+                            <div class="avatar-options">
+                                <img src="<?php echo $imageFolder . 'avatar1.jpg' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 1" class="avatar-option">
+                                <img src="<?php echo $imageFolder . 'avatar2.jpg' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 2" class="avatar-option">
+                                <img src="<?php echo $imageFolder . 'avatar3.png' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 3" class="avatar-option">
+                                <img src="<?php echo $imageFolder . 'avatar4.jpg' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 4" class="avatar-option">
+                                <img src="<?php echo $imageFolder . 'avatar5.jpg' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 5" class="avatar-option">
+                                <img src="<?php echo $imageFolder . 'avatar6.png' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 6" class="avatar-option">
+                            </div>
+                            <div class="modal-footer button-box">
+                                <button id="closeBtn">Close</button>
+                                <button id="saveBtn">Save</button>
+                            </div>
+                        </div>
 
-                <div class="back-to-login">
-                    <a href="profile.php">
-                        <p>Back to Profile</p>
-                    </a>
+                    </div>
+
+                </div>
+                <div class="right-side-box">
+
+                    <form method="POST">
+                        <div class="input-box">
+                            <span>Email : </span>
+                            <input type="text" placeholder="<?php echo $user_obj['email'] ?>" disabled>
+                        </div>
+
+                        <div class="input-box">
+                            <span>First Name : </span>
+                            <input type="text" value="<?php echo $_SESSION['user_data']['fname'] ?>" name='first_name'>
+                        </div>
+                        <div class="input-box">
+                            <span>Middle Name : </span>
+                            <input type="text" value="<?php echo $_SESSION['user_data']['mname'] ?>" name='middle_name'>
+                        </div>
+                        <div class="input-box">
+                            <span>Last Name : </span>
+                            <input type="text" value="<?php echo $_SESSION['user_data']['lname'] ?>" name='last_name'>
+                        </div>
+
+                        <div class="input-box">
+                            <span>Username : </span>
+                            <input type="text" value="<?php echo $_SESSION['user_data']['username'] ?>" name='username'>
+                        </div>
+
+                        <input type="hidden" id="avatar_src" name="avatar_src" value="<?php echo $user_obj['photo'] ?>">
+
+                        <div class="button-box">
+                            <button id="change-avatar-btn" type="submit">
+                                Update Profile
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="back-to-login">
+                        <a href="profile.php">
+                            <p>Back to Profile</p>
+                        </a>
+                    </div>
                 </div>
             </div>
+
         </div>
     </section>
 </body>

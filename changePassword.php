@@ -44,12 +44,12 @@
                 }
                 else
                 {
-                    $error = "Are you confident you remember your password?";
+                    $error = "You entered wrong password ! ";
                 }
             }
             else
             {
-                $error = "No user exist with this provided email id";
+                $error = "No user exist with this provided email id" ;
             }
       }
     }
@@ -66,6 +66,16 @@
     <title>Password recovery</title>
     <link rel="stylesheet" href="style/style.css">
 </head>
+<style>
+.alert-danger{
+  color: red ;
+  font-size: 14px;
+} 
+.alert-success{
+  color: #104b1e;
+  font-size: 14px;
+}
+</style>
 
 <script>
         function validateForm() {
@@ -119,7 +129,7 @@
                 '.$success_message.'
                 </div>';
             }
-        ?>
+    ?>
         <div class="title">Password recovery</div>
         <div class="content">
             <form method="POST" onsubmit="return validateForm()">

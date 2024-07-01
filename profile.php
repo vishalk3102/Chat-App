@@ -51,6 +51,23 @@ if (!$imageFolder) {
     .left-side-box {
         /* border: 2px solid red; */
         margin: 1rem;
+        /* display: flex; */
+        flex-direction: column;
+    }
+   .logout{
+    text-align: end;
+   }
+    .logout a{
+        border: 2px solid black;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        background-color: #030617;
+        color: #fff;
+        margin: 5px;
+        text-decoration: none;
+       
     }
 
     .left-side-box img {
@@ -112,7 +129,9 @@ if (!$imageFolder) {
         cursor: pointer;
     }
 
-    
+    .box-con{
+        display: flex:
+    }
     @media (max-width: 459px) {
         .profile-card {
        
@@ -128,10 +147,40 @@ if (!$imageFolder) {
 
 <body>
     <section id="profile" class="container">
+        <div class="box-con">
 
+         <div class="logout">
+
+         <?php
+
+        require 'bin\vendor\autoload.php';
+
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+        $dotenv->load();
+
+        $imageFolder = $_ENV['imgpath'];
+        if (!$imageFolder) {
+            die('IMAGE_FOLDER environment variable is not set.');
+        }
+
+
+        $login_user_id = $user_obj['id'];
+        require_once 'database/ChatUser.php';
+        $chatuser = new ChatUser();
+        $chatuser->setUserId($login_user_id);
+        $user_data = $chatuser->getAllUsersDataWithStatus();
+
+        ?>
+            <input type="hidden" id="login_user_id" name="login_user_id" value="<?php echo $login_user_id ?>">
+            <a id="logout" onclick="logoutUser()"> Logout </a>
+        </div>
+         <div>
         <div class="profile-card">
-            <div class="left-side-box"><img src="<?php echo $imageFolder.$user_obj['photo']?>" alt="avatar"></div>
+        
+            <div class="left-side-box"><img src="<?php echo $imageFolder.$user_obj['photo']?>" alt="avatar">
+            </div>
             <div class="right-side-box">
+           
                 <div class="text-box">
                     <h3 class="">Full Name :</h3>
                     <p class="">
@@ -164,12 +213,59 @@ if (!$imageFolder) {
                         <a href="dashboard.php">
                             Let's Chat
                         </a>
-                   
+
                 </div>
             </div>
-
+           
+        </div>
+        </div>
         </div>
     </section>
+
 </body>
+
+<script>
+         function logoutUser() {
+        var userId = document.getElementById("login_user_id").value;
+        console.log(userId);
+        if (userId) {
+            fetch('action.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'user_id': userId,
+                    'action': 'leave'
+                })
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log("Response received: " + data);
+                    let response;
+                    try {
+                        response = JSON.parse(data);
+                    } catch (e) {
+                        console.log("Failed to parse JSON response: " + e);
+                        return;
+                    }
+
+                    if (response.status == 1) {
+                        console.log("Logout successful, redirecting...");
+                        location.href = "index.php";
+                    } else {
+                        console.log("Logout failed");
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch Error: " + error);
+                    window.alert("Fetch Error: " + error);
+                });
+        } else {
+            console.warn("User ID not found");
+        }
+
+    }
+    </script>
 
 </html>

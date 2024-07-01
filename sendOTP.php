@@ -9,23 +9,6 @@ use  PHPMailer\PHPMailer\SMTP;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-        $user = new ChatUser();
-        $user->setRegistrationEmail($_POST['email']);
-        $user_data = $user->getUserByEmail();
-        if(is_array( $user_data) && count($user_data) > 0)
-        {
-
-            sendOtp($_POST['email']);
-        }
-        else
-        {
-            echo 'error';
-        }
-}
-
-
 function generateOTP() {
     // Generate a random 6-digit OTP
     return mt_rand(100000, 999999);

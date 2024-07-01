@@ -254,9 +254,9 @@ if (!$imageFolder) {
                             <img src="<?php echo $imageFolder . 'avatar4.jpg' ?>" onclick="selectAvatar(this)"
                                 alt="Avatar 4" class="avatar-option">
                             <img src="<?php echo $imageFolder . 'avatar5.jpg' ?>" onclick="selectAvatar(this)"
-                                alt="Avatar 4" class="avatar-option">
+                                alt="Avatar 5" class="avatar-option">
                             <img src="<?php echo $imageFolder . 'avatar6.png' ?>" onclick="selectAvatar(this)"
-                                alt="Avatar 4" class="avatar-option">
+                                alt="Avatar 6" class="avatar-option">
                         </div>
                         <div class="modal-footer button-box">
                             <button id="closeBtn">Close</button>

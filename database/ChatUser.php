@@ -306,6 +306,7 @@ class ChatUser
 
     public function newPassword($otp, $email, $password) {
         try {
+            date_default_timezone_set("ASIA/KOLKATA");
             $currentTime = date('Y-m-d H:i:s');
             $query = "
                 SELECT id, otp, UNIX_TIMESTAMP(expiry_timestamp) AS expiry_timestamp

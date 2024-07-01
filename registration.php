@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user->setRegistrationEmail($_POST['email']);
         $user->setPassword($_POST['password']);
         $user->setUsername(explode('@', $_POST['email'])[0]);
+        date_default_timezone_set("ASIA/KOLKATA");
         $user->setPasswordUpdateDate(date('Y-m-d H:i:s'));
         $user->setRegistrationDate(date('Y-m-d H:i:s'));
         $user->setPhoto('avatar.png');

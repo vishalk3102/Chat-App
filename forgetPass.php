@@ -1,10 +1,12 @@
 <?php
+$error="";
 session_start();
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require("./sendOTP.php");
-  
+    
+    
     $user = new ChatUser();
     $user->setRegistrationEmail($_POST['email']);
     $user_data = $user->getUserByEmail();
@@ -16,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     else
     {
-        echo 'error';
+        $error="This id is not registered";
     }
 }
 ?>
@@ -51,6 +53,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <div class="container log-container">
+    <?php
+        if ($error != '') {
+            echo '<div class="alert alert-danger" role="alert">
+                ' . $error . '
+                </div>';
+        }
+        
+        
+        ?>
         <div class="title">Password recovery</div>
         <div class="content">
             <form method="post" onsubmit="return validateForm()">

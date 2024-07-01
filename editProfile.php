@@ -293,7 +293,7 @@ if (!$imageFolder) {
                         <input type="text" value="<?php echo $_SESSION['user_data']['username'] ?>" name='username'>
                     </div>
 
-                    <input type="hidden" id="avatar_src" name="avatar_src" value="<?php echo $user_obj['photo'] ?>">
+                    <input type="hidden" id="avatar_src" name="avatar_src" value="<?php echo  $_SESSION['user_data']['photo'] ?>">
 
                     <div class="button-box">
                         <button id="change-avatar-btn" type="submit">

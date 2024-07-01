@@ -127,6 +127,7 @@ BEGIN
         u.fname, 
         u.lname, 
         u.photo, 
+        u.username,
         u.status,
         (
             SELECT COUNT(*)

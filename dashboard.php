@@ -92,10 +92,11 @@ $user_obj = $_SESSION['user_data'];
                                         <img src='" . $imageFolder . $user['photo'] . "' id='selected_user_image_". $user['user_id'] . "' alt='avatar'>
                                     </div>
                                     <div class='text-box'>
-                                        <p class='username-box notification' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "
+                                        <p class='username-box notification' id='list_user_username_" . $user['user_id'] . "'>" . $user['username'] .  "
                                             " . ($user['count_status'] != 0 ? "<span class='badge'>" . $user['count_status'] . "</span>" : "") . "   
                                         </p>
-                                        <p class='status-box ' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
+                                          <p class='status-box ' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "</p>
+                                          <p class='status-box ' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
                                     </div>
                                 </div>
                                 
@@ -193,15 +194,17 @@ $user_obj = $_SESSION['user_data'];
         }
 
     }
-    function make_chat_area(user_name, user_status, chatStarted,user_photo) {
+    function make_chat_area(user_name,username,user_status, chatStarted,user_photo) {
         var htmlcode = `
                     <div class="chat-navbar user-text-box">
                         <div class="profile">
                             <img src="`+ user_photo+`" alt="avatar">
                         </div>
                         <div class="text-box">
-                            <p class="username-box">`+ user_name + `</p>
+                            <p class="username-box">`+ username + `</p>
+                            <p class="status-box">`+ user_name + `</p>
                             <p class="status-box">`+ user_status + `</p>
+
                         </div>
                     </div>
                     <div class="chat-content">
@@ -232,9 +235,10 @@ $user_obj = $_SESSION['user_data'];
     function loadChat(element) {
         receiver_userid = element.getAttribute('data-user-id');
         var receiver_name = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
+        var receiver_username = document.getElementById('list_user_username_' + receiver_userid).innerHTML;
         var receiver_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
         var user_photo = document.getElementById('selected_user_image_'+receiver_userid).src;
-        make_chat_area(receiver_name, receiver_status, true,user_photo);
+        make_chat_area(receiver_name, receiver_username,receiver_status, true,user_photo);
 
 
         if (window.innerWidth <= 768) {
@@ -381,22 +385,22 @@ $user_obj = $_SESSION['user_data'];
         inputmsg.value = '';
     }
 
-    function userStatus() {
-        var xhr = new XMLHttpRequest();
+    // function userStatus() {
+    //     var xhr = new XMLHttpRequest();
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById('users-box').innerHTML = xhr.responseText;
-                } else {
-                    console.error('Error fetching user data:', xhr.status, xhr.statusText);
-                }
-            }
-        };
+    //     xhr.onreadystatechange = function () {
+    //         if (xhr.readyState === XMLHttpRequest.DONE) {
+    //             if (xhr.status === 200) {
+    //                 document.getElementById('users-box').innerHTML = xhr.responseText;
+    //             } else {
+    //                 console.error('Error fetching user data:', xhr.status, xhr.statusText);
+    //             }
+    //         }
+    //     };
 
-        xhr.open('GET', 'fetchUsers.php', true);
-        xhr.send();
-    }
+    //     xhr.open('GET', 'fetchUsers.php', true);
+    //     xhr.send();
+    // }
 
 
     // FUNCTION TO HIDE USER-BOX (MOBILE DEVICE)

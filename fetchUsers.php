@@ -28,9 +28,10 @@ if (isset($_SESSION['user_data'])) {
                                 <img src='" . $imageFolder . $user['photo'] . "' id='selected_user_image_". $user['user_id'] . "' alt='avatar'>
                             </div>
                             <div class='text-box'>
-                                <p class='username-box notification' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . " 
+                                <p class='username-box notification' id='list_user_username_" . $user['user_id'] . "'>" . $user['username'] . " 
                                     " . ($user['count_status'] != 0 ? "<span class='badge'>" . $user['count_status'] . "</span>" : "") . "  
                                 </p>
+                                <p class='status-box ' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] .' ' .  $user['lname'] . "</p>
                                 <p class='status-box ' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
                             </div>
 

@@ -162,7 +162,7 @@ DELIMITER ;
 UPDATE CHAT STATUS:-
 DELIMITER //
 
-CREATE PROCEDURE `update_chat_status` (
+CREATE PROCEDURE update_chat_status (
     IN p_sender_id INT,
     IN p_receiver_id INT
 )
@@ -172,6 +172,32 @@ BEGIN
     WHERE sender_id = p_sender_id AND 
           receiver_id = p_receiver_id AND
           message_status = 'send';
+END //
+
+DELIMITER ;
+
+
+UPDATE USER:-
+DELIMITER //
+
+CREATE PROCEDURE update_user_details (
+    IN p_user_id INT,
+    IN p_fname VARCHAR(50),
+    IN p_mname VARCHAR(50),
+    IN p_lname VARCHAR(50),
+    IN p_username VARCHAR(50),
+    IN p_photo VARCHAR(255)
+)
+BEGIN
+    UPDATE user
+    SET 
+        fname = p_fname,
+        mname = IF(p_mname = '', NULL, p_mname),
+        lname = p_lname,
+        username = p_username,
+        photo = p_photo
+    WHERE 
+        user_id = p_user_id;
 END //
 
 DELIMITER ;

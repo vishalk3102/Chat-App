@@ -33,7 +33,19 @@ $user_obj = $_SESSION['user_data'];
             justify-content: center;
             align-items: center;
         }
-       
+
+      .dot {
+        height: 10px;
+        width: 10px;
+        background-color: red;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 2px;
+        padding-top: 2px;
+        }
+        #green12{
+            background-color: green;
+        }
     </style>
 </head>
 
@@ -91,10 +103,12 @@ $user_obj = $_SESSION['user_data'];
                                         <img src='" . $imageFolder . $user['photo'] . "' id='selected_user_image_" . $user['user_id'] . "' alt='avatar'>
                                     </div>
                                     <div class='text-box'>
-                                        <p class='username-box notification' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "
+                                        <p class='username-box notification' id='list_user_username_" . $user['user_id'] . "'>" . $user['username'] .  "
                                             " . ($user['count_status'] != 0 ? "<span class='badge'>" . $user['count_status'] . "</span>" : "") . "   
                                         </p>
-                                        <p class='status-box ' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
+                                          <p class='status-box ' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "</p>
+                                          <p class='status-box ' >" . ($user['status'] === 'Active'?"<span class='dot' id='green12'></span>" :"<span class='dot' id='red'></span>" )."<span id='list_user_status_". $user['user_id']."'>".$user['status']."</span> </p>
+                                          
                                     </div>
                                 </div>
                                 
@@ -192,7 +206,12 @@ $user_obj = $_SESSION['user_data'];
         }
 
     }
-    function make_chat_area(user_name, user_status, chatStarted, user_photo) {
+    function make_chat_area(user_name,username,user_status, chatStarted,user_photo) {
+        var status_style = `<span class='dot' id='red'></span>`;
+        if(user_status=='Active')
+        {
+            status_style = `<span class='dot' id='green12'></span>`;
+        }
         var htmlcode = `
                     <div class="chat-navbar user-text-box">
                         <div class="profile">
@@ -200,7 +219,9 @@ $user_obj = $_SESSION['user_data'];
                         </div>
                         <div class="text-box">
                             <p class="username-box">`+ user_name + `</p>
-                            <p class="status-box">`+ user_status + `</p>
+                            <p class="status-box">`+ username  + `</p>
+                            <p class="status-box">`+ status_style + user_status + `</p>
+
                         </div>
                     </div>
                     <div class="chat-content">
@@ -231,9 +252,10 @@ $user_obj = $_SESSION['user_data'];
     function loadChat(element) {
         receiver_userid = element.getAttribute('data-user-id');
         var receiver_name = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
+        var receiver_username = document.getElementById('list_user_username_' + receiver_userid).innerHTML;
         var receiver_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
-        var user_photo = document.getElementById('selected_user_image_' + receiver_userid).src;
-        make_chat_area(receiver_name, receiver_status, true, user_photo);
+        var user_photo = document.getElementById('selected_user_image_'+receiver_userid).src;
+        make_chat_area(receiver_name, receiver_username,receiver_status, true,user_photo);
 
 
         if (window.innerWidth <= 768) {

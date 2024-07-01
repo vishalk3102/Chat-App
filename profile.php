@@ -176,8 +176,8 @@ if (!$imageFolder) {
 
         <div class="profile-card">
             <div class="left-side-box">
-                <!-- <img src="<?php echo $imageFolder . $user_obj['photo'] ?>" alt="avatar"> -->
-                <img src="./assets/avatar1.jpg" alt="avatar">
+                <img src="<?php echo $imageFolder . $user_obj['photo'] ?>" alt="avatar">
+                <!-- <img src="./assets/avatar1.jpg" alt="avatar"> -->
             </div>
             <div class="right-side-box">
                 <div class="text-box">

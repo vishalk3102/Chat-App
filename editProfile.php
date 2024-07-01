@@ -300,11 +300,11 @@ if (!$imageFolder) {
                 </div>';
                 }
                 ?>
-                <!-- <img src="<?php echo $imageFolder . $_SESSION['user_data']['photo'] ?>" alt="avatar"> -->
-                <img src="./assets/avatar1.jpg" alt="avatar">
+                <img src="<?php echo $imageFolder . $_SESSION['user_data']['photo'] ?>" alt="avatar">
+                <!-- <img src="./assets/avatar1.jpg" alt="avatar"> -->
                 <div class="button-box">
                     <button>
-                        <a >
+                        <a>
                             Change Avatar
                         </a>
                     </button>
@@ -349,7 +349,7 @@ if (!$imageFolder) {
                     </div>
                     <div class="input-box">
                         <span>Middle Name : </span>
-                        <input type="text" value="<?php echo  $_SESSION['user_data']['mname'] ?>" name='middle_name'>
+                        <input type="text" value="<?php echo $_SESSION['user_data']['mname'] ?>" name='middle_name'>
                     </div>
                     <div class="input-box">
                         <span>Last Name : </span>

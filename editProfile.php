@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_data'])) {
 $user_obj = $_SESSION['user_data'];
 function allFieldsFilled($data)
 {
-    return isset($data['first_name']) && $data['first_name'] !== "" && isset($data['last_name']) && $data['last_name']!== "" &&
+    return isset($data['first_name']) && $data['first_name'] !== "" && isset($data['last_name']) && $data['last_name'] !== "" &&
         isset($data['username']) && $data['username'] !== "" && isset($data['avatar_src']) && $data['avatar_src'] !== "";
 }
 function validateNameLength($name, $maxLength = 50)
@@ -28,9 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "First Name, Last Name and Username are required Fields.";
     } elseif (!validateNameLength($_POST['first_name']) || !validateNameLength($_POST['middle_name']) || !validateNameLength($_POST['last_name'])) {
         $error = "First name, middle name, and last name must each be no more than 50 characters long.";
-    }
-    else
-    {
+    } else {
         $user->setUserId($user_obj['id']);
         $user->setfname($_POST['first_name']);
         $user->setmname($_POST['middle_name']);
@@ -48,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = "Error: " . $db->errorInfo()[2];
         }
     }
-  
+
 }
 
 require 'bin\vendor\autoload.php';
@@ -201,27 +199,99 @@ if (!$imageFolder) {
         transition: border-color 0.3s ease;
     }
 
- .back-to-login a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px 0px;
-  text-decoration: none;
-  color: #000;
+    .back-to-login a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px 0px;
+        text-decoration: none;
+        color: #000;
 
-}
+    }
 
-.back-to-login a p {
-  font-size: 14px;
-  font-weight: 600;
-}
+    .back-to-login a p {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+
+    /* RESPONSIVE CODE  */
+    @media screen and (max-width: 768px) {
+        .profile-card {
+            width: 70%;
+            flex-direction: column;
+            /* flex-direction: column; */
+        }
+
+
+        .right-side-box {
+            margin-left: 0rem;
+        }
+
+        .input-box span {
+            font-size: 12px;
+        }
+
+        .input-box input {
+            font-size: 14px;
+        }
+
+        .button-box {
+            margin-top: 0rem;
+        }
+
+        .button-box button {
+            padding: 10px 10px;
+            font-size: 12px;
+            margin: 10px 5px;
+        }
+
+        .right-side-box .button-box {
+            display: flex;
+            justify-content: center;
+        }
+
+        .modal {
+            width: 400px;
+        }
+
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 992px) {
+        .profile-card {
+            width: 90%;
+            /* flex-direction: column; */
+        }
+
+
+        .left-side-box img {
+            border-radius: 10px;
+            height: 225px;
+            width: 275px;
+        }
+
+        .input-box span {
+            font-size: 12px;
+        }
+
+        .input-box input {
+            font-size: 14px;
+        }
+
+        .modal {
+            width: 400px;
+        }
+
+    }
 </style>
 
 <body>
     <section id="profile" class="container">
+        
+             
         <div class="profile-card">
             <div class="left-side-box">
-                <?php
+            <?php
                 if ($error != '') {
                     echo '<div class="alert alert-danger" role="alert">
                 ' . $error . '
@@ -234,9 +304,10 @@ if (!$imageFolder) {
                 }
                 ?>
                 <img src="<?php echo $imageFolder . $_SESSION['user_data']['photo'] ?>" alt="avatar">
+                <!-- <img src="./assets/avatar1.jpg" alt="avatar"> -->
                 <div class="button-box">
                     <button>
-                        <a >
+                        <a>
                             Change Avatar
                         </a>
                     </button>
@@ -281,7 +352,7 @@ if (!$imageFolder) {
                     </div>
                     <div class="input-box">
                         <span>Middle Name : </span>
-                        <input type="text" value="<?php echo  $_SESSION['user_data']['mname'] ?>" name='middle_name'>
+                        <input type="text" value="<?php echo $_SESSION['user_data']['mname'] ?>" name='middle_name'>
                     </div>
                     <div class="input-box">
                         <span>Last Name : </span>
@@ -309,6 +380,7 @@ if (!$imageFolder) {
                 </div>
             </div>
         </div>
+        
     </section>
 </body>
 <script>

@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require("./sendOTP.php");
@@ -9,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(is_array( $user_data) && count($user_data) > 0)
     {
 
+        $_SESSION['reset_email']=$_POST['email'];
         sendOtp($_POST['email']);
     }
     else
@@ -29,9 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script>
         function validateForm() {
-           
+
             var email = document.getElementById('email').value.trim();
-           
+
             // Validate email format
             var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
             var errorMessage = "Please enter a valid email address";
@@ -45,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
 
 </head>
- 
+
 <body>
     <div class="container log-container">
         <div class="title">Password recovery</div>

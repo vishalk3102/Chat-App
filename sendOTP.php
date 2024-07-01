@@ -27,20 +27,20 @@ function sendOtp($email)
         if($success)
         {
             $mail = new PHPMailer();
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';  
-            $mail->SMTPAuth = true;
-            $mail->Username = $_ENV['sender_mail']; 
-            $mail->Password = $_ENV['password'];    
-            $mail->Port = 587;
-            //$mail->SMTPDebug = true;
-            $mail->SMTPSecure = 'tls';
-          
+            // $mail->isSMTP();
+            $mail->Host = 'mail.contata.co.in';     
+            $mail->Port = 25;
+            $mail->SMTPAuth = false;
+            $mail->SMTPSecure = true;
             $mail->setFrom($_ENV['sender_mail']);
             $mail->addAddress($email); 
     
-            
-           
+            // $mail->SMTPDebug = true;
+            // $mail->SMTPSecure = 'tls';
+           // $mail->Username = $_ENV['sender_mail']; 
+            // $mail->Password = ""; 
+
+
             $mail->isHTML(true); // Set email format to HTML
             $mail->Subject = 'Your OTP for verification';
             $mail->Body    = 'Your OTP is: ' . $otp;
@@ -48,7 +48,7 @@ function sendOtp($email)
             // $mail -> SMTPOptions = array('ssl'=>array(
             //     'verify_peer'=> false,
             //     'verify_peer_name'=> false,
-            //     'allow_self_signed'=> false
+            //     'allow_self_signed'=> true
             // ));
            
             if(!$mail->send())

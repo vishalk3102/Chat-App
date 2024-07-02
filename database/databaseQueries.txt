@@ -56,11 +56,7 @@ EVENT TO CHECK IF THE OTP IS EXPIRED :-
 CREATE EVENT check_expired_otps
 ON SCHEDULE EVERY 1 MINUTE
 DO
-    UPDATE otp_table
-    SET
-        expiry_timestamp= NULL,
-        otp = NULL
-    WHERE expiry_timestamp< NOW();
+   CALL handle_expired_otps();
 
 TO RUN THE EVENT  :-
 
@@ -76,8 +72,9 @@ CREATE TRIGGER before_update_otp_table
 BEFORE UPDATE ON otp_table
 FOR EACH ROW
 BEGIN
-    IF NEW.used= 1 THEN
-        SET NEW.expiry_timestamp= NULL;
-        SET NEW.otp = NULL;
+     IF NEW.used = 1 THEN
+        CALL handle_used_otp(NEW.id);
     END IF;
 END $$
+
+DELIMITER ;

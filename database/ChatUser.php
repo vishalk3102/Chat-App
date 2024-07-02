@@ -246,44 +246,28 @@ class ChatUser
     }
 
 
-    public function updateOTP( $otp,$email) { 
+    public function updateOTP($otp, $email) {
         try {
-            $query = "SELECT * FROM otp_table WHERE email = :email";
-            $statement = $this->connection->prepare($query);
-            $statement->bindParam(':email', $email, PDO::PARAM_STR);
-            $statement->execute();
-            $existingOTP = $statement->fetch(PDO::FETCH_ASSOC);
- 
-            date_default_timezone_set("ASIA/KOLKATA");
             $expiry_time = date('Y-m-d H:i:s', strtotime('now +2 minutes'));
             $used = false;
-            if ($existingOTP) {
-                // Update existing OTP
-               
-                $updateQuery = "UPDATE otp_table SET otp = :otp, expiry_timestamp = :expiry_time, used=:used WHERE email=:email";
-                $updateStatement = $this->connection->prepare($updateQuery);
-                $updateStatement->bindParam(':otp', $otp, PDO::PARAM_STR);
-                $updateStatement->bindParam(':expiry_time', $expiry_time, PDO::PARAM_STR);
-                $updateStatement->bindParam(':email', $email, PDO::PARAM_STR);
-                $updateStatement->bindParam(':used', $used, PDO::PARAM_BOOL);
-                $updateStatement->execute();
-            } else {
-                // Insert new OTP
-                $insertQuery = "INSERT INTO otp_table (email, otp, expiry_timestamp,used) VALUES (:email, :otp, :expiry_time,:used)";
-                $insertStatement = $this->connection->prepare($insertQuery);
-                $insertStatement->bindParam(':email', $email, PDO::PARAM_STR);
-                $insertStatement->bindParam(':otp', $otp, PDO::PARAM_STR);
-                $insertStatement->bindParam(':expiry_time', $expiry_time, PDO::PARAM_STR);
-                $insertStatement->bindParam(':used', $used, PDO::PARAM_BOOL);
-                $insertStatement->execute();
-            }
- 
+    
+            $query = "CALL update_insert_otp(:email, :otp, :expiry_time, :used)";
+
+            $statement = $this->connection->prepare($query);
+            
+            $statement->bindParam(':email', $email, PDO::PARAM_STR);
+            $statement->bindParam(':otp', $otp, PDO::PARAM_STR);
+            $statement->bindParam(':expiry_time', $expiry_time, PDO::PARAM_STR);
+            $statement->bindParam(':used', $used, PDO::PARAM_BOOL);
+            $statement->execute();
+    
             return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
     }
+    
 
     public function newPassword($otp, $email, $password) {
         try {

@@ -146,7 +146,8 @@ class ChatUser
                 return false;
             }
         } catch (PDOException $e) {
-            die('Error: ' . $e->getMessage());
+          //  die('Error: ' . $e->getMessage());
+          header('location:errorPage.php');   
         }
     }
 
@@ -165,7 +166,8 @@ class ChatUser
             return $result;
 
         } catch (PDOException $e) {
-            die('Error: ' . $e->getMessage());
+            // die('Error: ' . $e->getMessage());
+            header('location:errorPage.php');   
         }
     }
 
@@ -184,7 +186,8 @@ class ChatUser
             return $user_data;
 
         } catch (PDOException $e) {
-            die('Error: ' . $e->getMessage());
+            // die('Error: ' . $e->getMessage());
+            header('location:errorPage.php');   
         }
     }
 
@@ -202,7 +205,8 @@ class ChatUser
             return $result;
 
         } catch (PDOException $e) {
-            die('Error: ' . $e->getMessage());
+            // die('Error: ' . $e->getMessage());
+            header('location:errorPage.php');   
         }
     }
 
@@ -221,7 +225,8 @@ class ChatUser
 
             return $data;
         } catch (PDOException $e) {
-            die('Error: ' . $e->getMessage());
+            // die('Error: ' . $e->getMessage());
+            header('location:errorPage.php');   
         }
     }
 
@@ -240,8 +245,9 @@ class ChatUser
 
             return $statement->execute();
         } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
+            // echo "Error: " . $e->getMessage();
+            // return false;
+            header('location:errorPage.php');   
         }
     }
 
@@ -263,8 +269,9 @@ class ChatUser
     
             return true;
         } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
+            // echo "Error: " . $e->getMessage();
+            // return false;
+            header('location:errorPage.php');   
         }
     }
     
@@ -306,8 +313,10 @@ class ChatUser
                 return false; // OTP is invalid or expired
             }
         } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
+            // echo "Error: " . $e->getMessage();
+
+            // return false;
+            header('location:errorPage.php');   
         }
     }
 }

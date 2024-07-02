@@ -28,8 +28,8 @@ function sendOtp($email)
         {
             $mail = new PHPMailer();
             // $mail->isSMTP();
-            $mail->Host = 'mail.contata.co.in';     
-            $mail->Port = 25;
+            $mail->Host = $_ENV['MAIL_SERVER'];     
+            $mail->Port = $_ENV['MPORT'];  
             $mail->SMTPAuth = false;
             $mail->SMTPSecure = true;
             $mail->setFrom($_ENV['sender_mail']);

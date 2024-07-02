@@ -71,6 +71,9 @@ $user_obj = $_SESSION['user_data'];
             padding: 2px;
 
         }
+        /* .show_message{
+            font-size: 300px;
+        } */
     </style>
 </head>
 
@@ -392,7 +395,7 @@ $user_obj = $_SESSION['user_data'];
                         if (response[count].sender_id == userId) {
                             html_data += `<div class="sender-message">
                                 <p> 
-                                 <span>`+ response[count].message + `</span>
+                                 <span class="show_message">`+ response[count].message + `</span>
                                     
                                      
                                      `+ read_check + `

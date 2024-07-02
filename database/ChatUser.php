@@ -246,57 +246,38 @@ class ChatUser
     }
 
 
-    // public function saveOtp($otp,$email)
-    // {
-    //     $query = "
-    //     INSERT INTO otp_table (email, otp, timestamp)
-    //     VALUES (:email, :otp, NOW())
-    //     ";
-
-    // //$statement = $connection->prepare($query);
-    // $statement = $this->connection->prepare($query);
-    // // Bind parameters
-   
-    // $statement->bindParam(':email', $email, PDO::PARAM_STR);
-    // $statement->bindParam(':otp', $otp, PDO::PARAM_STR);
-
-    // // Execute the statement
-    // $result = $statement->execute();
-
-    // // Return true if insertion was successful, false otherwise
-    // return $result;
-
-    // }
-
-    public function updateOTP( $otp,$email) {
-        date_default_timezone_set("ASIA/KOLKATA");
-        $expiry_time = date('Y-m-d H:i:s', strtotime('now +2 minutes'));
-
+    public function updateOTP( $otp,$email) { 
         try {
-            $query = "SELECT id FROM otp_table WHERE email = :email AND used = false";
+            $query = "SELECT * FROM otp_table WHERE email = :email";
             $statement = $this->connection->prepare($query);
             $statement->bindParam(':email', $email, PDO::PARAM_STR);
             $statement->execute();
             $existingOTP = $statement->fetch(PDO::FETCH_ASSOC);
-
+ 
+            date_default_timezone_set("ASIA/KOLKATA");
+            $expiry_time = date('Y-m-d H:i:s', strtotime('now +2 minutes'));
+            $used = false;
             if ($existingOTP) {
                 // Update existing OTP
-                $updateQuery = "UPDATE otp_table SET otp = :otp, expiry_timestamp = :expiry_time WHERE id = :otp_id";
+               
+                $updateQuery = "UPDATE otp_table SET otp = :otp, expiry_timestamp = :expiry_time, used=:used WHERE email=:email";
                 $updateStatement = $this->connection->prepare($updateQuery);
                 $updateStatement->bindParam(':otp', $otp, PDO::PARAM_STR);
                 $updateStatement->bindParam(':expiry_time', $expiry_time, PDO::PARAM_STR);
-                $updateStatement->bindParam(':otp_id', $existingOTP['id'], PDO::PARAM_INT);
+                $updateStatement->bindParam(':email', $email, PDO::PARAM_STR);
+                $updateStatement->bindParam(':used', $used, PDO::PARAM_BOOL);
                 $updateStatement->execute();
             } else {
                 // Insert new OTP
-                $insertQuery = "INSERT INTO otp_table (email, otp, expiry_timestamp) VALUES (:email, :otp, :expiry_time)";
+                $insertQuery = "INSERT INTO otp_table (email, otp, expiry_timestamp,used) VALUES (:email, :otp, :expiry_time,:used)";
                 $insertStatement = $this->connection->prepare($insertQuery);
                 $insertStatement->bindParam(':email', $email, PDO::PARAM_STR);
                 $insertStatement->bindParam(':otp', $otp, PDO::PARAM_STR);
                 $insertStatement->bindParam(':expiry_time', $expiry_time, PDO::PARAM_STR);
+                $insertStatement->bindParam(':used', $used, PDO::PARAM_BOOL);
                 $insertStatement->execute();
             }
-
+ 
             return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -312,30 +293,32 @@ class ChatUser
                 SELECT id, otp, UNIX_TIMESTAMP(expiry_timestamp) AS expiry_timestamp
                 FROM otp_table
                 WHERE email = :email AND used = false
-                ORDER BY created_at DESC
                 LIMIT 1
             ";
             $statement = $this->connection->prepare($query);
             $statement->bindParam(':email', $email, PDO::PARAM_STR);
             $statement->execute();
-
+ 
             $row = $statement->fetch(PDO::FETCH_ASSOC);
-
+ 
             if (!$row) {
                 return false; // No valid OTP found for this email
             }
-
+ 
             $dbOtp = $row['otp'];
             $expiryTimestamp = $row['expiry_timestamp'];
-
-            if ($otp === $dbOtp && time() <= $expiryTimestamp) {
+ 
+            if ($otp === $dbOtp) {
                 // OTP is valid and not expired
                 $this->setRegistrationEmail($email);
                 $this->setPassword($password);
-
+                $used=1;
                 if ($this->resetPassword()) {
                     // Mark OTP as used and delete it
-                    $this->deleteOTP($row['id']);
+                    $query = "update otp_table set used=:used;";
+                    $statement = $this->connection->prepare($query);
+                    $statement->bindParam(':used', $used, PDO::PARAM_INT);
+                    $statement->execute();
                     return true;
                 } else {
                     return false;
@@ -348,70 +331,6 @@ class ChatUser
             return false;
         }
     }
-
-    private function deleteOTP($otpId) {
-        try {
-            $query = "DELETE FROM otp_table WHERE id = :otp_id";
-            $statement = $this->connection->prepare($query);
-            $statement->bindParam(':otp_id', $otpId, PDO::PARAM_INT);
-            $statement->execute();
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        }
-    }
-
-
-    // public function newPassword($otp,$email,$password)
-    // {
-    //     try {
-           
-    //         $query = "
-    //             SELECT otp,UNIX_TIMESTAMP(timestamp) AS timestamp
-    //             FROM otp_table
-    //             WHERE email = :email
-    //             ORDER BY timestamp DESC
-    //             LIMIT 1
-    //         ";
-    //         $statement = $this->connection->prepare($query);
-    //         $statement->bindParam(':email', $email, PDO::PARAM_STR);
-    //         $statement->execute();
-    
-           
-    //         $row = $statement->fetch(PDO::FETCH_ASSOC);
-    //         if (!$row) {
-    //             return false; 
-    //         }
-    
-    //         $dbOtp = $row['otp'];
-    //        // $timestamp = strtotime($row['timestamp']);
-    //        $timestamp =$row['timestamp'];
-    //         $currentTime = time();
-    
-    //         if ($otp === $dbOtp && ($currentTime - $timestamp) <= 60) {
-                
-    //             $this->setRegistrationEmail($email);
-    //             $this->setPassword($password);
-    //             if($this->resetPassword())
-    //             {
-    //                 return true;
-    //             }
-                       
-    //             else
-    //                 {
-    //                     return false;
-    //                 }
-            
-    //         } else {
-    //             return false; // OTP is invalid or expired
-    //         }
-    //     } catch (PDOException $e) {
-    //         // Handle PDO exceptions
-    //         echo "Error: " . $e->getMessage();
-    //         return false;
-    //     }
-
-    // }
-
 
 }
 

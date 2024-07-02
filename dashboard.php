@@ -57,7 +57,10 @@ $user_obj = $_SESSION['user_data'];
         .sender-message p {
             display: flex;
             flex-direction: column;
-
+            font-size: 14px;
+        }
+        .sender-message p span:nth-child(1){
+            font-size: 14px;
         }
 
         .message_status_show {
@@ -234,10 +237,9 @@ $user_obj = $_SESSION['user_data'];
 
     }
 
-    function handleEnter(e)
-    {
+    function handleEnter(e) {
         if (event.key == "Enter" && !event.shiftKey) {
-            
+
             event.preventDefault();
             handleMessage();
         }
@@ -312,11 +314,10 @@ $user_obj = $_SESSION['user_data'];
         chatInterval = setInterval(() => fetchChat(receiver_userid), 2000);
 
     }
-
-    // FUNCTION TO AUTO SCROLL MESSAGE TO BOTTOM 
+    // FUNCTION TO AUTO SCROLL MESSAGE TO BOTTOM
     function scrollToBottom() {
         var chatBox = document.querySelector('.chat-text-box');
-        if (chatBox) {
+        if (chatBox && !chatBox.hasScrolled) {
             const scrollHeight = chatBox.scrollHeight;
             const height = chatBox.clientHeight;
             const maxScrollTop = scrollHeight - height;
@@ -327,14 +328,31 @@ $user_obj = $_SESSION['user_data'];
                 behavior: 'smooth'
             });
 
-            // Double-check scroll position after animation
-            setTimeout(() => {
-                if (chatBox.scrollTop !== maxScrollTop) {
-                    chatBox.scrollTop = maxScrollTop;
-                }
-            }, 300);
+            // Mark as scrolled
+            chatBox.hasScrolled = true;
+
+            // Remove the scroll event listener after initial scroll
+            chatBox.removeEventListener('scroll', preventAutoScroll);
         }
     }
+
+    // Prevent auto-scrolling after user has manually scrolled
+    function preventAutoScroll() {
+        this.hasScrolled = true;
+    }
+
+    // Call this function when the chat is loaded
+    function initializeChat() {
+        var chatBox = document.querySelector('.chat-text-box');
+        if (chatBox) {
+            chatBox.hasScrolled = false;
+            chatBox.addEventListener('scroll', preventAutoScroll);
+            scrollToBottom();
+        }
+    }
+
+    // Call initializeChat when your chat component is mounted or loaded
+    initializeChat();
 
     function fetchChat(recUserId) {
         receiver_userid = recUserId
@@ -409,7 +427,7 @@ $user_obj = $_SESSION['user_data'];
             });
     }
 
-    
+
 
     function handleMessage() {
 
@@ -457,6 +475,7 @@ $user_obj = $_SESSION['user_data'];
                     </div>`
 
                     document.getElementById('message_text_box').innerHTML += html_data;
+                    initializeChat();
                     setTimeout(scrollToBottom, 100);
                 }
 

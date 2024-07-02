@@ -1,5 +1,6 @@
 <?php
 require_once 'DatabaseConnection.php';
+require_once 'init.php';
 class ChatUser
 {
     private $user_id;
@@ -131,7 +132,8 @@ class ChatUser
             }
             $statement->bindParam(':lname', $this->lname);
             $statement->bindParam(':username', $this->username);
-            $statement->bindParam(':password', $this->password);
+            // $statement->bindParam(':password', $this->password);
+            $statement->bindParam(':password', NULL);
             $statement->bindParam(':email', $this->email);
             $statement->bindParam(':photo', $this->photo);
             $statement->bindParam(':registration_date', $this->registration_date);
@@ -225,7 +227,5 @@ class ChatUser
             die('Error: ' . $e->getMessage());
         }
     }
-
-
 }
 ?>

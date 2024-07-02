@@ -37,7 +37,7 @@ $user_obj = $_SESSION['user_data'];
         .dot {
             height: 10px;
             width: 10px;
-            background-color: red;
+            background-color: #e79023;
             border-radius: 50%;
             display: inline-block;
             margin-right: 2px;
@@ -45,11 +45,28 @@ $user_obj = $_SESSION['user_data'];
         }
 
         #green12 {
-            background-color: green;
+            background-color: #10B982;
+            /* border: 1px solid #000; */
         }
 
         .active_user {
-            background-color: #45FFCA;
+            background-color: #4e61c7;
+            color: #fff;
+        }
+
+        .sender-message p {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .message_status_show {
+            margin-left: 94%;
+            bottom: 0;
+            height: 8px;
+            width: 16px;
+            padding: 2px;
+
         }
     </style>
 </head>
@@ -167,6 +184,8 @@ $user_obj = $_SESSION['user_data'];
         profileIcon.addEventListener('click', toggleDropdown);
         document.addEventListener('click', closeDropdown);
 
+
+
     });
 
 
@@ -211,6 +230,15 @@ $user_obj = $_SESSION['user_data'];
         }
 
     }
+
+    function handleEnter(e)
+    {
+        if (event.key == "Enter" && !event.shiftKey) {
+            
+            event.preventDefault();
+            handleMessage();
+        }
+    }
     function make_chat_area(user_name, username, user_status, chatStarted, user_photo) {
         var status_style = `<span class='dot' id='red'></span>`;
         if (user_status == 'Active') {
@@ -235,7 +263,7 @@ $user_obj = $_SESSION['user_data'];
                     </div>
 
                     <div class="chat-message-box">
-                        <form method="POST" onsubmit="event.preventDefault(); handleMessage();">
+                        <form id="messageForm" onsubmit="event.preventDefault(); handleMessage();" onkeypress="handleEnter(this)">
                             <textarea  type="text" id="user_text_message" placeholder="Type a message..." maxLength="255"></textarea>
                             <button type="submit" ><span><i class="fa fa-send-o"></i></span></button>
                         </form>
@@ -332,12 +360,27 @@ $user_obj = $_SESSION['user_data'];
                 if (response.length > 0) {
                     var html_data = '';
                     for (var count = 0; count < response.length; count++) {
+                        let read_check = `<span class="message_status_show"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 109.76" style="enable-background:new 0 0 122.88 109.76" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#01A601;}</style><g><path class="st0" d="M0,52.88l22.68-0.3c8.76,5.05,16.6,11.59,23.35,19.86C63.49,43.49,83.55,19.77,105.6,0h17.28 C92.05,34.25,66.89,70.92,46.77,109.76C36.01,86.69,20.96,67.27,0,52.88L0,52.88z"/></g></svg>
+                                     </span>`;
+                        if (response[count].message_status == 'send') {
+                            read_check = `<span class="message_status_show"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 109.76" style="enable-background:new 0 0 122.88 109.76" xml:space="preserve">
+                            <g>
+                                <path style="fill:#000000;" d="M0,52.88l22.68-0.3c8.76,5.05,16.6,11.59,23.35,19.86C63.49,43.49,83.55,19.77,105.6,0h17.28 C92.05,34.25,66.89,70.92,46.77,109.76C36.01,86.69,20.96,67.27,0,52.88L0,52.88z"/>
+                            </g>
+                                </svg>
+
+                            </span>`;
+                        }
                         if (response[count].sender_id == userId) {
                             html_data += `<div class="sender-message">
-                                <p>
-                                    `+ response[count].message + `
+                                <p> 
+                                 <span>`+ response[count].message + `</span>
+                                    
+                                     
+                                     `+ read_check + `
                                 </p>
                                 <span>`+ response[count].timestamp + `</span>
+                              
                             </div>`
                         }
                         else {
@@ -362,6 +405,8 @@ $user_obj = $_SESSION['user_data'];
                 console.error("Fetch Error: " + error);
             });
     }
+
+    
 
     function handleMessage() {
 

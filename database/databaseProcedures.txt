@@ -236,6 +236,7 @@ BEGIN
 END //
 DELIMITER ;
 
+
 UPDATE AND INSERT OTP :-
 
 DELIMITER $$
@@ -261,30 +262,6 @@ END $$
 
 DELIMITER ;
 
-PROCEDURE FOR EVENT TO CHECK EXPIRED OTP :-
-
-DELIMITER $$
-
-CREATE PROCEDURE handle_expired_otps()
-BEGIN
-    UPDATE otp_table SET expiry_timestamp = NULL, otp = NULL WHERE expiry_timestamp < NOW();
-END $$
-
-DELIMITER ;
-
-
-PROCEDURE TO CHECK OTP THAT ARE USED :-
-
-DELIMITER $$
-
-CREATE PROCEDURE handle_used_otp (
-    IN p_id INT
-)
-BEGIN
-    UPDATE otp_table SET expiry_timestamp = NULL, otp = NULL WHERE id = p_id;
-END $$
-
-DELIMITER $$
 
 
 

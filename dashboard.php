@@ -71,9 +71,9 @@ $user_obj = $_SESSION['user_data'];
             padding: 2px;
 
         }
-        .show_message{
+        /* .show_message{
             font-size: 300px;
-        }
+        } */
     </style>
 </head>
 

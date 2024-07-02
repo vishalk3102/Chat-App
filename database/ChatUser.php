@@ -119,7 +119,7 @@ class ChatUser
         try {
             // calling INSERT_USER stored procedure
             $query = "CALL insert_user(:fname, :mname, :lname, :username, :password, :email, :photo, :registration_date, :status, :password_update_date)";
-    
+
             $statement = $this->connection->prepare($query);
 
             $statement->bindParam(':fname', $this->fname);
@@ -149,7 +149,7 @@ class ChatUser
             die('Error: ' . $e->getMessage());
         }
     }
-    
+
 
     public function resetPassword()
     {
@@ -163,7 +163,7 @@ class ChatUser
             $result = $statement->execute();
 
             return $result;
-            
+
         } catch (PDOException $e) {
             die('Error: ' . $e->getMessage());
         }
@@ -174,15 +174,15 @@ class ChatUser
         try {
             $query = "CALL get_user_by_email(:email)";
             $statement = $this->connection->prepare($query);
-            
+
             $statement->bindParam(':email', $this->email);
-            
+
             $statement->execute();
-            
+
             $user_data = $statement->fetch(PDO::FETCH_ASSOC);
 
             return $user_data;
-            
+
         } catch (PDOException $e) {
             die('Error: ' . $e->getMessage());
         }
@@ -200,7 +200,7 @@ class ChatUser
             $result = $statement->execute();
 
             return $result;
-            
+
         } catch (PDOException $e) {
             die('Error: ' . $e->getMessage());
         }
@@ -212,13 +212,13 @@ class ChatUser
         try {
             $query = "CALL get_all_users_data_with_status(:user_id)";
             $stmt = $this->connection->prepare($query);
-            
+
             $stmt->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
-            
+
             $stmt->execute();
-            
+
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+
             return $data;
         } catch (PDOException $e) {
             die('Error: ' . $e->getMessage());
@@ -230,14 +230,14 @@ class ChatUser
         try {
             $query = "CALL update_user_details(:user_id, :fname, :mname, :lname, :username, :photo)";
             $statement = $this->connection->prepare($query);
-    
+
             $statement->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
             $statement->bindValue(':fname', $this->fname, PDO::PARAM_STR);
             $statement->bindValue(':mname', $this->mname === '' ? null : $this->mname, PDO::PARAM_STR);
             $statement->bindValue(':lname', $this->lname, PDO::PARAM_STR);
             $statement->bindValue(':username', $this->username, PDO::PARAM_STR);
             $statement->bindValue(':photo', $this->photo, PDO::PARAM_STR);
-    
+
             return $statement->execute();
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -269,40 +269,35 @@ class ChatUser
     }
     
 
-    public function newPassword($otp, $email, $password) {
+    public function newPassword($otp, $email, $password)
+    {
         try {
             date_default_timezone_set("ASIA/KOLKATA");
-            $currentTime = date('Y-m-d H:i:s');
-            $query = "
-                SELECT id, otp, UNIX_TIMESTAMP(expiry_timestamp) AS expiry_timestamp
-                FROM otp_table
-                WHERE email = :email AND used = false
-                LIMIT 1
-            ";
+            $query = "CALL GetValidOTP(:email)";
             $statement = $this->connection->prepare($query);
             $statement->bindParam(':email', $email, PDO::PARAM_STR);
             $statement->execute();
- 
+
             $row = $statement->fetch(PDO::FETCH_ASSOC);
- 
+            $statement->closeCursor();
             if (!$row) {
                 return false; // No valid OTP found for this email
             }
- 
+
             $dbOtp = $row['otp'];
             $expiryTimestamp = $row['expiry_timestamp'];
- 
+
             if ($otp === $dbOtp) {
                 // OTP is valid and not expired
                 $this->setRegistrationEmail($email);
                 $this->setPassword($password);
-                $used=1;
+                $used = true;
                 if ($this->resetPassword()) {
-                    // Mark OTP as used and delete it
-                    $query = "update otp_table set used=:used;";
-                    $statement = $this->connection->prepare($query);
-                    $statement->bindParam(':used', $used, PDO::PARAM_INT);
-                    $statement->execute();
+                    // Mark OTP as used
+                    $query = "CALL check_otp(:email)";
+                    $stmt = $this->connection->prepare($query);
+                    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+                    $stmt->execute();
                     return true;
                 } else {
                     return false;
@@ -315,10 +310,9 @@ class ChatUser
             return false;
         }
     }
-
 }
 
 
 
 
-?> 
+?>

@@ -203,6 +203,38 @@ END //
 
 DELIMITER ;
 
+INSERT/UPDATE otp:-
+
+DELIMITER //
+ 
+CREATE PROCEDURE GetValidOTP (IN p_email VARCHAR(255))
+
+BEGIN
+
+    SELECT id AS id, otp AS otp, UNIX_TIMESTAMP(expiry_timestamp) AS expiry_timestamp
+    FROM otp_table
+
+    WHERE email = p_email AND used = false
+
+    LIMIT 1;
+
+END //
+ 
+DELIMITER ;
+
+ 
+
+CHECK FOR OTP Validation:-
+DELIMITER //
+CREATE PROCEDURE `check_otp` (
+    IN p_email VARCHAR(255)
+)
+BEGIN
+    UPDATE `otp_table`
+    SET `used` = true
+    WHERE `email` = p_email;
+END //
+DELIMITER ;
 
 UPDATE AND INSERT OTP :-
 

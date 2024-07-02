@@ -173,7 +173,7 @@
 .chat-box {
   width: 70%;
   height: 100%;
-  font-size:xx-large;
+  /* font-size:xx-large; */
   background-color: #ebeef3;
   display: flex;
   flex-direction: column;

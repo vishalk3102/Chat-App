@@ -43,3 +43,41 @@ MODIFY COLUMN `photo` VARCHAR(110) NOT NULL;
 ALTER TABLE Chatting MODIFY message BLOB NOT NULL;
 
 
+CREATE TABLE IF NOT EXISTS otp_table(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    otp VARCHAR(255) DEFAULT NULL,
+    used BOOLEAN NOT NULL,
+    expiry_timestamp DATETIME DEFAULT NULL
+);
+
+EVENT TO CHECK IF THE OTP IS EXPIRED :-
+
+CREATE EVENT check_expired_otps
+ON SCHEDULE EVERY 1 MINUTE
+DO
+    UPDATE otp_table
+    SET
+        expiry_timestamp= NULL,
+        otp = NULL
+    WHERE expiry_timestamp< NOW();
+
+TO RUN THE EVENT  :-
+
+SET GLOBAL event_scheduler = ON;
+
+SHOW EVENTS WHERE Name = 'check_expired_otps';
+
+TRIGGER TO CHECK IF OTP IS USED 
+
+DELIMITER $$
+
+CREATE TRIGGER before_update_otp_table
+BEFORE UPDATE ON otp_table
+FOR EACH ROW
+BEGIN
+    IF NEW.used= 1 THEN
+        SET NEW.expiry_timestamp= NULL;
+        SET NEW.otp = NULL;
+    END IF;
+END $$

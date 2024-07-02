@@ -14,12 +14,18 @@
   color: #fff;
   margin: -50px auto 10px 40px;
 }
+.er-box a{
+  color:white;
+}
+.er-box{
+  text-align: center;
+}
 </style>
 <body>
     <div class=" log-container er-box">
       <img src="assets\error.png" alt="404"/>
       <p class="erp">Error 4😕4 !</p>
-
+      <a href="index.php">Back</a>   
     </div>
 </body>
 

@@ -246,10 +246,7 @@ class ChatUser
     }
 
 
-    public function updateOTP( $otp,$email) {
-        // date_default_timezone_set("ASIA/KOLKATA");
-        // $expiry_time = date('Y-m-d H:i:s', strtotime('now +2 minutes'));
- 
+    public function updateOTP( $otp,$email) { 
         try {
             $query = "SELECT * FROM otp_table WHERE email = :email";
             $statement = $this->connection->prepare($query);
@@ -318,7 +315,6 @@ class ChatUser
                 $used=1;
                 if ($this->resetPassword()) {
                     // Mark OTP as used and delete it
-                    // $this->deleteOTP($row['id']);
                     $query = "update otp_table set used=:used;";
                     $statement = $this->connection->prepare($query);
                     $statement->bindParam(':used', $used, PDO::PARAM_INT);
@@ -335,9 +331,6 @@ class ChatUser
             return false;
         }
     }
-    
-
-
 
 }
 

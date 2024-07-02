@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
         display: flex;
     }
 
-    .resend-button {
+    #resend-button {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -96,6 +96,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
         color: #fff;
         background-color: #030617;
         border: none;
+    }
+
+    #resend-button[disabled] {
+        cursor: not-allowed;
+        opacity: 0.7;
+        pointer-events: none;
     }
 
     .otp-timer {
@@ -144,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
                         <span class="details">OTP</span>
                         <div class="otp-input-resend-box">
                             <input type="text" placeholder="Enter OTP" name="otp" required>
-                            <button class="resend-button" id="delayedLink" data-email="<?php echo $user_email ?>"
+                            <button id="resend-button" id="delayedLink" data-email="<?php echo $user_email ?>"
                                 style="display:inline;" disabled>Resend</button>
                             </input>
                         </div>
@@ -163,8 +169,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
                         <span><img src="./assets/arrow.png" alt=""></span>
                         <p>Back to Log in</p>
                     </a>
-
-                    <!-- <a id="delayedLink" data-email="<?php echo $user_email ?>" style="display:inline;">Resend OTP</a> -->
                 </div>
             </form>
         </div>
@@ -174,42 +178,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
 
 </body>
 <script>
-
-    // // LOGIC FOR RESENDING OTP
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     // Find the element by id
-    //     var delayedLink = document.getElementById('delayedLink');
-
-    //     // Add click event listener
-    //     delayedLink.addEventListener('click', function (event) {
-    //         event.preventDefault(); // Prevent default action of <a> tag
-
-    //         // Get the email from data attribute
-    //         var userEmail = delayedLink.getAttribute('data-email');
-    //         // Create form element
-    //         var form = document.createElement('form');
-    //         form.setAttribute('method', 'POST');
-    //         // form.setAttribute('action', 'your-post-endpoint-url'); // Replace with your actual endpoint URL
-
-    //         // Create hidden input field for email
-    //         var emailInput = document.createElement('input');
-    //         emailInput.setAttribute('type', 'hidden');
-    //         emailInput.setAttribute('name', 'otpemail');
-    //         emailInput.setAttribute('value', userEmail);
-
-    //         // Append the input to the form
-    //         form.appendChild(emailInput);
-
-    //         // Append the form to the document body (you can append it to any other element if needed)
-    //         document.body.appendChild(form);
-
-    //         // Submit the form
-    //         form.submit();
-    //     });
-    // });
-
-
-
     // LOGIC FOR COUNTDOWN TIMER
     document.addEventListener('DOMContentLoaded', function () {
         const timerDisplay = document.getElementById('timer');
@@ -225,9 +193,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
                 // If there's a stored end time and it's in the future, use it
                 timer = Math.round((storedEndTime - now) / 1000);
             } else {
-                // Otherwise, start a new 2-minute timer
-                timer = 120;
-                localStorage.setItem('otpEndTime', now + 120000);
+                timer = 30;
+                localStorage.setItem('otpEndTime', now + 30000);
             }
 
             updateTimerDisplay();
@@ -259,19 +226,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
 
         function resetTimer() {
             clearInterval(countdown);
-            timer = 120;
+            timer = 30;
             const now = new Date().getTime();
-            localStorage.setItem('otpEndTime', now + 120000);
+            localStorage.setItem('otpEndTime', now + 30000);
             resendButton.disabled = true;
             updateTimerDisplay();
             startTimer();
-
-            // Here you would add the logic to resend the OTP
-            // For example: sendNewOTP();
         }
 
         // LOGIC FOR RESENDING OTP
         resendButton.addEventListener('click', function (event) {
+            console.log('resend clicked')
             event.preventDefault();
 
             // Get the email from data attribute
@@ -280,7 +245,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
             // Create form element
             var form = document.createElement('form');
             form.setAttribute('method', 'POST');
-            // form.setAttribute('action', 'your-post-endpoint-url'); // Replace with your actual endpoint URL
 
             // Create hidden input field for email
             var emailInput = document.createElement('input');
@@ -294,7 +258,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
             // Append the form to the document body
             document.body.appendChild(form);
 
-            // Submit the form
             form.submit();
 
             // Reset the timer after form submission

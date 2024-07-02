@@ -227,7 +227,14 @@ if (!$imageFolder) {
         font-size: 14px;
         font-weight: 600;
     }
-
+    .alert-success{
+    color: #104b1e;
+    font-size: 14px;
+    }
+    .alert-danger{
+    color: red ;
+    font-size: 14px;
+    }
 
     /* RESPONSIVE CODE  */
     @media screen and (max-width: 768px) {

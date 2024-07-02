@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user->setRegistrationEmail($_POST['email']);
         $user->setPassword($_POST['password']);
         $user->setUsername(explode('@', $_POST['email'])[0]);
+        date_default_timezone_set("ASIA/KOLKATA");
         $user->setPasswordUpdateDate(date('Y-m-d H:i:s'));
         $user->setRegistrationDate(date('Y-m-d H:i:s'));
         $user->setPhoto('avatar.png');
@@ -81,7 +82,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="style/style.css">
 
 </head>
-
+,<style>
+.alert-danger{
+  color: red ;
+  font-size: 14px;
+}
+.
+.alert-success{
+  color: #104b1e;
+  font-size: 14px;
+}
+</style>
 <body>
     <div class="container reg-container">
         <?php

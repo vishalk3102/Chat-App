@@ -379,7 +379,7 @@ if (!$imageFolder) {
                             <input type="text" value="<?php echo $_SESSION['user_data']['username'] ?>" name='username'>
                         </div>
 
-                        <input type="hidden" id="avatar_src" name="avatar_src" value="<?php echo $user_obj['photo'] ?>">
+                    <input type="hidden" id="avatar_src" name="avatar_src" value="<?php echo  $_SESSION['user_data']['photo'] ?>">
 
                         <div class="button-box">
                             <button id="change-avatar-btn" type="submit">
@@ -426,9 +426,6 @@ if (!$imageFolder) {
         var filename = src.substring(src.lastIndexOf('/') + 1);
         var avatarSrcInput = document.getElementById('avatar_src');
         avatarSrcInput.value = filename;
-        console.log('Selected Avatar: ', src);
-        console.log('filename: ', filename);
-        console.log('avatar src: ', avatarImage.src);
     }
 
     // Attach event listeners

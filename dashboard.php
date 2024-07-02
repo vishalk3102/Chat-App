@@ -33,6 +33,26 @@ $user_obj = $_SESSION['user_data'];
             justify-content: center;
             align-items: center;
         }
+
+        .dot {
+            height: 10px;
+            width: 10px;
+            background-color: #e79023;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 2px;
+            padding-top: 2px;
+        }
+
+        #green12 {
+            background-color: #10B982;
+            /* border: 1px solid #000; */
+        }
+
+        .active_user {
+            background-color: #4e61c7;
+            color: #fff;
+        }
     </style>
 </head>
 
@@ -90,10 +110,12 @@ $user_obj = $_SESSION['user_data'];
                                         <img src='" . $imageFolder . $user['photo'] . "' id='selected_user_image_" . $user['user_id'] . "' alt='avatar'>
                                     </div>
                                     <div class='text-box'>
-                                        <p class='username-box notification' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "
+                                        <p class='username-box notification' id='list_user_username_" . $user['user_id'] . "'>" . $user['username'] . "
                                             " . ($user['count_status'] != 0 ? "<span class='badge'>" . $user['count_status'] . "</span>" : "") . "   
                                         </p>
-                                        <p class='status-box ' id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</p>
+                                          <p class='status-box ' id='list_user_name_" . $user['user_id'] . "'>" . $user['fname'] . ' ' . $user['lname'] . "</p>
+                                          <p class='status-box ' >" . ($user['status'] === 'Active' ? "<span class='dot' id='green12'></span>" : "<span class='dot' id='red'></span>") . "<span id='list_user_status_" . $user['user_id'] . "'>" . $user['status'] . "</span> </p>
+                                          
                                     </div>
                                 </div>
                                 
@@ -121,6 +143,7 @@ $user_obj = $_SESSION['user_data'];
 </body>
 <script>
     var chatInterval;
+    let currentActiveUser = null;
     // VARIABLE FOR MAINTAINING VIEW STATUS FOR BACK BUTTON (MOBILE DEVICE)
     const VIEW_MODE_USER_LIST = 'user_list';
     const VIEW_MODE_CHAT = 'chat';
@@ -146,13 +169,14 @@ $user_obj = $_SESSION['user_data'];
         profileIcon.addEventListener('click', toggleDropdown);
         document.addEventListener('click', closeDropdown);
 
+
+
     });
 
 
 
     function logoutUser() {
         var userId = document.getElementById("login_user_id").value;
-        console.log(userId);
         if (userId) {
             fetch('action.php', {
                 method: 'POST',
@@ -191,7 +215,20 @@ $user_obj = $_SESSION['user_data'];
         }
 
     }
-    function make_chat_area(user_name, user_status, chatStarted, user_photo) {
+
+    function handleEnter(e)
+    {
+        if (event.key == "Enter" && !event.shiftKey) {
+            
+            event.preventDefault();
+            handleMessage();
+        }
+    }
+    function make_chat_area(user_name, username, user_status, chatStarted, user_photo) {
+        var status_style = `<span class='dot' id='red'></span>`;
+        if (user_status == 'Active') {
+            status_style = `<span class='dot' id='green12'></span>`;
+        }
         var htmlcode = `
                     <div class="chat-navbar user-text-box">
                         <div class="profile">
@@ -199,7 +236,9 @@ $user_obj = $_SESSION['user_data'];
                         </div>
                         <div class="text-box">
                             <p class="username-box">`+ user_name + `</p>
-                            <p class="status-box">`+ user_status + `</p>
+                            <p class="status-box">`+ username + `</p>
+                            <p class="status-box">`+ status_style + user_status + `</p>
+
                         </div>
                     </div>
                     <div class="chat-content">
@@ -209,7 +248,7 @@ $user_obj = $_SESSION['user_data'];
                     </div>
 
                     <div class="chat-message-box">
-                        <form method="POST" onsubmit="event.preventDefault(); handleMessage();">
+                        <form id="messageForm" onsubmit="event.preventDefault(); handleMessage();" onkeypress="handleEnter(this)">
                             <textarea  type="text" id="user_text_message" placeholder="Type a message..." maxLength="255"></textarea>
                             <button type="submit" ><span><i class="fa fa-send-o"></i></span></button>
                         </form>
@@ -228,11 +267,17 @@ $user_obj = $_SESSION['user_data'];
     }
 
     function loadChat(element) {
+
+        document.querySelectorAll('.user-text-box').forEach(userBox => {
+            userBox.classList.remove('active_user');
+        });
+        element.classList.add('active_user');
         receiver_userid = element.getAttribute('data-user-id');
         var receiver_name = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
+        var receiver_username = document.getElementById('list_user_username_' + receiver_userid).innerHTML;
         var receiver_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
         var user_photo = document.getElementById('selected_user_image_' + receiver_userid).src;
-        make_chat_area(receiver_name, receiver_status, true, user_photo);
+        make_chat_area(receiver_name, receiver_username, receiver_status, true, user_photo);
 
 
         if (window.innerWidth <= 768) {
@@ -243,7 +288,7 @@ $user_obj = $_SESSION['user_data'];
             clearInterval(chatInterval);
         }
 
-        console.log('Triggered');
+        // console.log('Triggered');
         // Call loadChat immediately and then every 2 seconds
         fetchChat(receiver_userid);
         chatInterval = setInterval(() => fetchChat(receiver_userid), 2000);
@@ -305,7 +350,7 @@ $user_obj = $_SESSION['user_data'];
         })
             .then(response => response.text())
             .then(data => {
-                console.log("Response received: " + data);
+                // console.log("Response received: " + data);
                 let response;
                 try {
                     response = JSON.parse(data);
@@ -348,11 +393,12 @@ $user_obj = $_SESSION['user_data'];
             });
     }
 
+    
+
     function handleMessage() {
 
         var inputmsg = document.getElementById('user_text_message');
         var message = inputmsg.value.trim();
-        console.log();
         if (receiver_userid == '') {
             window.alert('something went wrong');
             return;
@@ -377,7 +423,6 @@ $user_obj = $_SESSION['user_data'];
         })
             .then(response => response.text())
             .then(data => {
-                console.log("Response received: " + data);
                 let response;
                 try {
                     response = JSON.parse(data);
@@ -407,22 +452,22 @@ $user_obj = $_SESSION['user_data'];
         inputmsg.value = '';
     }
 
-    function userStatus() {
-        var xhr = new XMLHttpRequest();
+    // function userStatus() {
+    //     var xhr = new XMLHttpRequest();
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    document.getElementById('users-box').innerHTML = xhr.responseText;
-                } else {
-                    console.error('Error fetching user data:', xhr.status, xhr.statusText);
-                }
-            }
-        };
+    //     xhr.onreadystatechange = function () {
+    //         if (xhr.readyState === XMLHttpRequest.DONE) {
+    //             if (xhr.status === 200) {
+    //                 document.getElementById('users-box').innerHTML = xhr.responseText;
+    //             } else {
+    //                 console.error('Error fetching user data:', xhr.status, xhr.statusText);
+    //             }
+    //         }
+    //     };
 
-        xhr.open('GET', 'fetchUsers.php', true);
-        xhr.send();
-    }
+    //     xhr.open('GET', 'fetchUsers.php', true);
+    //     xhr.send();
+    // }
 
 
     // FUNCTION TO HIDE USER-BOX (MOBILE DEVICE)
@@ -457,53 +502,64 @@ $user_obj = $_SESSION['user_data'];
     // Listen for visibility changes
     document.addEventListener('visibilitychange', toggleBackButtonVisibility);
 
-    //         function updateUsers() {
-    //             var userId = document.getElementById('login_user_id').value;
+    function updateUsers() {
+        var userId = document.getElementById('login_user_id').value;
 
-    //             fetch('action.php', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/x-www-form-urlencoded'
-    //                 },
-    //                 body: new URLSearchParams({
-    //                     'user_id': userId,
-    //                     'action': 'get_users',
-    //                 })
-    //             })
-    //             .then(response => response.json()) // Parse response as JSON
-    //             .then(data => {
-    //                 console.log("Response received: ", data);
-    //                 // Check if data is valid
-    //                 if (Array.isArray(data)) {
-    //                     // Construct HTML for users
-    //                     let userHTML = '';
-    //                     data.forEach(user => {
-    //                         userHTML += `
-    //                             <div class='user-text-box' data-userid='${user.user_id}' onclick='loadChat(${user.user_id}'>
-    //                                 <div class='profile'>
-    //                                     <img src='./assets/avatar.png' alt='avatar'>
-    //                                 </div>
-    //                                 <div class='text-box'>
-    //                                     <p class='username-box' id='list_user_name_${user.user_id}'>${user.fname} ${user.lname}</p>
-    //                                     <p class='status-box' id='list_user_status_${user.user_id}'>${user.status}</p>
-    //                                 </div>
-    //                             </div>
-    //                         `;
-    //                     });
-    //                     // Update the users-box element
-    //                     document.getElementById('users-box').innerHTML = userHTML;
-    //                 } else {
-    //                     console.error('Invalid data format received.');
-    //                 }
-    //             })
-    //             .catch(error => {
-    //                 console.error("Fetch Error:", error);
-    //             });
-    // }
+        fetch('action.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                'user_id': userId,
+                'action': 'get_users',
+            })
+        })
+            .then(response => response.json()) // Parse response as JSON
+            .then(data => {
+                //console.log("Response received: ", data);
+                // Check if data is valid
+                if (Array.isArray(data)) {
+                    // Construct HTML for users
+                    let userHTML = '';
+                    document.getElementById('users-box').innerHTML = '';
+                    data.forEach(user => {
+                        var status_style = `<span class='dot' id='red'></span>`;
+                        var isActive = "";
+                        if (user.status == 'Active') {
+                            status_style = `<span class='dot' id='green12'></span>`;
+                        }
+                        if (receiver_userid != '' && user.user_id == receiver_userid) {
+                            isActive = " active_user";
+                        }
+                        var unread = user.count_status != 0 ? `<span class='badge'>` + user.count_status + `</span>` : ``;
+                        userHTML = `<div class='user-text-box chat_triggered_class ${isActive}' id='chat11_user_${user.user_id}'  data-user-id='${user.user_id}' onclick='loadChat(this)'>
+                                    <div class='profile'>
+                                        <img src='${user.imagepath}${user.photo}' id='selected_user_image_${user.user_id}' alt='avatar'>
+                                    </div>
+                                    <div class='text-box'>
+                                        <p class='username-box notification' id='list_user_username_${user.user_id}'>` + user.username + unread + `</p>
+                                          <p class='status-box ' id='list_user_name_${user.user_id}'>` + user.fname + ` ` + user.lname + `</p>
+                                          <p class='status-box ' >`+ status_style + ` ` + `<span id='list_user_status_${user.user_id}'>` + user.status + `</span></p>
+                                          
+                                    </div>
+                                </div>`;
+                        document.getElementById('users-box').innerHTML += userHTML;
+                    });
+                    // Update the users-box element
+                } else {
+                    console.error('Invalid data format received.');
+                }
+            })
+            .catch(error => {
+                console.error("Fetch Error:", error);
+            });
+    }
 
 
-    userStatus();
-    setInterval(userStatus, 3000);
+    // userStatus();
+    updateUsers()
+    setInterval(updateUsers, 3000);
 
 
 </script>

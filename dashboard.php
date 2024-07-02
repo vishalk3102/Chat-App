@@ -411,7 +411,7 @@ $user_obj = $_SESSION['user_data'];
 
                     }
                     document.getElementById('message_text_box').innerHTML = html_data;
-                    // initializeChat();
+                    initializeChat();
                     setTimeout(scrollToBottom, 100);
                 }
 

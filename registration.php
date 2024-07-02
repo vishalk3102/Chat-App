@@ -60,8 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error = "There already exist a user with this email";
         } else {
             if ($user->saveUser()) {
-                $success_message = "Registration successful!";
-            } else {
+             $success_message = "Registration successful! Now you can login.";
+             header('location:index.php?Message='.$success_message.'');   
+        } else {
                 $error = "Error: " . $db->errorInfo()[2];
             }
         }

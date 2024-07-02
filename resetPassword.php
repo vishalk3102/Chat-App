@@ -1,21 +1,37 @@
 <?php
 session_start();
-$error = $_SESSION['reset_email'];
+$error = '';
 $success_message = '';
 
 if (!isset($_SESSION['reset_email'])) {
     header('location:forgetPass.php');
 }
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+$user_email = $_SESSION['reset_email'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otp'])) {
     require_once ('database/ChatUser.php');
 
     $user = new ChatUser();
     $user->setPassword($_POST['password']);
     if ($user->newPassword($_POST['otp'], $_SESSION['reset_email'], $_POST['password'])) {
         $success_message = "Password updated ! Enjoy your safe & secure chatting :)";
-
+        unset($_SESSION["reset_email"]);
     } else {
         $error = "Error: Invalid otp";
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
+    require ("./sendOTP.php");
+
+
+    $user = new ChatUser();
+    $user->setRegistrationEmail($_POST['otpemail']);
+    $user_data = $user->getUserByEmail();
+    if (is_array($user_data) && count($user_data) > 0) {
+
+        sendOtp($_POST['otpemail']);
+    } else {
+        $error = "This id is not registered";
     }
 }
 
@@ -128,14 +144,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <span class="details">OTP</span>
                         <div class="otp-input-resend-box">
                             <input type="text" placeholder="Enter OTP" name="otp" required>
-                            <button class="resend-button" id="delayedLink">Resend</button>
+                            <button class="resend-button" id="delayedLink" data-email="<?php echo $user_email ?>"
+                                style="display:inline;" disabled>Resend</button>
                             </input>
                         </div>
                     </div>
                 </div>
                 <div class="otp-timer">
                     <span id="timer">
-                        2:00
+
                     </span>
                 </div>
                 <div class="button submit-button">
@@ -147,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <p>Back to Log in</p>
                     </a>
 
-                    <a href="forgetPass.php" id="delayedLink" style="display:inline;">Resend OTP</a>
+                    <!-- <a id="delayedLink" data-email="<?php echo $user_email ?>" style="display:inline;">Resend OTP</a> -->
                 </div>
             </form>
         </div>
@@ -157,41 +174,136 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 </body>
 <script>
+
+    // // LOGIC FOR RESENDING OTP
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     // Find the element by id
+    //     var delayedLink = document.getElementById('delayedLink');
+
+    //     // Add click event listener
+    //     delayedLink.addEventListener('click', function (event) {
+    //         event.preventDefault(); // Prevent default action of <a> tag
+
+    //         // Get the email from data attribute
+    //         var userEmail = delayedLink.getAttribute('data-email');
+    //         // Create form element
+    //         var form = document.createElement('form');
+    //         form.setAttribute('method', 'POST');
+    //         // form.setAttribute('action', 'your-post-endpoint-url'); // Replace with your actual endpoint URL
+
+    //         // Create hidden input field for email
+    //         var emailInput = document.createElement('input');
+    //         emailInput.setAttribute('type', 'hidden');
+    //         emailInput.setAttribute('name', 'otpemail');
+    //         emailInput.setAttribute('value', userEmail);
+
+    //         // Append the input to the form
+    //         form.appendChild(emailInput);
+
+    //         // Append the form to the document body (you can append it to any other element if needed)
+    //         document.body.appendChild(form);
+
+    //         // Submit the form
+    //         form.submit();
+    //     });
+    // });
+
+
+
+    // LOGIC FOR COUNTDOWN TIMER
     document.addEventListener('DOMContentLoaded', function () {
-        let timer = 120; // 2 minutes in seconds
         const timerDisplay = document.getElementById('timer');
-        const resendButton = document.getElementsByClassName('resend-button');
+        const resendButton = document.getElementById('resend-button');
+        let timer;
+        let countdown;
+
+        function initializeTimer() {
+            const storedEndTime = localStorage.getItem('otpEndTime');
+            const now = new Date().getTime();
+
+            if (storedEndTime && now < storedEndTime) {
+                // If there's a stored end time and it's in the future, use it
+                timer = Math.round((storedEndTime - now) / 1000);
+            } else {
+                // Otherwise, start a new 2-minute timer
+                timer = 120;
+                localStorage.setItem('otpEndTime', now + 120000);
+            }
+
+            updateTimerDisplay();
+            startTimer();
+        }
 
         function startTimer() {
-            let minutes, seconds;
-            const countdown = setInterval(function () {
-                minutes = parseInt(timer / 60, 10);
-                seconds = parseInt(timer % 60, 10);
+            countdown = setInterval(function () {
+                timer--;
+                updateTimerDisplay();
 
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                timerDisplay.textContent = minutes + ":" + seconds;
-
-                if (--timer < 0) {
+                if (timer <= 0) {
                     clearInterval(countdown);
                     resendButton.disabled = false;
-                    timerDisplay.textContent = "00:00";
+                    localStorage.removeItem('otpEndTime');
                 }
             }, 1000);
         }
 
-        // Start the timer when the page loads
-        startTimer();
+        function updateTimerDisplay() {
+            let minutes = Math.floor(timer / 60);
+            let seconds = timer % 60;
 
-        // Reset timer when resend button is clicked
-        resendButton.addEventListener('click', function () {
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            timerDisplay.textContent = minutes + ":" + seconds;
+        }
+
+        function resetTimer() {
+            clearInterval(countdown);
             timer = 120;
+            const now = new Date().getTime();
+            localStorage.setItem('otpEndTime', now + 120000);
             resendButton.disabled = true;
+            updateTimerDisplay();
             startTimer();
-            // Here you would also add the logic to resend the OTP
+
+            // Here you would add the logic to resend the OTP
+            // For example: sendNewOTP();
+        }
+
+        // LOGIC FOR RESENDING OTP
+        resendButton.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            // Get the email from data attribute
+            var userEmail = resendButton.getAttribute('data-email');
+
+            // Create form element
+            var form = document.createElement('form');
+            form.setAttribute('method', 'POST');
+            // form.setAttribute('action', 'your-post-endpoint-url'); // Replace with your actual endpoint URL
+
+            // Create hidden input field for email
+            var emailInput = document.createElement('input');
+            emailInput.setAttribute('type', 'hidden');
+            emailInput.setAttribute('name', 'otpemail');
+            emailInput.setAttribute('value', userEmail);
+
+            // Append the input to the form
+            form.appendChild(emailInput);
+
+            // Append the form to the document body
+            document.body.appendChild(form);
+
+            // Submit the form
+            form.submit();
+
+            // Reset the timer after form submission
+            resetTimer();
         });
+
+        initializeTimer();
     });
+
 </script>
 
 </html>

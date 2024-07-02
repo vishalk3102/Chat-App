@@ -167,7 +167,6 @@
     <script>
         function validateForm() {
             // event.preventDefault();
-            console.log("hleo");
            
             var oldPassword = document.getElementById('old-password').value;
             var newPassword = document.getElementById('new-password').value;

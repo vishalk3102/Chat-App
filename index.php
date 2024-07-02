@@ -1,12 +1,18 @@
 <?php
 session_start();
 $error = '';
-if (isset($_SESSION['user_data'])) {
+$success = "";
+if (isset($_SESSION['user_data']))
+{
     header('location:dashboard.php');
+} 
+if(isset($_REQUEST['Message']))
+{
+    $success = $_REQUEST['Message'];
 }
-
-if (isset($_POST['email'], $_POST['password'])) {
-    require_once ('database/ChatUser.php');
+if(isset($_POST['email'],$_POST['password']))
+{
+    require_once('database/ChatUser.php');
     $user = new ChatUser();
     $user->setRegistrationEmail($_POST['email']);
     $user_data = $user->getUserByEmail();
@@ -98,9 +104,14 @@ if (isset($_POST['email'], $_POST['password'])) {
                             echo '<div class="error-message er" id="server_error" >
                         ' . $error . '</div>
                         ';
-                            $error = "";
-                        }
-                        ?>
+                        $error="";
+                      }
+                      if ($success != '') {
+                        echo '<div class="alert alert-success" role="alert">
+                            ' . $success . '
+                            </div>';
+                    }
+                      ?>
 
 
                     </div>

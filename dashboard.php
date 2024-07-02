@@ -71,6 +71,9 @@ $user_obj = $_SESSION['user_data'];
             padding: 2px;
 
         }
+        /* .show_message{
+            font-size: 300px;
+        } */
     </style>
 </head>
 
@@ -311,7 +314,7 @@ $user_obj = $_SESSION['user_data'];
         // console.log('Triggered');
         // Call loadChat immediately and then every 2 seconds
         fetchChat(receiver_userid);
-        chatInterval = setInterval(() => fetchChat(receiver_userid), 2000);
+        chatInterval = setInterval(() => fetchChat(receiver_userid), 3000);
 
     }
     // FUNCTION TO AUTO SCROLL MESSAGE TO BOTTOM
@@ -395,7 +398,7 @@ $user_obj = $_SESSION['user_data'];
                         if (response[count].sender_id == userId) {
                             html_data += `<div class="sender-message">
                                 <p> 
-                                 <span>`+ response[count].message + `</span>
+                                 <span class="show_message">`+ response[count].message + `</span>
                                     
                                      
                                      `+ read_check + `
@@ -485,23 +488,6 @@ $user_obj = $_SESSION['user_data'];
             });
         inputmsg.value = '';
     }
-
-    // function userStatus() {
-    //     var xhr = new XMLHttpRequest();
-
-    //     xhr.onreadystatechange = function () {
-    //         if (xhr.readyState === XMLHttpRequest.DONE) {
-    //             if (xhr.status === 200) {
-    //                 document.getElementById('users-box').innerHTML = xhr.responseText;
-    //             } else {
-    //                 console.error('Error fetching user data:', xhr.status, xhr.statusText);
-    //             }
-    //         }
-    //     };
-
-    //     xhr.open('GET', 'fetchUsers.php', true);
-    //     xhr.send();
-    // }
 
 
     // FUNCTION TO HIDE USER-BOX (MOBILE DEVICE)

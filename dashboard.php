@@ -216,10 +216,9 @@ $user_obj = $_SESSION['user_data'];
 
     }
 
-    function handleEnter(e)
-    {
+    function handleEnter(e) {
         if (event.key == "Enter" && !event.shiftKey) {
-            
+
             event.preventDefault();
             handleMessage();
         }
@@ -382,7 +381,7 @@ $user_obj = $_SESSION['user_data'];
 
                     }
                     document.getElementById('message_text_box').innerHTML = html_data;
-                    initializeChat();
+                    // initializeChat();
                     setTimeout(scrollToBottom, 100);
                 }
 
@@ -393,7 +392,7 @@ $user_obj = $_SESSION['user_data'];
             });
     }
 
-    
+
 
     function handleMessage() {
 

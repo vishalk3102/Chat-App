@@ -53,6 +53,21 @@ $user_obj = $_SESSION['user_data'];
             background-color: #4e61c7;
             color: #fff;
         }
+
+        .sender-message p {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .message_status_show {
+            margin-left: 94%;
+            bottom: 0;
+            height: 8px;
+            width: 16px;
+            padding: 2px;
+
+        }
     </style>
 </head>
 
@@ -216,10 +231,9 @@ $user_obj = $_SESSION['user_data'];
 
     }
 
-    function handleEnter(e)
-    {
+    function handleEnter(e) {
         if (event.key == "Enter" && !event.shiftKey) {
-            
+
             event.preventDefault();
             handleMessage();
         }
@@ -294,11 +308,10 @@ $user_obj = $_SESSION['user_data'];
         chatInterval = setInterval(() => fetchChat(receiver_userid), 2000);
 
     }
-
-    // FUNCTION TO AUTO SCROLL MESSAGE TO BOTTOM 
+    // FUNCTION TO AUTO SCROLL MESSAGE TO BOTTOM
     function scrollToBottom() {
         var chatBox = document.querySelector('.chat-text-box');
-        if (chatBox) {
+        if (chatBox && !chatBox.hasScrolled) {
             const scrollHeight = chatBox.scrollHeight;
             const height = chatBox.clientHeight;
             const maxScrollTop = scrollHeight - height;
@@ -309,14 +322,31 @@ $user_obj = $_SESSION['user_data'];
                 behavior: 'smooth'
             });
 
-            // Double-check scroll position after animation
-            setTimeout(() => {
-                if (chatBox.scrollTop !== maxScrollTop) {
-                    chatBox.scrollTop = maxScrollTop;
-                }
-            }, 300);
+            // Mark as scrolled
+            chatBox.hasScrolled = true;
+
+            // Remove the scroll event listener after initial scroll
+            chatBox.removeEventListener('scroll', preventAutoScroll);
         }
     }
+
+    // Prevent auto-scrolling after user has manually scrolled
+    function preventAutoScroll() {
+        this.hasScrolled = true;
+    }
+
+    // Call this function when the chat is loaded
+    function initializeChat() {
+        var chatBox = document.querySelector('.chat-text-box');
+        if (chatBox) {
+            chatBox.hasScrolled = false;
+            chatBox.addEventListener('scroll', preventAutoScroll);
+            scrollToBottom();
+        }
+    }
+
+    // Call initializeChat when your chat component is mounted or loaded
+    initializeChat();
 
     function fetchChat(recUserId) {
         receiver_userid = recUserId
@@ -345,12 +375,27 @@ $user_obj = $_SESSION['user_data'];
                 if (response.length > 0) {
                     var html_data = '';
                     for (var count = 0; count < response.length; count++) {
+                        let read_check = `<span class="message_status_show"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 109.76" style="enable-background:new 0 0 122.88 109.76" xml:space="preserve"><style type="text/css">.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#01A601;}</style><g><path class="st0" d="M0,52.88l22.68-0.3c8.76,5.05,16.6,11.59,23.35,19.86C63.49,43.49,83.55,19.77,105.6,0h17.28 C92.05,34.25,66.89,70.92,46.77,109.76C36.01,86.69,20.96,67.27,0,52.88L0,52.88z"/></g></svg>
+                                     </span>`;
+                        if (response[count].message_status == 'send') {
+                            read_check = `<span class="message_status_show"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 122.88 109.76" style="enable-background:new 0 0 122.88 109.76" xml:space="preserve">
+                            <g>
+                                <path style="fill:#000000;" d="M0,52.88l22.68-0.3c8.76,5.05,16.6,11.59,23.35,19.86C63.49,43.49,83.55,19.77,105.6,0h17.28 C92.05,34.25,66.89,70.92,46.77,109.76C36.01,86.69,20.96,67.27,0,52.88L0,52.88z"/>
+                            </g>
+                                </svg>
+
+                            </span>`;
+                        }
                         if (response[count].sender_id == userId) {
                             html_data += `<div class="sender-message">
-                                <p>
-                                    `+ response[count].message + `
+                                <p> 
+                                 <span>`+ response[count].message + `</span>
+                                    
+                                     
+                                     `+ read_check + `
                                 </p>
                                 <span>`+ response[count].timestamp + `</span>
+                              
                             </div>`
                         }
                         else {
@@ -376,7 +421,7 @@ $user_obj = $_SESSION['user_data'];
             });
     }
 
-    
+
 
     function handleMessage() {
 
@@ -424,6 +469,7 @@ $user_obj = $_SESSION['user_data'];
                     </div>`
 
                     document.getElementById('message_text_box').innerHTML += html_data;
+                    initializeChat();
                     setTimeout(scrollToBottom, 100);
                 }
 

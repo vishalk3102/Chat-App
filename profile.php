@@ -147,7 +147,7 @@ if (!$imageFolder) {
         cursor: pointer;
     }
 
-
+    
 
     /* RESPONSIVE CODE  */
     @media screen and (max-width: 768px) {

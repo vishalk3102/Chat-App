@@ -37,7 +37,7 @@ $user_obj = $_SESSION['user_data'];
         .dot {
             height: 10px;
             width: 10px;
-            background-color: red;
+            background-color: #e79023;
             border-radius: 50%;
             display: inline-block;
             margin-right: 2px;
@@ -45,11 +45,13 @@ $user_obj = $_SESSION['user_data'];
         }
 
         #green12 {
-            background-color: green;
+            background-color: #10B982;
+            /* border: 1px solid #000; */
         }
 
         .active_user {
-            background-color: #45FFCA;
+            background-color: #4e61c7;
+            color: #fff;
         }
 
         .sender-message p {
@@ -182,6 +184,8 @@ $user_obj = $_SESSION['user_data'];
         profileIcon.addEventListener('click', toggleDropdown);
         document.addEventListener('click', closeDropdown);
 
+
+
     });
 
 
@@ -226,6 +230,15 @@ $user_obj = $_SESSION['user_data'];
         }
 
     }
+
+    function handleEnter(e)
+    {
+        if (event.key == "Enter" && !event.shiftKey) {
+            
+            event.preventDefault();
+            handleMessage();
+        }
+    }
     function make_chat_area(user_name, username, user_status, chatStarted, user_photo) {
         var status_style = `<span class='dot' id='red'></span>`;
         if (user_status == 'Active') {
@@ -250,7 +263,7 @@ $user_obj = $_SESSION['user_data'];
                     </div>
 
                     <div class="chat-message-box">
-                        <form method="POST" onsubmit="event.preventDefault(); handleMessage();">
+                        <form id="messageForm" onsubmit="event.preventDefault(); handleMessage();" onkeypress="handleEnter(this)">
                             <textarea  type="text" id="user_text_message" placeholder="Type a message..." maxLength="255"></textarea>
                             <button type="submit" ><span><i class="fa fa-send-o"></i></span></button>
                         </form>
@@ -392,6 +405,8 @@ $user_obj = $_SESSION['user_data'];
                 console.error("Fetch Error: " + error);
             });
     }
+
+    
 
     function handleMessage() {
 

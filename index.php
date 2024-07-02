@@ -1,11 +1,15 @@
 <?php
 session_start();
 $error = '';
+$success = "";
 if (isset($_SESSION['user_data']))
 {
     header('location:dashboard.php');
 } 
-
+if(isset($_REQUEST['Message']))
+{
+    $success = $_REQUEST['Message'];
+}
 if(isset($_POST['email'],$_POST['password']))
 {
     require_once('database/ChatUser.php');
@@ -113,6 +117,11 @@ if(isset($_POST['email'],$_POST['password']))
                         ';
                         $error="";
                       }
+                      if ($success != '') {
+                        echo '<div class="alert alert-success" role="alert">
+                            ' . $success . '
+                            </div>';
+                    }
                       ?>
 
                      

@@ -23,17 +23,33 @@
             {
                 if(password_verify($_POST['opassword'],$userData['password']))
                 {
+                    if($_POST['npassword'] !== $_POST['cnpassword'])
+                    {
+                        $error = "Password and confirm password did not matched";
+                    }
+                    else if(password_verify($_POST['npassword'],$userData['password']))
+                    {
+                        $error = "New password must be different from old password";
+                    }
+                    else
+                    {
                         $user-> setPassword($_POST['npassword']);
                         if ($user->resetPassword()) {
                             $success_message = "Password updated ! Enjoy your safe & secure chatting :)";
                         } else {
                             $error =  "Error: " . $db->errorInfo()[2];
                         }
+                    }
+                        
                 }
                 else
                 {
-                    $error = "Are you confident you remember your password?";
+                    $error = "You entered wrong password ! ";
                 }
+            }
+            else
+            {
+                $error = "No user exist with this provided email id" ;
             }
       }
     }
@@ -50,41 +66,16 @@
     <title>Password recovery</title>
     <link rel="stylesheet" href="style/style.css">
 </head>
-
 <style>
-    .button {
-        margin-bottom: 2px !important;
-    }
-
-    .back-to-login a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 5px 0px;
-        text-decoration: none;
-        color: #000;
-
-    }
-
-    .back-to-login a span {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-    }
-
-    .back-to-login a span img {
-        height: 20px;
-        width: 30px;
-        padding: 4px;
-        margin-right: 4px;
-    }
-
-    .back-to-login a p {
-        font-size: 12px;
-        font-weight: 600;
-    }
-</style> 
+.alert-danger{
+  color: red ;
+  font-size: 14px;
+} 
+.alert-success{
+  color: #104b1e;
+  font-size: 14px;
+}
+</style>
 
 <script>
         function validateForm() {
@@ -93,7 +84,7 @@
             var password = document.getElementById('new-password').value;
             var confirmPassword = document.getElementById('cnew-password').value;
 
-        
+            console.log(password);
             // Validate password and confirm password match
         
             var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -103,14 +94,17 @@
             var target=document.getElementById('newPasswordError');
 
             if (!passwordRegex.test(password)) {
+                console.log("ghg");
                 target.style.display="inline";
                 target.textContent = errorMessage;
                 return false;
             }target.style.display="none"; 
+            console.log("ttt");
 
             var errorMessage = "Password and Confirm Password do not match";
             var target=document.getElementById('confError');
             if (password !== confirmPassword) {
+                console.log("uuu");
                 target.style.display="inline";
                 target.textContent = errorMessage;
                 return false;
@@ -135,7 +129,7 @@
                 '.$success_message.'
                 </div>';
             }
-        ?>
+    ?>
         <div class="title">Password recovery</div>
         <div class="content">
             <form method="POST" onsubmit="return validateForm()">
@@ -147,7 +141,7 @@
                     </div>
                     <div class="input-box">
                         <span class="details">New Password</span>
-                        <input type="text" placeholder="Enter your new password" id="new-password" name="npassword" required>
+                        <input type="password" placeholder="Enter your new password" id="new-password" name="npassword" required>
                         <div id="newPasswordError" class="error-message"></div>
                     </div>
                     <div class="input-box">
@@ -156,7 +150,7 @@
                         <div id="confError" class="error-message"></div>
                     </div>
                 </div>
-                <div class="button">
+                <div class="button btn">
                     <input type="submit" value="Submit">
                 </div>
                 <div class="back-to-login">

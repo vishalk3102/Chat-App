@@ -1,5 +1,8 @@
 <?php
 require_once 'DatabaseConnection.php';
+require 'bin\vendor\autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load();
 class ChatMessage
 {
 
@@ -10,12 +13,13 @@ class ChatMessage
     private $timestamp;
     private $message_status;  //(“send” and “received”)   
     private $connection;
+    private $encryption_key;
 
     public function __construct()
     {
         $database = new DatabaseConnection();
         $this->connection = $database->connect();
-
+        $this->encryption_key = $_ENV['ENY_KEY'];
     }
 
     public function setMessageId($message_id)
@@ -74,17 +78,21 @@ class ChatMessage
         return $this->message_status;
     }
 
+   
+
     public function save_chat()
     {
         try {
-            $query = "CALL insert_chat_message(:sender_id, :receiver_id, :message, :timestamp, :message_status)";
+            $query = "CALL insert_chat_message(:sender_id, :receiver_id, :message, :timestamp, :message_status, :key)";
             $stmt = $this->connection->prepare($query);
- 
+            
+
             $stmt->bindParam(':sender_id', $this->sender_id);
             $stmt->bindParam(':receiver_id', $this->receiver_id);
             $stmt->bindParam(':message', $this->message);
             $stmt->bindParam(':timestamp', $this->timestamp);
             $stmt->bindParam(':message_status', $this->message_status);
+            $stmt->bindParam(':key',$this->encryption_key);
  
             $stmt->execute();
    
@@ -99,10 +107,11 @@ class ChatMessage
     public function fetch_chat()
     {
         try {
-            $stmt = $this->connection->prepare("CALL fetch_chat_messages(:sender_id, :receiver_id)");
+            $stmt = $this->connection->prepare("CALL fetch_chat_messages(:sender_id, :receiver_id, :key)");
    
             $stmt->bindParam(':sender_id', $this->sender_id);
             $stmt->bindParam(':receiver_id', $this->receiver_id);
+            $stmt->bindParam(':key',$this->encryption_key);
  
             $stmt->execute();
    
@@ -113,6 +122,21 @@ class ChatMessage
         }
     }
 
+    public function change_chat_status()
+    {
+        try {
+            $query = "CALL update_chat_status(:sender_id, :receiver_id)";
+            $stmt = $this->connection->prepare($query);
+
+            $stmt->bindParam(':sender_id', $this->sender_id);
+            $stmt->bindParam(':receiver_id', $this->receiver_id);
+
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
 
 
 }

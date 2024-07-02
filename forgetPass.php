@@ -1,3 +1,28 @@
+<?php
+$error="";
+session_start();
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    require("./sendOTP.php");
+    
+    
+    $user = new ChatUser();
+    $user->setRegistrationEmail($_POST['email']);
+    $user_data = $user->getUserByEmail();
+    if(is_array( $user_data) && count($user_data) > 0)
+    {
+
+        $_SESSION['reset_email']=$_POST['email'];
+        sendOtp($_POST['email']);
+    }
+    else
+    {
+        $error="This id is not registered";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,9 +34,9 @@
 
     <script>
         function validateForm() {
-           
+
             var email = document.getElementById('email').value.trim();
-           
+
             // Validate email format
             var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
             var errorMessage = "Please enter a valid email address";
@@ -25,46 +50,21 @@
     </script>
 
 </head>
- <style>
-    .button {
-        margin-bottom: 2px !important;
-    }
-
-    .back-to-login a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 5px 0px;
-        text-decoration: none;
-        color: #000;
-
-    }
-
-    .back-to-login a span {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-    }
-
-    .back-to-login a span img {
-        height: 20px;
-        width: 30px;
-        padding: 4px;
-        margin-right: 4px;
-    }
-
-    .back-to-login a p {
-        font-size: 12px;
-        font-weight: 600;
-    }
-</style> 
 
 <body>
     <div class="container log-container">
+    <?php
+        if ($error != '') {
+            echo '<div class="alert alert-danger" role="alert">
+                ' . $error . '
+                </div>';
+        }
+        
+        
+        ?>
         <div class="title">Password recovery</div>
         <div class="content">
-            <form action="sendOTP.php" method="post" onsubmit="return validateForm()">
+            <form method="post" onsubmit="return validateForm()">
                 <div class="user-details">
                     <div class="input-box">
                         <span class="details">Email</span>

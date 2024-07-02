@@ -1,5 +1,9 @@
 <?php
 session_start();
+require 'bin\vendor\autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 // $logFile = 'debug.log';
 
@@ -28,7 +32,7 @@ if(isset($_POST["action"]) && $_POST["action"] == 'fetch_chat')
     $chat_object = new ChatMessage();
     $chat_object->setSenderId($_POST["to_user_id"]);
     $chat_object->setReceiverId($_POST["from_user_id"]);
-    // $private_chat_object->change_chat_status();
+    $chat_object->change_chat_status();
     echo json_encode($chat_object->fetch_chat());
 }
 
@@ -38,6 +42,7 @@ if(isset($_POST["action"]) && $_POST["action"] == "send_message")
     $chat_object = new ChatMessage();
     $chat_object->setSenderId($_POST["from_user_id"]);
     $chat_object->setReceiverId($_POST["to_user_id"]);
+    date_default_timezone_set("ASIA/KOLKATA");
     $chat_object->setTimestamp(date('Y-m-d H:i:s'));
     $chat_object->setMessageStatus('send');
     $chat_object->setMessage($_POST["message"]);
@@ -46,32 +51,38 @@ if(isset($_POST["action"]) && $_POST["action"] == "send_message")
     echo json_encode($response);
 }
 
-// if(isset($_POST["action"]) && $_POST["action"] == "get_users")
-// {
+if(isset($_POST["action"]) && $_POST["action"] == "get_users")
+{
     
-//     $user_id = $_POST["user_id"];
-//     require_once 'database/ChatUser.php';
-//     $chatuser = new ChatUser();
-//     $chatuser->setUserId($user_id);
-//     $user_data = $chatuser->getAllUsersDataWithStatus();
-
-
-//     $user_html = [];
-//     foreach ($user_data as $user) {
+    $user_id = $_POST["user_id"];
+    require_once 'database/ChatUser.php';
+    $chatuser = new ChatUser();
+    $chatuser->setUserId($user_id);
+    $user_data = $chatuser->getAllUsersDataWithStatus();
+    $imageFolder = $_ENV['imgpath'];
+    if (!$imageFolder) {
+        die('IMAGE_FOLDER environment variable is not set.');
+    }
+    $user_html = [];
+    foreach ($user_data as $user) {
        
-//         if ($user['user_id'] != $user_id) {
-//             $user_html[] = [
-//                 'user_id' => $user['user_id'],
-//                 'fname' => $user['fname'],
-//                 'lname' => $user['lname'],
-//                 'status' => $user['status']
-//             ];
-//         }
-//     }
+        if ($user['user_id'] != $user_id) {
+            $user_html[] = [
+                'user_id' => $user['user_id'],
+                'fname' => $user['fname'],
+                'lname' => $user['lname'],
+                'status' => $user['status'],
+                'username' => $user['username'],
+                'photo' => $user['photo'],
+                'count_status' => $user['count_status'],
+                'imagepath' => $_ENV['imgpath'],
+            ];
+        }
+    }
    
-//     echo json_encode($user_html);
+    echo json_encode($user_html);
    
-// }
+}
 
 ?>
 

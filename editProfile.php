@@ -1,3 +1,68 @@
+<?php
+session_start();
+
+$error = '';
+$success_message = '';
+
+if (!isset($_SESSION['user_data'])) {
+    header('location:index.php');
+}
+
+$user_obj = $_SESSION['user_data'];
+function allFieldsFilled($data)
+{
+    return isset($data['first_name']) && $data['first_name'] !== "" && isset($data['last_name']) && $data['last_name'] !== "" &&
+        isset($data['username']) && $data['username'] !== "" && isset($data['avatar_src']) && $data['avatar_src'] !== "";
+}
+function validateNameLength($name, $maxLength = 50)
+{
+    return strlen($name) <= $maxLength;
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    require_once ('database/ChatUser.php');
+
+    $user = new ChatUser();
+    if (!allFieldsFilled($_POST)) {
+        $error = "First Name, Last Name and Username are required Fields.";
+    } elseif (!validateNameLength($_POST['first_name']) || !validateNameLength($_POST['middle_name']) || !validateNameLength($_POST['last_name'])) {
+        $error = "First name, middle name, and last name must each be no more than 50 characters long.";
+    } else {
+        $user->setUserId($user_obj['id']);
+        $user->setfname($_POST['first_name']);
+        $user->setmname($_POST['middle_name']);
+        $user->setlname($_POST['last_name']);
+        $user->setUsername($_POST['username']);
+        $user->setPhoto($_POST['avatar_src']);
+        if ($user->updateUser()) {
+            $_SESSION['user_data']['fname'] = $_POST['first_name'];
+            $_SESSION['user_data']['mname'] = $_POST['middle_name'];
+            $_SESSION['user_data']['lname'] = $_POST['last_name'];
+            $_SESSION['user_data']['photo'] = $_POST['avatar_src'];
+            $_SESSION['user_data']['username'] = $_POST['username'];
+            $success_message = "Profile Updated! :)";
+        } else {
+            $error = "Error: " . $db->errorInfo()[2];
+        }
+    }
+
+}
+
+require 'bin\vendor\autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$imageFolder = $_ENV['imgpath'];
+if (!$imageFolder) {
+    die('IMAGE_FOLDER environment variable is not set.');
+}
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <style>
@@ -23,9 +88,23 @@
         width: 50%;
         border-radius: 10px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         background-color: #fff;
         padding: 2rem;
+    }
+
+    .profile-card> :nth-child(2) {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .toaster-box {
+        width: 100%;
+        text-align: center;
+        padding: 5px 0px;
+        margin-bottom: 1rem;
     }
 
     .left-side-box {
@@ -133,75 +212,197 @@
         margin: 10px;
         transition: border-color 0.3s ease;
     }
+
+    .back-to-login a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px 0px;
+        text-decoration: none;
+        color: #000;
+
+    }
+
+    .back-to-login a p {
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .alert-success{
+    color: #104b1e;
+    font-size: 14px;
+    }
+    .alert-danger{
+    color: red ;
+    font-size: 14px;
+    }
+
+    /* RESPONSIVE CODE  */
+    @media screen and (max-width: 768px) {
+        .profile-card {
+            width: 70%;
+            flex-direction: column;
+            /* flex-direction: column; */
+        }
+
+
+        .right-side-box {
+            margin-left: 0rem;
+        }
+
+        .input-box span {
+            font-size: 12px;
+        }
+
+        .input-box input {
+            font-size: 14px;
+        }
+
+        .button-box {
+            margin-top: 0rem;
+        }
+
+        .button-box button {
+            padding: 10px 10px;
+            font-size: 12px;
+            margin: 10px 5px;
+        }
+
+        .right-side-box .button-box {
+            display: flex;
+            justify-content: center;
+        }
+
+        .modal {
+            width: 400px;
+        }
+
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 992px) {
+        .profile-card {
+            width: 90%;
+            /* flex-direction: column; */
+        }
+
+
+        .left-side-box img {
+            border-radius: 10px;
+            height: 225px;
+            width: 275px;
+        }
+
+        .input-box span {
+            font-size: 12px;
+        }
+
+        .input-box input {
+            font-size: 14px;
+        }
+
+        .modal {
+            width: 400px;
+        }
+
+    }
 </style>
 
 <body>
     <section id="profile" class="container">
         <div class="profile-card">
-            <div class="left-side-box">
-                <img src="./assets/avatar.png" alt="avatar">
-                <div class="button-box">
-                    <button>
-                        <a href="editProfile.php">
-                            Change Avatar
-                        </a>
-                    </button>
-                </div>
-                <div id="avatarModal" class="modal">
-                    <div class="modal-content">
-                        <h4>Select Your New Avatar</h4>
-                        <div class="avatar-options">
-                            <img src="./assets/avatar1.jpg" onclick="selectAvatar(this)" alt="Avatar 1"
-                                class="avatar-option">
-                            <img src="./assets/avatar2.jpg" onclick="selectAvatar(this)" alt="Avatar 2"
-                                class="avatar-option">
-                            <img src="./assets/avatar3.png" onclick="selectAvatar(this)" alt="Avatar 3"
-                                class="avatar-option">
-                            <img src="./assets/avatar4.jpg" onclick="selectAvatar(this)" alt="Avatar 4"
-                                class="avatar-option">
-                            <img src="./assets/avatar5.jpg" onclick="selectAvatar(this)" alt="Avatar 4"
-                                class="avatar-option">
-                            <img src="./assets/avatar6.png" onclick="selectAvatar(this)" alt="Avatar 4"
-                                class="avatar-option">
-                        </div>
-                        <div class="modal-footer button-box">
-                            <button id="closeBtn">Close</button>
-                            <button id="saveBtn">Save</button>
-                        </div>
-                    </div>
-
-                </div>
-
+            <div class="toaster-box">
+                <?php
+                if ($error != '') {
+                    echo '<p class=" alert alert-danger" role="alert">
+                ' . $error . '
+                </p>';
+                }
+                if ($success_message != '') {
+                    echo '<p class="alert alert-success" role="alert">
+                ' . $success_message . '
+                </p>';
+                }
+                ?>
             </div>
-            <div class="right-side-box">
-                <form action="#">
-                    <div class="input-box">
-                        <span>First Name : </span>
-                        <input type="text" placeholder="Enter your first name" required>
-                    </div>
-                    <div class="input-box">
-                        <span>Middle Name : </span>
-                        <input type="text" placeholder="Enter your middle name" required>
-                    </div>
-                    <div class="input-box">
-                        <span>Last Name : </span>
-                        <input type="text" placeholder="Enter your last name" required>
-                    </div>
-                    <div class="input-box">
-                        <span>Email : </span>
-                        <input type="text" placeholder="Enter your email" required>
-                    </div>
-                    <div class="input-box">
-                        <span>Username : </span>
-                        <input type="text" placeholder="Enter your user name" required>
-                    </div>
+            <div class="">
+                <div class="left-side-box">
+                    <img src="<?php echo $imageFolder . $_SESSION['user_data']['photo'] ?>" alt="avatar">
+                    <!-- <img src="./assets/avatar1.jpg" alt="avatar"> -->
                     <div class="button-box">
-                        <button id="change-avatar-btn">
-                            Update Profile
+                        <button>
+                            <a>
+                                Change Avatar
+                            </a>
                         </button>
                     </div>
-                </form>
+                    <div id="avatarModal" class="modal">
+                        <div class="modal-content">
+                            <h4>Select Your New Avatar</h4>
+                            <div class="avatar-options">
+                                <img src="<?php echo $imageFolder . 'avatar1.jpg' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 1" class="avatar-option">
+                                <img src="<?php echo $imageFolder . 'avatar2.jpg' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 2" class="avatar-option">
+                                <img src="<?php echo $imageFolder . 'avatar3.png' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 3" class="avatar-option">
+                                <img src="<?php echo $imageFolder . 'avatar4.jpg' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 4" class="avatar-option">
+                                <img src="<?php echo $imageFolder . 'avatar5.jpg' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 5" class="avatar-option">
+                                <img src="<?php echo $imageFolder . 'avatar6.png' ?>" onclick="selectAvatar(this)"
+                                    alt="Avatar 6" class="avatar-option">
+                            </div>
+                            <div class="modal-footer button-box">
+                                <button id="closeBtn">Close</button>
+                                <button id="saveBtn">Save</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="right-side-box">
+
+                    <form method="POST">
+                        <div class="input-box">
+                            <span>Email : </span>
+                            <input type="text" placeholder="<?php echo $user_obj['email'] ?>" disabled>
+                        </div>
+
+                        <div class="input-box">
+                            <span>First Name : </span>
+                            <input type="text" value="<?php echo $_SESSION['user_data']['fname'] ?>" name='first_name'>
+                        </div>
+                        <div class="input-box">
+                            <span>Middle Name : </span>
+                            <input type="text" value="<?php echo $_SESSION['user_data']['mname'] ?>" name='middle_name'>
+                        </div>
+                        <div class="input-box">
+                            <span>Last Name : </span>
+                            <input type="text" value="<?php echo $_SESSION['user_data']['lname'] ?>" name='last_name'>
+                        </div>
+
+                        <div class="input-box">
+                            <span>Username : </span>
+                            <input type="text" value="<?php echo $_SESSION['user_data']['username'] ?>" name='username'>
+                        </div>
+
+                    <input type="hidden" id="avatar_src" name="avatar_src" value="<?php echo  $_SESSION['user_data']['photo'] ?>">
+
+                        <div class="button-box">
+                            <button id="change-avatar-btn" type="submit">
+                                Update Profile
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="back-to-login">
+                        <a href="profile.php">
+                            <p>Back to Profile</p>
+                        </a>
+                    </div>
+                </div>
             </div>
+
         </div>
     </section>
 </body>
@@ -226,8 +427,12 @@
     // Function to update the avatar image
     function updateAvatarImage(src) {
         const avatarImage = document.querySelector('.left-side-box img');
-        avatarImage.src = src;
-        console.log('Selected Avatar:', src);
+
+        avatarImage.src = src; // Assign new src
+
+        var filename = src.substring(src.lastIndexOf('/') + 1);
+        var avatarSrcInput = document.getElementById('avatar_src');
+        avatarSrcInput.value = filename;
     }
 
     // Attach event listeners

@@ -64,17 +64,16 @@ DELIMITER //
 CREATE PROCEDURE `insert_chat_message` (
     IN p_sender_id INT,
     IN p_receiver_id INT,
-    IN p_message VARCHAR(255),
+    IN p_message BLOB,
     IN p_timestamp DATETIME,
-    IN p_message_status VARCHAR(50)
+    IN p_message_status VARCHAR(50),
+    In p_enc_key varchar(100)
 )
 BEGIN
-    DECLARE v_encrypted_message blob;
- 
-    SET v_encrypted_message = AES_ENCRYPT(p_message, 'contatadshfsk');
+    
  
     INSERT INTO chatting (sender_id, receiver_id, message, timestamp, message_status)
-    VALUES (p_sender_id, p_receiver_id, v_encrypted_message, p_timestamp, p_message_status);
+    VALUES (p_sender_id, p_receiver_id, AES_ENCRYPT(p_message, p_enc_key), p_timestamp, p_message_status);
  
     SELECT LAST_INSERT_ID() AS chat_id;
 END //
@@ -87,13 +86,14 @@ DELIMITER //
 
 CREATE PROCEDURE fetch_chat_messages(
     IN p_sender_id INT,
-    IN p_receiver_id INT
+    IN p_receiver_id INT,
+    In p_dec_key varchar(100)
 )
 BEGIN
     SELECT 
         m.sender_id,
         m.receiver_id,
-        CAST(AES_DECRYPT(m.message, 'contatadshfsk') AS CHAR) AS message,
+        CAST(AES_DECRYPT(m.message, p_dec_key) AS CHAR) AS message,
         m.timestamp,
         m.message_status, 
         CONCAT(u1.fname, ' ', u1.lname) AS from_user_name, 
@@ -127,6 +127,7 @@ BEGIN
         u.fname, 
         u.lname, 
         u.photo, 
+        u.username,
         u.status,
         (
             SELECT COUNT(*)
@@ -143,7 +144,7 @@ DELIMITER ;
 
 
 
-UPDATE_USER_STATUS:-
+UPDATE_USER_PASSWORD:-
 DELIMITER //
  
 CREATE PROCEDURE `update_user_password` (
@@ -156,4 +157,48 @@ BEGIN
     WHERE `email` = p_email;
 END //
  
+DELIMITER ;
+
+
+UPDATE CHAT STATUS:-
+DELIMITER //
+
+CREATE PROCEDURE update_chat_status (
+    IN p_sender_id INT,
+    IN p_receiver_id INT
+)
+BEGIN
+    UPDATE chatting
+    SET message_status = 'read'
+    WHERE sender_id = p_sender_id AND 
+          receiver_id = p_receiver_id AND
+          message_status = 'send';
+END //
+
+DELIMITER ;
+
+
+UPDATE USER:-
+DELIMITER //
+
+CREATE PROCEDURE update_user_details (
+    IN p_user_id INT,
+    IN p_fname VARCHAR(50),
+    IN p_mname VARCHAR(50),
+    IN p_lname VARCHAR(50),
+    IN p_username VARCHAR(50),
+    IN p_photo VARCHAR(255)
+)
+BEGIN
+    UPDATE user
+    SET 
+        fname = p_fname,
+        mname = IF(p_mname = '', NULL, p_mname),
+        lname = p_lname,
+        username = p_username,
+        photo = p_photo
+    WHERE 
+        user_id = p_user_id;
+END //
+
 DELIMITER ;

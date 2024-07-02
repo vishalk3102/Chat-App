@@ -53,7 +53,7 @@ function sendOtp($email)
            
             if(!$mail->send())
             {
-                echo $mail->ErrorInfo;
+                header('location:errorPage.php');   
             }
             else
             {
@@ -64,7 +64,7 @@ function sendOtp($email)
         }
 
         else {
-            echo 'Error saving OTP to database.';
+            header('location:errorPage.php');
         }
 
 
@@ -72,7 +72,7 @@ function sendOtp($email)
 
     catch(Exception $e)
     {
-        echo 'error $e';
+        header('location:errorPage.php');
     }
 }
 ?>

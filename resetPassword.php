@@ -6,7 +6,8 @@
     if (!isset($_SESSION['reset_email'])) {
         header('location:forgetPass.php');
     }
-    if($_SERVER['REQUEST_METHOD'] == 'POST')
+    $user_email = $_SESSION['reset_email'];
+    if($_SERVER['REQUEST_METHOD'] == 'POST' && isset( $_POST['otp']) ) 
     {
             require_once('database/ChatUser.php');
             
@@ -15,13 +16,31 @@
                 if($user->newPassword($_POST['otp'],$_SESSION['reset_email'],$_POST['password']))
                 {
                    $success_message = "Password updated ! Enjoy your safe & secure chatting :)";
-                      
+                    unset($_SESSION["reset_email"]);
                 }
                 else
                 {
                     $error =  "Error: Invalid otp";
                 }
-            }
+    }
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
+        require("./sendOTP.php");
+        
+        
+        $user = new ChatUser();
+        $user->setRegistrationEmail($_POST['otpemail']);
+        $user_data = $user->getUserByEmail();
+        if(is_array( $user_data) && count($user_data) > 0)
+        {
+    
+            sendOtp($_POST['otpemail']);
+        }
+        else
+        {
+            $error="This id is not registered";
+        }
+    }
       
     
 
@@ -114,12 +133,45 @@
                         <p>Back to Log in</p>
                     </a>
 
-                    <a href="forgetPass.php" id="delayedLink" style="display:inline;">Resend OTP</a>
+                    <a  id="delayedLink" data-email="<?php echo $user_email?>" style="display:inline;">Resend OTP</a>
                 </div>
             </form>
         </div>
     </div>
+    <script>
+       document.addEventListener("DOMContentLoaded", function() {
+        // Find the element by id
+        var delayedLink = document.getElementById('delayedLink');
 
+        // Add click event listener
+        delayedLink.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default action of <a> tag
+        
+        // Get the email from data attribute
+        var userEmail = delayedLink.getAttribute('data-email');
+        // Create form element
+        var form = document.createElement('form');
+        form.setAttribute('method', 'POST');
+        // form.setAttribute('action', 'your-post-endpoint-url'); // Replace with your actual endpoint URL
+
+        // Create hidden input field for email
+        var emailInput = document.createElement('input');
+        emailInput.setAttribute('type', 'hidden');
+        emailInput.setAttribute('name', 'otpemail');
+        emailInput.setAttribute('value', userEmail);
+
+        // Append the input to the form
+        form.appendChild(emailInput);
+
+        // Append the form to the document body (you can append it to any other element if needed)
+        document.body.appendChild(form);
+
+        // Submit the form
+        form.submit();
+    });
+});
+
+    </script>
 
    
 </body>

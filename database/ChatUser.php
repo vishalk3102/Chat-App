@@ -254,6 +254,7 @@ class ChatUser
 
     public function updateOTP($otp, $email) {
         try {
+            date_default_timezone_set("ASIA/KOLKATA");
             $expiry_time = date('Y-m-d H:i:s', strtotime('now +2 minutes'));
             $used = false;
     
@@ -284,7 +285,8 @@ class ChatUser
             $statement = $this->connection->prepare($query);
             $statement->bindParam(':email', $email, PDO::PARAM_STR);
             $statement->execute();
-
+            $current_time = date('Y-m-d H:i:s');
+            $unix_timestamp = strtotime($current_time);
             $row = $statement->fetch(PDO::FETCH_ASSOC);
             $statement->closeCursor();
             if (!$row) {
@@ -294,7 +296,7 @@ class ChatUser
             $dbOtp = $row['otp'];
             $expiryTimestamp = $row['expiry_timestamp'];
 
-            if ($otp === $dbOtp) {
+            if ($otp === $dbOtp && $unix_timestamp<=$expiryTimestamp) {
                 // OTP is valid and not expired
                 $this->setRegistrationEmail($email);
                 $this->setPassword($password);

@@ -308,8 +308,6 @@ $user_obj = $_SESSION['user_data'];
             clearInterval(chatInterval);
         }
 
-        // console.log('Triggered');
-        // Call loadChat immediately and then every 2 seconds
         fetchChat(receiver_userid);
         chatInterval = setInterval(() => fetchChat(receiver_userid), 3000);
 
@@ -535,7 +533,6 @@ $user_obj = $_SESSION['user_data'];
             .then(response => response.json()) // Parse response as JSON
             .then(data => {
                 //console.log("Response received: ", data);
-                // Check if data is valid
                 if (Array.isArray(data)) {
                     // Construct HTML for users
                     let userHTML = '';

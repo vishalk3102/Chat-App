@@ -20,9 +20,8 @@ function sendOtp($email)
     try{
 
         $otp = generateOTP(); // Generate OTP
-
         $user = new ChatUser();
-        $success = $user->updateOTP($otp, $email); 
+        $success = $user->updateOTP(md5($otp), $email); 
 
         if($success)
         {
@@ -34,22 +33,12 @@ function sendOtp($email)
             $mail->SMTPSecure = true;
             $mail->setFrom($_ENV['sender_mail']);
             $mail->addAddress($email); 
-    
-            // $mail->SMTPDebug = true;
-            // $mail->SMTPSecure = 'tls';
-           // $mail->Username = $_ENV['sender_mail']; 
-            // $mail->Password = ""; 
-
 
             $mail->isHTML(true); // Set email format to HTML
             $mail->Subject = 'Your OTP for verification';
             $mail->Body    = 'Your OTP is: ' . $otp;
     
-            // $mail -> SMTPOptions = array('ssl'=>array(
-            //     'verify_peer'=> false,
-            //     'verify_peer_name'=> false,
-            //     'allow_self_signed'=> true
-            // ));
+        
            
             if(!$mail->send())
             {
@@ -58,7 +47,6 @@ function sendOtp($email)
             else
             {
                 header('location:resetPassword.php');   
-                // echo 'sent';
             }
 
         }

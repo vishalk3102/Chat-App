@@ -100,7 +100,8 @@ class ChatMessage
             return $result['chat_id'];
  
         } catch (PDOException $e) {
-            die('Error: ' . $e->getMessage());
+            // die('Error: ' . $e->getMessage());
+            header('location:errorPage.php');   
         }
     }
 
@@ -117,8 +118,9 @@ class ChatMessage
    
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
+            // echo "Error: " . $e->getMessage();
+            // return false;
+            header('location:errorPage.php');   
         }
     }
 
@@ -133,8 +135,9 @@ class ChatMessage
 
             $stmt->execute();
         } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
+            // echo "Error: " . $e->getMessage();
+            // return false;
+            header('location:errorPage.php');   
         }
     }
 

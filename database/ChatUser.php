@@ -296,7 +296,7 @@ class ChatUser
             $dbOtp = $row['otp'];
             $expiryTimestamp = $row['expiry_timestamp'];
 
-            if ($otp === $dbOtp && $unix_timestamp<=$expiryTimestamp) {
+            if (md5((string)$otp)==$dbOtp && $unix_timestamp<=$expiryTimestamp) {
                 // OTP is valid and not expired
                 $this->setRegistrationEmail($email);
                 $this->setPassword($password);

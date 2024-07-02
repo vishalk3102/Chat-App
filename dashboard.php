@@ -57,7 +57,10 @@ $user_obj = $_SESSION['user_data'];
         .sender-message p {
             display: flex;
             flex-direction: column;
-
+            font-size: 14px;
+        }
+        .sender-message p span:nth-child(1){
+            font-size: 14px;
         }
 
         .message_status_show {

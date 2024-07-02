@@ -46,7 +46,6 @@ $user_obj = $_SESSION['user_data'];
 
         #green12 {
             background-color: #10B982;
-            /* border: 1px solid #000; */
         }
 
         .active_user {
@@ -59,7 +58,8 @@ $user_obj = $_SESSION['user_data'];
             flex-direction: column;
             font-size: 14px;
         }
-        .sender-message p span:nth-child(1){
+
+        .sender-message p span:nth-child(1) {
             font-size: 14px;
         }
 
@@ -172,6 +172,9 @@ $user_obj = $_SESSION['user_data'];
 
 
     var receiver_userid = '';
+
+
+    // DROPDOWN LOGIC 
     document.addEventListener('DOMContentLoaded', () => {
         const profileIcon = document.querySelector('.profile span');
         const dropdownContent = document.querySelector('.dropdown-content');

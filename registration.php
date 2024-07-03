@@ -101,15 +101,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="user-details fields">
                     <div class="input-box">
                         <span class="details">First Name</span>
-                        <input type="text" placeholder="Enter your name" maxlength="50" name="first_name" id="firstName" required>
+                        <input type="text" placeholder="Enter your first name" maxlength="50" name="first_name" id="firstName" required>
                     </div>
                     <div class="input-box">
                         <span class="details">Middle Name</span>
-                        <input type="text" placeholder="Enter your name" maxlength="50" name="middle_name" id="middleName">
+                        <input type="text" placeholder="Enter your middle name" maxlength="50" name="middle_name" id="middleName">
                     </div>
                     <div class="input-box">
                         <span class="details">Last Name</span>
-                        <input type="text" placeholder="Enter your name" maxlength="50" name="last_name" id="lastName" required>
+                        <input type="text" placeholder="Enter your last name" maxlength="50" name="last_name" id="lastName" required>
                     </div>
                     <div class="input-box">
                         <span class="details">Email</span>

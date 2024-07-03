@@ -80,3 +80,7 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+ALTER TABLE otp_table
+ADD CONSTRAINT fk_user_email
+FOREIGN KEY (email) REFERENCES user(email);

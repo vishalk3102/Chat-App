@@ -153,7 +153,8 @@ CREATE PROCEDURE `update_user_password` (
 )
 BEGIN
     UPDATE `user`
-    SET `password` = p_password
+    SET `password` = p_password,
+    `password_update_date` = NOW()
     WHERE `email` = p_email;
 END //
  

@@ -290,7 +290,6 @@ class ChatUser
     public function newPassword($otp, $email, $password) {
         try {
             date_default_timezone_set("ASIA/KOLKATA");
-            $currentTime = date('Y-m-d H:i:s');
             $query = "
                 SELECT id, otp, UNIX_TIMESTAMP(expiry_timestamp) AS expiry_timestamp
                 FROM otp_table
@@ -314,9 +313,9 @@ class ChatUser
                 // OTP is valid and not expired
                 $this->setRegistrationEmail($email);
                 $this->setPassword($password);
-                $used=1;
+                $used=true;
                 if ($this->resetPassword()) {
-                    // Mark OTP as used and delete it
+                    // Mark OTP as used 
                     $query = "update otp_table set used=:used;";
                     $statement = $this->connection->prepare($query);
                     $statement->bindParam(':used', $used, PDO::PARAM_INT);

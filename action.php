@@ -25,7 +25,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'leave') {
     echo json_encode($response);
 } 
 
-// file_put_contents($logFile, "Response: " . print_r($response, true) . "\n", FILE_APPEND);
 if(isset($_POST["action"]) && $_POST["action"] == 'fetch_chat')
 {
     require 'database/ChatMessage.php';

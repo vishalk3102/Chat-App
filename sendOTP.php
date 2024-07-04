@@ -33,7 +33,7 @@ function sendOtp($email)
             $mail->SMTPSecure = true;
             $mail->setFrom($_ENV['sender_mail']);
             // $mail->addAddress($email);
-            $mail->addAddress('harshgoku001@gmail.com'); 
+            $mail->addAddress($email); 
 
             $mail->isHTML(true); // Set email format to HTML
             $mail->Subject = 'Your OTP for verification';
@@ -152,6 +152,7 @@ function checkOtp($otp,$email) {
         if ($otp === $extractedOtp) {    
             $expirationTime = 120; 
             if (time() <= ($creationTime + $expirationTime)) {
+                unlink($filename);
                 return true; 
         }
     }

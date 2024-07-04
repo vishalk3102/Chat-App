@@ -120,8 +120,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
 </style>
 
 <body>
+
+<div id="toaster" class="toaster"></div>
+
     <div class="container log-container">
-        <?php
+        <!-- <?php
         if ($error != '') {
             echo '<div class="alert alert-danger" role="alert">
                 ' . $error . '
@@ -132,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
                 ' . $success_message . '
                 </div>';
         }
-        ?>
+        ?> -->
         <div class="title">Password recovery</div>
         <div class="content">
             <form method="POST" onsubmit="return validateForm()">
@@ -268,6 +271,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
 
         initializeTimer();
     });
+
+     // Toaster Message
+     <?php if ($success_message != '' || $error != ''): ?>
+        var toaster = document.getElementById('toaster');
+        toaster.textContent = "<?php echo $success_message != '' ? $success_message : $error; ?>";
+        toaster.style.backgroundColor = "<?php echo $success_message != '' ? '#065e40' : '#f44336'; ?>"; // Green for success, red for error
+
+        toaster.style.display = "block";
+        
+        setTimeout(function () {
+            toaster.style.display = "none"; // Redirect after 2 seconds
+            
+        }, 2000);
+    <?php endif; ?>
 
 </script>
 

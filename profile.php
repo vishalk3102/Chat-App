@@ -64,8 +64,12 @@ if (!$imageFolder) {
         text-align: end;
     }
 
+    .logout {
+        text-align: end;
+    }
+
     .logout a {
-        border: 2px solid black;
+        /* border: 2px solid black; */
         border-radius: 5px;
         text-align: center;
         font-size: 14px;
@@ -74,7 +78,6 @@ if (!$imageFolder) {
         color: #fff;
         margin: 5px;
         text-decoration: none;
-
     }
 
     .left-side-box img {
@@ -119,7 +122,7 @@ if (!$imageFolder) {
     }
 
     .button-box a {
-        border: 2px solid black;
+        /* border: 2px solid black; */
         border-radius: 5px;
         padding: 10px 16px;
         text-align: center;
@@ -136,29 +139,8 @@ if (!$imageFolder) {
         cursor: pointer;
     }
 
-    .logout-button {
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
-
-
-    .logout-button img {
-        height: 25px;
-        width: 25px;
-    }
-
-    .logout-button img:hover {
-        cursor: pointer;
-    }
-
-
-
-    /* RESPONSIVE CODE  */
     @media screen and (max-width: 768px) {
         .profile-card {
-            width: 70%;
             flex-direction: column;
             padding: 0rem;
         }
@@ -185,10 +167,6 @@ if (!$imageFolder) {
         .button-box a {
             padding: 10px 10px;
             font-size: 12px;
-        }
-
-        .logout-button {
-            padding: 1rem 1rem 0.5rem 0rem;
         }
     }
 
@@ -219,133 +197,74 @@ if (!$imageFolder) {
 
 <body>
     <section id="profile" class="container">
-        <div class="box-con">
+        <div class="logout">
 
-            <div class="logout">
+            <?php
 
-                <?php
+            require 'bin\vendor\autoload.php';
 
-                require 'bin\vendor\autoload.php';
+            $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+            $dotenv->load();
 
-                $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-                $dotenv->load();
-
-                $imageFolder = $_ENV['imgpath'];
-                if (!$imageFolder) {
-                    die('IMAGE_FOLDER environment variable is not set.');
-                }
+            $imageFolder = $_ENV['imgpath'];
+            if (!$imageFolder) {
+                die('IMAGE_FOLDER environment variable is not set.');
+            }
 
 
-                $login_user_id = $user_obj['id'];
-                require_once 'database/ChatUser.php';
-                $chatuser = new ChatUser();
-                $chatuser->setUserId($login_user_id);
-                $user_data = $chatuser->getAllUsersDataWithStatus();
+            $login_user_id = $user_obj['id'];
+            require_once 'database/ChatUser.php';
+            $chatuser = new ChatUser();
+            $chatuser->setUserId($login_user_id);
+            $user_data = $chatuser->getAllUsersDataWithStatus();
 
-                ?>
+            ?>
 
+        </div>
+        <div class="profile-card">
+            <div class="left-side-box">
+                <img src="<?php echo $imageFolder . $user_obj['photo'] ?>" alt="avatar">
             </div>
-            <div>
-                <div class="profile-card">
-                    <div class="logout-button">
-                        <input type="hidden" id="login_user_id" name="login_user_id"
-                            value="<?php echo $login_user_id ?>">
-                        <a id="logout" onclick="logoutUser()">
-                            <img src="./assets/logout.png" alt="logout">
-                        </a>
-                    </div>
-                    <div class="left-side-box">
-                        <img src="<?php echo $imageFolder . $user_obj['photo'] ?>" alt="avatar">
-                        <!-- <img src="./assets/avatar1.jpg" alt="avatar"> -->
-                    </div>
-                    <div class="right-side-box">
+            <div class="right-side-box">
 
-                        <div class="text-box">
-                            <h3 class="">Full Name :</h3>
-                            <p class="">
-                                <?php echo $user_obj['fname'] . ' ' . $user_obj['mname'] . ' ' . $user_obj['lname']; ?>
-                            </p>
-                        </div>
-                        <div class="text-box">
-                            <h3 class="">Username :</h3>
-                            <p class="">
-                                <?php echo $user_obj['username'] ?>
-                            </p>
-                        </div>
-                        <div class="text-box">
-                            <h3 class="">Email :</h3>
-                            <p class="">
-                                <?php echo $user_obj['email'] ?>
-                            </p>
-                        </div>
+                <div class="text-box">
+                    <h3 class="">Full Name :</h3>
+                    <p class="">
+                        <?php echo $user_obj['fname'] . ' ' . $user_obj['mname'] . ' ' . $user_obj['lname']; ?>
+                    </p>
+                </div>
+                <div class="text-box">
+                    <h3 class="">Username :</h3>
+                    <p class="">
+                        <?php echo $user_obj['username'] ?>
+                    </p>
+                </div>
+                <div class="text-box">
+                    <h3 class="">Email :</h3>
+                    <p class="">
+                        <?php echo $user_obj['email'] ?>
+                    </p>
+                </div>
 
-                        <div class="button-box">
+                <div class="button-box">
 
-                            <a href="editProfile.php" class="btn">
-                                Edit Profile
-                            </a>
+                    <a href="editProfile.php" class="btn">
+                        Edit Profile
+                    </a>
 
-                            <a href="changePassword.php" class="btn">
-                                Change Password
-                            </a>
+                    <a href="changePassword.php" class="btn">
+                        Change Password
+                    </a>
 
-                            <a href="dashboard.php" class="btn">
-                                Let's Chat
-                            </a>
-
-                        </div>
-                    </div>
+                    <a href="dashboard.php" class="btn">
+                        Let's Chat
+                    </a>
 
                 </div>
             </div>
         </div>
     </section>
-
 </body>
-<script>
-    function logoutUser() {
-        var userId = document.getElementById("login_user_id").value;
-        console.log(userId);
-        if (userId) {
-            fetch('action.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    'user_id': userId,
-                    'action': 'leave'
-                })
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log("Response received: " + data);
-                    let response;
-                    try {
-                        response = JSON.parse(data);
-                    } catch (e) {
-                        console.log("Failed to parse JSON response: " + e);
-                        return;
-                    }
-
-                    if (response.status == 1) {
-                        console.log("Logout successful, redirecting...");
-                        location.href = "index.php";
-                    } else {
-                        console.log("Logout failed");
-                    }
-                })
-                .catch(error => {
-                    console.error("Fetch Error: " + error);
-                    window.alert("Fetch Error: " + error);
-                });
-        } else {
-            console.warn("User ID not found");
-        }
-
-    }
-</script>
-
 <script type="text/javascript" src="./js/script.js"> </script>
-<script type="text/javascript" src="./js/logout.js"> </script>
+
 </html>

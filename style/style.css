@@ -200,7 +200,7 @@ form .button input:hover {
 
 .toaster {
   position: fixed;
-  top: 80px;
+  top: 40px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #065e40;

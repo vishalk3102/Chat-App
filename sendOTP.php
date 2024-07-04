@@ -152,6 +152,7 @@ function checkOtp($otp,$email) {
         if ($otp === $extractedOtp) {    
             $expirationTime = 120; 
             if (time() <= ($creationTime + $expirationTime)) {
+                unlink($filename);
                 return 2; 
             }
             else

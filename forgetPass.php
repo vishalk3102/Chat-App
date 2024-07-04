@@ -16,10 +16,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['reset_email']=$_POST['email'];
         sendOtp($_POST['email']);
     }
-    else
-    {
-        $message="Email Sent";
-    }
+    // else
+    // {
+    //     $message="Email Sent";
+    // }
 }
 ?>
 
@@ -34,38 +34,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script>
         function validateForm() {
-
-            var email = document.getElementById('email').value.trim();
-
-            // Validate email format
-            var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
-            var errorMessage = "Please enter a valid email address";
-            if (!emailRegex.test(email)) {
-                document.getElementById('emailError').textContent = errorMessage;
-                return false;
-            }
-
-            return true;
+            event.preventDefault();
+        var toaster = document.getElementById('toaster');
+        toaster.textContent = "Email sent";
+        toaster.style.display = "block";
+        
+        setTimeout(function () {
+            toaster.style.display = "none";
+            var form = document.getElementById('resetPasswordForm');
+            form.submit(); // Submit the form after 2 seconds
+        }, 1500);
+         
         }
+    
+        
     </script>
 
 </head>
 
 
 <body>
+<div id="toaster" class="toaster"></div>
     <div class="container log-container">
 
-    <?php
+    <!-- <?php
          if ($message != '') {
             echo '<div class="alert alert-success" role="alert">
                 ' . $message . '
                 </div>';
         }
-    ?>
+    ?> -->
     
         <div class="title">Password recovery</div>
         <div class="content">
-            <form method="post" onsubmit="return validateForm()">
+            <form method="post" id="resetPasswordForm" onsubmit="return validateForm()">
                 <div class="user-details">
                     <div class="input-box">
                         <span class="details">Email</span>

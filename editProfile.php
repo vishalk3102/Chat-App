@@ -109,12 +109,16 @@ if (!$imageFolder) {
 
     .left-side-box {
         margin: 1rem;
+        height: 80%;
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .left-side-box img {
         border-radius: 10px;
-        height: 250px;
-        width: 300px;
+        width: 80%;
     }
 
     .left-side-box .button-box {
@@ -238,14 +242,46 @@ if (!$imageFolder) {
         font-size: 14px;
     }
 
+
+    .toaster {
+        position: fixed;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #065e40;
+        color: white;
+        padding: 15px 32px;
+        border-radius: 8px;
+        display: none;
+        z-index: 999;
+    }
+
     /* RESPONSIVE CODE  */
     @media screen and (max-width: 768px) {
         .profile-card {
-            width: 70%;
-            flex-direction: column;
-            /* flex-direction: column; */
+            width: 65%;
+            display: flex;
+            padding: 1rem
         }
 
+        .profile-card> :nth-child(2) {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .left-side-box {
+            margin: 0rem;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .left-side-box img {
+            width: 80%;
+        }
 
         .right-side-box {
             margin-left: 0rem;
@@ -286,11 +322,24 @@ if (!$imageFolder) {
             /* flex-direction: column; */
         }
 
+        .input-box span {
+            font-size: 12px;
+        }
 
-        .left-side-box img {
-            border-radius: 10px;
-            height: 225px;
-            width: 275px;
+        .input-box input {
+            font-size: 14px;
+        }
+
+        .modal {
+            width: 400px;
+        }
+
+    }
+
+    @media screen and (min-width: 992px) and (max-width: 1200px) {
+        .profile-card {
+            width: 90%;
+            /* flex-direction: column; */
         }
 
         .input-box span {
@@ -309,27 +358,27 @@ if (!$imageFolder) {
 </style>
 
 <body>
+    <div id="toaster" class="toaster"></div>
     <section id="profile" class="container">
         <input type="hidden" id="login_user_id" name="login_user_id" value="<?php echo $user_obj['id'] ?>">
         <div class="profile-card">
             <div class="toaster-box">
                 <?php
-                if ($error != '') {
-                    echo '<p class=" alert alert-danger" role="alert">
-                ' . $error . '
-                </p>';
-                }
-                if ($success_message != '') {
-                    echo '<p class="alert alert-success" role="alert">
-                ' . $success_message . '
-                </p>';
-                }
+                // if ($error != '') {
+                //     echo '<p class=" alert alert-danger" role="alert">
+                // ' . $error . '
+                // </p>';
+                // }
+                // if ($success_message != '') {
+                //     echo '<p class="alert alert-success" role="alert">
+                // ' . $success_message . '
+                // </p>';
+                // }
                 ?>
             </div>
             <div class="">
                 <div class="left-side-box">
                     <img src="<?php echo $imageFolder . $_SESSION['user_data']['photo'] ?>" alt="avatar">
-                    <!-- <img src="./assets/avatar1.jpg" alt="avatar"> -->
                     <div class="button-box">
                         <button>
                             <a>
@@ -345,7 +394,7 @@ if (!$imageFolder) {
                                     alt="Avatar 1" class="avatar-option">
                                 <img src="<?php echo $imageFolder . 'avatar2.jpg' ?>" onclick="selectAvatar(this)"
                                     alt="Avatar 2" class="avatar-option">
-                                <img src="<?php echo $imageFolder . 'avatar3.png' ?>" onclick="selectAvatar(this)"
+                                <img src="<?php echo $imageFolder . 'avatar3.jpg' ?>" onclick="selectAvatar(this)"
                                     alt="Avatar 3" class="avatar-option">
                                 <img src="<?php echo $imageFolder . 'avatar4.jpg' ?>" onclick="selectAvatar(this)"
                                     alt="Avatar 4" class="avatar-option">
@@ -446,6 +495,20 @@ if (!$imageFolder) {
         // Save logic here
         closeModal();
     });
+
+    // Toaster Message
+    <?php if ($success_message != '' || $error != ''): ?>
+        var toaster = document.getElementById('toaster');
+        toaster.textContent = "<?php echo $success_message != '' ? $success_message : $error; ?>";
+        toaster.style.backgroundColor = "<?php echo $success_message != '' ? '#065e40' : '#f44336'; ?>"; // Green for success, red for error
+
+        toaster.style.display = "block";
+
+        setTimeout(function () {
+            toaster.style.display = "none"; // Redirect after 2 seconds
+
+        }, 2000);
+    <?php endif; ?>
 
 </script>
 <script type="text/javascript" src="./js/script.js"> </script>

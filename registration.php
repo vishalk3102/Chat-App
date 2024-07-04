@@ -20,7 +20,7 @@ function validatePassword($password)
 function allFieldsFilled($data)
 {
     return isset($data['first_name']) && $data['first_name']!=="" && isset($data['last_name'])&& $data['last_name']!=="" &&
-        isset($data['email'])&& $data['email'] !== "" && isset($data['password']) && $data['password'] !== "" && isset($data['cpassword']) && $data['cpassword'] !=="";
+        isset($data['email'])&& $data['email'] !== "" && isset($data['password']) && $data['password'] !== "" && isset($data['cpassword']) && $data['cpassword'] !=="" &&  isset($data['username'])&& $data['username'] !== "";
 }
 //checking the name length
 function validateNameLength($name, $maxLength = 50)
@@ -283,7 +283,7 @@ if (!$imageFolder) {
                     <div class="input-box" style="width:100%">
                         <span class="details">Username</span>
                         <input type="text" placeholder="Enter your username" maxlength="50" name="username"
-                            id="username">
+                            id="username" required>
                     </div>
                     <div class="input-box avatar-box" style="width:100%">
                         <span class="details">Avatar</span>

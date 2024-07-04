@@ -34,24 +34,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script>
         function validateForm() {
-
-            var email = document.getElementById('email').value.trim();
-
-            // Validate email format
-            var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
-            var errorMessage = "Please enter a valid email address";
-            if (!emailRegex.test(email)) {
-                document.getElementById('emailError').textContent = errorMessage;
-                return false;
-            }
-
-            return true;
+      
+        var toaster = document.getElementById('toaster');
+        toaster.textContent = "Email sent";
+        toaster.style.display = "block";
+        
+        setTimeout(function () {
+            toaster.style.display = "none";
+        }, 2000);
+       
         }
+
+        
     </script>
 
 </head>
 
 <body>
+<div id="toaster" class="toaster"></div>
     <div class="container log-container">
     
         <div class="title">Password recovery</div>

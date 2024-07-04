@@ -128,6 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div id="confError" style="display:inline" class="error-message"></div>
                     </div>
                 </div>
+                
                 <div class="button">
                     <input type="submit" id="registerBtn" value="Register">
                 </div>

@@ -18,7 +18,7 @@ BEGIN
         `fname`, `mname`, `lname`, `username`, `password`, `email`,
         `photo`, `registration_date`, `status`, `password_update_date`
     ) VALUES (
-        p_fname, p_mname, p_lname, p_username, p_password, p_email,
+        p_fname, p_mname, p_lname, LOWER(p_username), p_password, LOWER(p_email),
         p_photo, p_registration_date, p_status, p_password_update_date
     );
 END //
@@ -36,6 +36,20 @@ CREATE PROCEDURE `get_user_by_email` (
 BEGIN
     SELECT * FROM `User`
     WHERE `email` = p_email;
+END //
+
+DELIMITER ;
+
+
+GET_USER_BY_USERNAME:-
+DELIMITER //
+
+CREATE PROCEDURE `get_user_by_username` (
+    IN p_username VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM `User`
+    WHERE `username` = p_username;
 END //
 
 DELIMITER ;
@@ -196,7 +210,7 @@ BEGIN
         fname = p_fname,
         mname = IF(p_mname = '', NULL, p_mname),
         lname = p_lname,
-        username = p_username,
+        username = LOWER(p_username),
         photo = p_photo
     WHERE 
         user_id = p_user_id;
@@ -204,65 +218,14 @@ END //
 
 DELIMITER ;
 
-INSERT/UPDATE otp:-
-
 DELIMITER //
  
-CREATE PROCEDURE GetValidOTP (IN p_email VARCHAR(255))
-
+CREATE PROCEDURE `get_status_with_userid` (
+    IN p_user_id INT
+)
 BEGIN
-
-    SELECT id AS id, otp AS otp, UNIX_TIMESTAMP(expiry_timestamp) AS expiry_timestamp
-    FROM otp_table
-
-    WHERE email = p_email AND used = false
-
-    LIMIT 1;
-
+    SELECT status FROM `User`
+    WHERE `user_id` = p_user_id;
 END //
  
 DELIMITER ;
-
- 
-
-CHECK FOR OTP Validation:-
-DELIMITER //
-CREATE PROCEDURE `check_otp` (
-    IN p_email VARCHAR(255)
-)
-BEGIN
-    UPDATE `otp_table`
-    SET `used` = true
-    WHERE `email` = p_email;
-END //
-DELIMITER ;
-
-
-UPDATE AND INSERT OTP :-
-
-DELIMITER $$
-
-CREATE PROCEDURE update_insert_otp (
-    IN p_email VARCHAR(255),
-    IN p_otp VARCHAR(255),
-    IN p_expiry_time DATETIME,
-    IN p_used BOOLEAN
-)
-BEGIN
-    DECLARE existing_id INT;
-    SELECT id INTO existing_id FROM otp_table WHERE email = p_email;
-
-    IF existing_id IS NOT NULL THEN
-        UPDATE otp_table
-        SET otp = p_otp, expiry_timestamp = p_expiry_time, used = p_used WHERE id = existing_id;
-    ELSE
-        INSERT INTO otp_table (email, otp, expiry_timestamp, used)
-        VALUES (p_email, p_otp, p_expiry_time, p_used);
-    END IF;
-END $$
-
-DELIMITER ;
-
-
-
-

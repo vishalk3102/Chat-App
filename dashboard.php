@@ -3,8 +3,18 @@ session_start();
 if (!isset($_SESSION['user_data'])) {
     header('location:index.php');
 }
-
+$_SESSION['last_activity'] = time();
 $user_obj = $_SESSION['user_data'];
+
+$session_timeout = 3 * 60; 
+
+// Check if session is expired
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $session_timeout) {
+    require_once 'database/ChatUser.php';
+    $chatuser = new ChatUser();
+    session_unset();    // unset all session variables
+    session_destroy();  // destroy session data in storage
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,10 +81,6 @@ $user_obj = $_SESSION['user_data'];
             padding: 2px;
 
         }
-
-        /* .show_message{
-            font-size: 300px;
-        } */
     </style>
 </head>
 
@@ -166,4 +172,6 @@ $user_obj = $_SESSION['user_data'];
 
 <script type="text/javascript" src="./js/logout.js"> </script>
 <script type="text/javascript" src="./js/dashboard.js"> </script>
+
+<!-- <script type="text/javascript" src="./js/session.js"></script> -->
 </html>

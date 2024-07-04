@@ -156,9 +156,13 @@ if (!$imageFolder) {
         height: 100px;
         border-radius: 50%;
         cursor: pointer;
-        border: 1px solid black;
+        border: 1px solid transparent;
         margin: 10px;
         transition: border-color 0.3s ease;
+    }
+
+    .avatar-options .avatar-option.selected {
+        border: 3px solid #EE4E4E;
     }
 
     .button-box {
@@ -228,8 +232,9 @@ if (!$imageFolder) {
                     </div>
                     <div class="input-box">
                         <span class="details">Email</span>
-                        <input type="text" placeholder="Enter your email" name="email" id="email" required>
-                        <div id="emailError" style="display:inline" class="error-message"></div>
+                        <input type="text" placeholder="Enter your email" name="email" id="email" required
+                            onchange="updateUsernameFromEmail()">
+                        <div id="emailError" style="display: inline" class="error-message"></div>
                     </div>
                     <div class="input-box">
                         <span class="details">Password</span>
@@ -242,6 +247,11 @@ if (!$imageFolder) {
                         <input type="password" placeholder="Confirm your password" maxlength="20" name="cpassword"
                             id="confirmPassword" required>
                         <div id="confError" style="display:inline" class="error-message"></div>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Username*</span>
+                        <input type="text" placeholder="Enter your username" maxlength="50" name="username"
+                            id="username">
                     </div>
                     <div class="input-box avatar-box" style="width:100%">
                         <span class="details">Avatar</span>
@@ -269,8 +279,8 @@ if (!$imageFolder) {
                                     alt="Avatar 6" class="avatar-option">
                             </div>
                             <div class="modal-footer button-box">
-                            <button type="button" id="closeBtn">Close</button>
-                            <button type="button" id="saveBtn">Save</button>
+                                <button type="button" id="closeBtn">Close</button>
+                                <button type="button" id="saveBtn">Save</button>
                             </div>
                         </div>
                     </div>
@@ -288,21 +298,44 @@ if (!$imageFolder) {
 
 
     <script>
+
+         // Function to update username field based on email
+         function updateUsernameFromEmail() {
+            var email = document.getElementById('email').value.trim();
+            var usernameField = document.getElementById('username');
+            
+            // Extract username part from email before '@'
+            var atIndex = email.indexOf('@');
+            var username = (atIndex !== -1) ? email.substring(0, atIndex) : email;
+            
+            // Update username field
+            usernameField.value = username;
+        }
+        
         // Function to open the modal
         function openModal() {
             const modal = document.getElementById('avatarModal');
             modal.style.display = 'block';
         }
 
+        let tempSelectedAvatar = null;
+
         // Function to select an avatar
         function selectAvatar(imgElement) {
-            updateAvatarImage(imgElement.src);
+            document.querySelectorAll('.avatar-option').forEach(img => {
+                img.classList.remove('selected');
+            });
+
+            // Add 'selected' class to the clicked avatar
+            imgElement.classList.add('selected');
+            tempSelectedAvatar = imgElement.src;
         }
 
         // Function to close the modal
         function closeModal() {
             const modal = document.getElementById('avatarModal');
             modal.style.display = 'none';
+            tempSelectedAvatar = null;
         }
 
         // Function to update the avatar image
@@ -320,6 +353,9 @@ if (!$imageFolder) {
         document.querySelector('#openAvatarModal').addEventListener('click', openModal);
         document.getElementById('closeBtn').addEventListener('click', closeModal);
         document.getElementById('saveBtn').addEventListener('click', () => {
+            if (tempSelectedAvatar) {
+                updateAvatarImage(tempSelectedAvatar)
+            }
             closeModal();
         });
 

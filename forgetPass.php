@@ -1,5 +1,5 @@
 <?php
-$error="";
+$message="";
 session_start();
 
 
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     else
     {
-        $error="This id is not registered";
+        $message="Email Sent";
     }
 }
 ?>
@@ -51,8 +51,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </head>
 
+
 <body>
     <div class="container log-container">
+
+    <?php
+         if ($message != '') {
+            echo '<div class="alert alert-success" role="alert">
+                ' . $message . '
+                </div>';
+        }
+    ?>
     
         <div class="title">Password recovery</div>
         <div class="content">

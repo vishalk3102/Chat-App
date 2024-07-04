@@ -1,6 +1,5 @@
 <?php
 require_once 'DatabaseConnection.php';
-require_once 'init.php';
 class ChatUser
 {
     private $user_id;
@@ -124,7 +123,6 @@ class ChatUser
             $statement = $this->connection->prepare($query);
 
             $statement->bindParam(':fname', $this->fname);
-            // $statement->bindParam(':mname', $this->mname, PDO::PARAM_NULL);
             if ($this->mname === '') {
                 $statement->bindValue(':mname', null, PDO::PARAM_NULL);
             } else {
@@ -132,8 +130,7 @@ class ChatUser
             }
             $statement->bindParam(':lname', $this->lname);
             $statement->bindParam(':username', $this->username);
-            // $statement->bindParam(':password', $this->password);
-            $statement->bindParam(':password', NULL);
+            $statement->bindParam(':password', $this->password);
             $statement->bindParam(':email', $this->email);
             $statement->bindParam(':photo', $this->photo);
             $statement->bindParam(':registration_date', $this->registration_date);
@@ -231,6 +228,27 @@ class ChatUser
             header('location:errorPage.php');   
         }
     }
+
+
+    public function getStatusWithUserId()
+    {
+        try {
+            $query = "CALL get_status_with_userid(:user_id)";
+            $stmt = $this->connection->prepare($query);
+
+            $stmt->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $data;
+        } catch (PDOException $e) {
+            // die('Error: ' . $e->getMessage());
+            header('location:errorPage.php');   
+        }
+    }
+
 
     public function updateUser()
     {

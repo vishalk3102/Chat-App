@@ -156,9 +156,13 @@ if (!$imageFolder) {
         height: 100px;
         border-radius: 50%;
         cursor: pointer;
-        border: 1px solid black;
+        border: 1px solid transparent;
         margin: 10px;
         transition: border-color 0.3s ease;
+    }
+
+    .avatar-options .avatar-option.selected {
+        border: 3px solid #EE4E4E;
     }
 
     .button-box {
@@ -269,8 +273,8 @@ if (!$imageFolder) {
                                     alt="Avatar 6" class="avatar-option">
                             </div>
                             <div class="modal-footer button-box">
-                            <button type="button" id="closeBtn">Close</button>
-                            <button type="button" id="saveBtn">Save</button>
+                                <button type="button" id="closeBtn">Close</button>
+                                <button type="button" id="saveBtn">Save</button>
                             </div>
                         </div>
                     </div>
@@ -294,15 +298,24 @@ if (!$imageFolder) {
             modal.style.display = 'block';
         }
 
+        let tempSelectedAvatar = null;
+
         // Function to select an avatar
         function selectAvatar(imgElement) {
-            updateAvatarImage(imgElement.src);
+            document.querySelectorAll('.avatar-option').forEach(img => {
+                img.classList.remove('selected');
+            });
+
+            // Add 'selected' class to the clicked avatar
+            imgElement.classList.add('selected');
+            tempSelectedAvatar = imgElement.src;
         }
 
         // Function to close the modal
         function closeModal() {
             const modal = document.getElementById('avatarModal');
             modal.style.display = 'none';
+            tempSelectedAvatar = null;
         }
 
         // Function to update the avatar image
@@ -320,6 +333,9 @@ if (!$imageFolder) {
         document.querySelector('#openAvatarModal').addEventListener('click', openModal);
         document.getElementById('closeBtn').addEventListener('click', closeModal);
         document.getElementById('saveBtn').addEventListener('click', () => {
+            if (tempSelectedAvatar) {
+                updateAvatarImage(tempSelectedAvatar)
+            }
             closeModal();
         });
 

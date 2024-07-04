@@ -109,12 +109,14 @@ if (!$imageFolder) {
 
     .left-side-box {
         margin: 1rem;
+        height: 80%;
+        width: 80%;
     }
 
     .left-side-box img {
         border-radius: 10px;
-        height: 250px;
-        width: 300px;
+        height: 100%;
+        width: 100%;
     }
 
     .left-side-box .button-box {
@@ -227,23 +229,43 @@ if (!$imageFolder) {
         font-size: 14px;
         font-weight: 600;
     }
-    .alert-success{
-    color: #104b1e;
-    font-size: 14px;
+
+    .alert-success {
+        color: #104b1e;
+        font-size: 14px;
     }
-    .alert-danger{
-    color: red ;
-    font-size: 14px;
+
+    .alert-danger {
+        color: red;
+        font-size: 14px;
     }
 
     /* RESPONSIVE CODE  */
     @media screen and (max-width: 768px) {
         .profile-card {
-            width: 70%;
-            flex-direction: column;
-            /* flex-direction: column; */
+            width: 65%;
+            display: flex;
+            padding: 1rem
         }
 
+        .profile-card> :nth-child(2) {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .left-side-box {
+            margin: 0rem;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .left-side-box img {
+            width: 80%;
+        }
 
         .right-side-box {
             margin-left: 0rem;
@@ -284,11 +306,24 @@ if (!$imageFolder) {
             /* flex-direction: column; */
         }
 
+        .input-box span {
+            font-size: 12px;
+        }
 
-        .left-side-box img {
-            border-radius: 10px;
-            height: 225px;
-            width: 275px;
+        .input-box input {
+            font-size: 14px;
+        }
+
+        .modal {
+            width: 400px;
+        }
+
+    }
+
+    @media screen and (min-width: 992px) and (max-width: 1200px) {
+        .profile-card {
+            width: 90%;
+            /* flex-direction: column; */
         }
 
         .input-box span {
@@ -326,7 +361,6 @@ if (!$imageFolder) {
             <div class="">
                 <div class="left-side-box">
                     <img src="<?php echo $imageFolder . $_SESSION['user_data']['photo'] ?>" alt="avatar">
-                    <!-- <img src="./assets/avatar1.jpg" alt="avatar"> -->
                     <div class="button-box">
                         <button>
                             <a>
@@ -386,7 +420,8 @@ if (!$imageFolder) {
                             <input type="text" value="<?php echo $_SESSION['user_data']['username'] ?>" name='username'>
                         </div>
 
-                    <input type="hidden" id="avatar_src" name="avatar_src" value="<?php echo  $_SESSION['user_data']['photo'] ?>">
+                        <input type="hidden" id="avatar_src" name="avatar_src"
+                            value="<?php echo $_SESSION['user_data']['photo'] ?>">
 
                         <div class="button-box">
                             <button id="change-avatar-btn" type="submit">

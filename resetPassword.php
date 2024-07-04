@@ -16,17 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otp'])) {
     $user = new ChatUser();
     $user->setPassword($_POST['password']);
     $user->setRegistrationEmail($_SESSION['reset_email']);
-    $res = checkOtp($_POST['otp'],$_SESSION['reset_email']);
+    $res = checkOtp($_POST['otp'], $_SESSION['reset_email']);
 
     if ($res == 2) {
         $user->resetPassword();
         $success_message = "Password updated ! Enjoy your safe & secure chatting :)";
         unset($_SESSION["reset_email"]);
-    } else if($res == 1){
+    } else if ($res == 1) {
         $error = "OTP is Expired";
-    }
-    else
-    {
+    } else {
         $error = "Invalid OTP";
     }
 }
@@ -132,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
 
 <body>
 
-<div id="toaster" class="toaster"></div>
+    <div id="toaster" class="toaster"></div>
 
     <div class="container log-container">
         <!-- <?php
@@ -192,8 +190,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
 
 
     <script src="js/check.js">
-        
-        </script>
+
+    </script>
 </body>
 <script>
     // LOGIC FOR COUNTDOWN TIMER
@@ -204,19 +202,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
         let countdown;
 
         function initializeTimer() {
-            const storedEndTime = localStorage.getItem('otpEndTime');
+            const startTime = localStorage.getItem('otpStartTime');
             const now = new Date().getTime();
+            const elapsedTime = now - parseInt(startTime);
 
-            if (storedEndTime && now < storedEndTime) {
-                // If there's a stored end time and it's in the future, use it
-                timer = Math.round((storedEndTime - now) / 1000);
+            if (startTime && elapsedTime < 30000) {
+                // If less than 30 seconds have passed, continue the timer
+                timer = Math.max(0, 30 - Math.floor(elapsedTime / 1000));
             } else {
-                timer = 30;
-                localStorage.setItem('otpEndTime', now + 30000);
+                // If more than 30 seconds have passed or no start time, set timer to 0
+                timer = 0;
             }
 
             updateTimerDisplay();
-            startTimer();
+            if (timer > 0) {
+                startTimer();
+                resendButton.disabled = true;
+            } else {
+                resendButton.disabled = false;
+            }
         }
 
         function startTimer() {
@@ -227,7 +231,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
                 if (timer <= 0) {
                     clearInterval(countdown);
                     resendButton.disabled = false;
-                    localStorage.removeItem('otpEndTime');
+                    localStorage.removeItem('otpStartTime');
                 }
             }, 1000);
         }
@@ -246,7 +250,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
             clearInterval(countdown);
             timer = 30;
             const now = new Date().getTime();
-            localStorage.setItem('otpEndTime', now + 30000);
+            localStorage.setItem('otpStartTime', now.toString());
             resendButton.disabled = true;
             updateTimerDisplay();
             startTimer();
@@ -285,17 +289,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
         initializeTimer();
     });
 
-     // Toaster Message
-     <?php if ($success_message != '' || $error != ''): ?>
+    // Toaster Message
+    <?php if ($success_message != '' || $error != ''): ?>
         var toaster = document.getElementById('toaster');
         toaster.textContent = "<?php echo $success_message != '' ? $success_message : $error; ?>";
         toaster.style.backgroundColor = "<?php echo $success_message != '' ? '#065e40' : '#f44336'; ?>"; // Green for success, red for error
 
         toaster.style.display = "block";
-        
+
         setTimeout(function () {
             toaster.style.display = "none"; // Redirect after 2 seconds
-            
+
         }, 2000);
     <?php endif; ?>
 

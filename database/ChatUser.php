@@ -123,7 +123,6 @@ class ChatUser
             $statement = $this->connection->prepare($query);
 
             $statement->bindParam(':fname', $this->fname);
-            // $statement->bindParam(':mname', $this->mname, PDO::PARAM_NULL);
             if ($this->mname === '') {
                 $statement->bindValue(':mname', null, PDO::PARAM_NULL);
             } else {
@@ -178,6 +177,26 @@ class ChatUser
             $statement = $this->connection->prepare($query);
 
             $statement->bindParam(':email', $this->email);
+
+            $statement->execute();
+
+            $user_data = $statement->fetch(PDO::FETCH_ASSOC);
+
+            return $user_data;
+
+        } catch (PDOException $e) {
+            // die('Error: ' . $e->getMessage());
+            header('location:errorPage.php');   
+        }
+    }
+
+    public function getUserByUsername()
+    {
+        try {
+            $query = "CALL get_user_by_username(:username)";
+            $statement = $this->connection->prepare($query);
+
+            $statement->bindParam(':username', $this->username);
 
             $statement->execute();
 

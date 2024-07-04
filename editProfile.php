@@ -35,16 +35,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user->setlname($_POST['last_name']);
         $user->setUsername($_POST['username']);
         $user->setPhoto($_POST['avatar_src']);
-        if ($user->updateUser()) {
+        $checkusername = $user->getUserByUsername();
+
+        
+        if((is_array($checkusername) && count($checkusername) > 0) && ($checkusername["user_id"]!==$user_obj['id']))
+        {
+            $error = "Username already taken";
+        } 
+        else if ($user->updateUser()) {
             $_SESSION['user_data']['fname'] = $_POST['first_name'];
             $_SESSION['user_data']['mname'] = $_POST['middle_name'];
             $_SESSION['user_data']['lname'] = $_POST['last_name'];
             $_SESSION['user_data']['photo'] = $_POST['avatar_src'];
             $_SESSION['user_data']['username'] = $_POST['username'];
             $success_message = "Profile Updated! :)";
-        } else {
+        }
+        else {
             $error = "Error: " . $db->errorInfo()[2];
         }
+        
     }
 
 }

@@ -107,6 +107,7 @@ if (!$imageFolder) {
         border: 1px solid #ccc;
         border-bottom-width: 2px;
         transition: all 0.3s ease;
+        margin-top: 1rem;
 
     }
 
@@ -244,11 +245,11 @@ if (!$imageFolder) {
                     </div>
                     <div class="input-box avatar-box" style="width:100%">
                         <span class="details">Avatar</span>
+                        <div class="image-box">
+                            <img src="./assets/avatar1.jpg" alt="avatar">
+                        </div>
                         <button type="button" id="openAvatarModal">Select Avatar</button>
                         <input type="hidden" id="avatar_src" name="avatar_src" value="default_avatar.jpg">
-                    </div>
-                    <div class="image-box">
-                        <img src="./assets/avatar1.jpg" alt="avatar">
                     </div>
                     <div id="avatarModal" class="modal">
                         <div class="modal-content">

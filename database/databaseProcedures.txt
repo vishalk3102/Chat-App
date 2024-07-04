@@ -18,7 +18,7 @@ BEGIN
         `fname`, `mname`, `lname`, `username`, `password`, `email`,
         `photo`, `registration_date`, `status`, `password_update_date`
     ) VALUES (
-        p_fname, p_mname, p_lname, p_username, p_password, p_email,
+        p_fname, p_mname, p_lname, LOWER(p_username), p_password, LOWER(p_email),
         p_photo, p_registration_date, p_status, p_password_update_date
     );
 END //
@@ -210,7 +210,7 @@ BEGIN
         fname = p_fname,
         mname = IF(p_mname = '', NULL, p_mname),
         lname = p_lname,
-        username = p_username,
+        username = LOWER(p_username),
         photo = p_photo
     WHERE 
         user_id = p_user_id;

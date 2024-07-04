@@ -4,23 +4,25 @@
 $error = '';
 $success_message = '';
 
+//validaton of email
 function validateEmail($email)
 {
     $emailRegex = "/^[^\s@]+@([^\s@]+\.)?contata\.in$/i";
     return preg_match($emailRegex, $email);
 }
-
+//password validation
 function validatePassword($password)
 {
     $passwordRegex = "/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
     return preg_match($passwordRegex, $password);
 }
-
+//checking the required fields are set or not
 function allFieldsFilled($data)
 {
-    return isset($data['first_name']) && isset($data['last_name']) &&
-        isset($data['email']) && isset($data['password']) && isset($data['cpassword']);
+    return isset($data['first_name']) && $data['first_name']!=="" && isset($data['last_name'])&& $data['last_name']!=="" &&
+        isset($data['email'])&& $data['email'] !== "" && isset($data['password']) && $data['password'] !== "" && isset($data['cpassword']) && $data['cpassword'] !=="";
 }
+//checking the name length
 function validateNameLength($name, $maxLength = 50)
 {
     return strlen($name) <= $maxLength;
@@ -28,13 +30,15 @@ function validateNameLength($name, $maxLength = 50)
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     session_start();
+    //checking if user is already logged in 
     if (isset($_SESSION['user_data'])) {
         header('location:dashboard.php');
     }
 
+    //validing all the required parameters
     require_once ('database/ChatUser.php');
     if (!allFieldsFilled($_POST)) {
-        $error = "All fields except middle name are required.";
+        $error = "Please fill all required fields";
     } elseif (!validateNameLength($_POST['first_name']) || !validateNameLength($_POST['middle_name']) || !validateNameLength($_POST['last_name'])) {
         $error = "First name, middle name, and last name must each be no more than 50 characters long.";
     } elseif (!validateEmail($_POST['email'])) {
@@ -85,6 +89,7 @@ require 'bin\vendor\autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+//checking the path is correct or not
 $imageFolder = $_ENV['imgpath'];
 if (!$imageFolder) {
     die('IMAGE_FOLDER environment variable is not set.');
@@ -202,9 +207,28 @@ if (!$imageFolder) {
 
     /* RESPONSIVE CODE  */
     @media screen and (max-width: 768px) {
+
+        .container {
+            padding: 15px 25px;
+        }
+
+        .content form .user-details {
+            margin: 16px 0px 0px 0px;
+        }
+
+        .reg-container form .user-details .input-box {
+            /* border: 2px solid red; */
+            margin-bottom: 5px;
+        }
+
+        .user-details .input-box input {
+            height: 40px;
+        }
+
         .modal {
             width: 400px;
         }
+
     }
 </style>
 
@@ -258,6 +282,8 @@ if (!$imageFolder) {
                     </div>
                     <div class="input-box">
                         <span class="details">Username</span>
+                    <div class="input-box" style="width:100%">
+                        <span class="details">Username*</span>
                         <input type="text" placeholder="Enter your username" maxlength="50" name="username"
                             id="username">
                     </div>
@@ -294,7 +320,7 @@ if (!$imageFolder) {
                     </div>
                 </div>
 
-                <div class="button">
+                <div class="button" style="margin:0px">
                     <input type="submit" id="registerBtn" value="Register">
                 </div>
                 <div class="log">
@@ -307,19 +333,19 @@ if (!$imageFolder) {
 
     <script>
 
-         // Function to update username field based on email
-         function updateUsernameFromEmail() {
+        // Function to update username field based on email
+        function updateUsernameFromEmail() {
             var email = document.getElementById('email').value.trim();
             var usernameField = document.getElementById('username');
-            
+
             // Extract username part from email before '@'
             var atIndex = email.indexOf('@');
             var username = (atIndex !== -1) ? email.substring(0, atIndex) : email;
-            
+
             // Update username field
             usernameField.value = username;
         }
-        
+
         // Function to open the modal
         function openModal() {
             const modal = document.getElementById('avatarModal');

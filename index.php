@@ -2,25 +2,31 @@
 session_start();
 $error = '';
 $success = "";
-if (isset($_SESSION['user_data']))
-{
+
+//checking if the user is already logged in
+if (isset($_SESSION['user_data'])) {
     header('location:dashboard.php');
-} 
-if(isset($_REQUEST['Message']))
-{
+}
+if (isset($_REQUEST['Message'])) {
     $success = $_REQUEST['Message'];
 }
-if(isset($_POST['email'],$_POST['password']))
-{
-    require_once('database/ChatUser.php');
+
+//login start
+if (isset($_POST['email'], $_POST['password']) && preg_match( "/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/",$_POST['password']) && preg_match("/^[^\s@]+@([^\s@]+\.)?contata\.in$/i",$_POST['email'])) {
+    require_once ('database/ChatUser.php');
     $user = new ChatUser();
     $user->setRegistrationEmail($_POST['email']);
     $user_data = $user->getUserByEmail();
+
+    //checking if the user exist or not
     if (is_array($user_data) && count($user_data) > 0) {
+
+        //verifying the password
         if (password_verify($_POST['password'], $user_data['password'])) {
-           
             $user->setUserId($user_data['user_id']);
             $user->setStatus('Active');
+
+            //user status change and session creation
             if ($user->UpdateUserLoginStatus()) {
                 $_SESSION['user_data'] = [
                     'id' => $user_data['user_id'],
@@ -31,7 +37,6 @@ if(isset($_POST['email'],$_POST['password']))
                     'email' => $user_data['email'],
                     'username' => $user_data['username'],
                 ];
-                // setcookie("user_id",time(),time()+600);
                 header('location:dashboard.php');
             }
         } else {
@@ -106,14 +111,14 @@ if(isset($_POST['email'],$_POST['password']))
                             echo '<div class="error-message er" id="server_error" >
                         ' . $error . '</div>
                         ';
-                        $error="";
-                      }
-                      if ($success != '') {
-                        echo '<div class="alert alert-success" role="alert">
+                            $error = "";
+                        }
+                        if ($success != '') {
+                            echo '<div class="alert alert-success" role="alert">
                             ' . $success . '
                             </div>';
-                    }
-                      ?>
+                        }
+                        ?>
 
 
                     </div>

@@ -1,19 +1,19 @@
 <?php
-$message="";
+$message = "";
 session_start();
 
 
+//sending otp
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    require("./sendOTP.php");
-    
-    
+    require ("./sendOTP.php");
+
+
     $user = new ChatUser();
     $user->setRegistrationEmail($_POST['email']);
     $user_data = $user->getUserByEmail();
-    if(is_array( $user_data) && count($user_data) > 0)
-    {
+    if (is_array($user_data) && count($user_data) > 0) {
 
-        $_SESSION['reset_email']=$_POST['email'];
+        $_SESSION['reset_email'] = $_POST['email'];
         sendOtp($_POST['email']);
     }
     // else
@@ -35,36 +35,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script>
         function validateForm() {
             event.preventDefault();
-        var toaster = document.getElementById('toaster');
-        toaster.textContent = "Email sent";
-        toaster.style.display = "block";
-        
-        setTimeout(function () {
-            toaster.style.display = "none";
-            var form = document.getElementById('resetPasswordForm');
-            form.submit(); // Submit the form after 2 seconds
-        }, 1500);
-         
+            var toaster = document.getElementById('toaster');
+            toaster.textContent = "Email sent";
+            toaster.style.display = "block";
+
+
+            localStorage.setItem('otpStartTime', new Date().getTime());
+            setTimeout(function () {
+                toaster.style.display = "none";
+                var form = document.getElementById('resetPasswordForm');
+                form.submit(); // Submit the form after 2 seconds
+            }, 1500);
+
         }
-    
-        
+
+
     </script>
 
 </head>
 
 
 <body>
-<div id="toaster" class="toaster"></div>
+    <div id="toaster" class="toaster"></div>
     <div class="container log-container">
 
-    <!-- <?php
-         if ($message != '') {
+        <!-- <?php
+        if ($message != '') {
             echo '<div class="alert alert-success" role="alert">
                 ' . $message . '
                 </div>';
         }
-    ?> -->
-    
+        ?> -->
+
         <div class="title">Password recovery</div>
         <div class="content">
             <form method="post" id="resetPasswordForm" onsubmit="return validateForm()">

@@ -153,11 +153,15 @@ function checkOtp($otp,$email) {
             $expirationTime = 120; 
             if (time() <= ($creationTime + $expirationTime)) {
                 unlink($filename);
-                return true; 
-        }
+                return 2; 
+            }
+            else
+            {
+                return 1;
+            }
     }
 
-    return false; 
+    return 0; 
 }
 }
 ?>

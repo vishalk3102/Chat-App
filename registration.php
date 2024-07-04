@@ -232,8 +232,9 @@ if (!$imageFolder) {
                     </div>
                     <div class="input-box">
                         <span class="details">Email</span>
-                        <input type="text" placeholder="Enter your email" name="email" id="email" required>
-                        <div id="emailError" style="display:inline" class="error-message"></div>
+                        <input type="text" placeholder="Enter your email" name="email" id="email" required
+                            onchange="updateUsernameFromEmail()">
+                        <div id="emailError" style="display: inline" class="error-message"></div>
                     </div>
                     <div class="input-box">
                         <span class="details">Password</span>
@@ -246,6 +247,11 @@ if (!$imageFolder) {
                         <input type="password" placeholder="Confirm your password" maxlength="20" name="cpassword"
                             id="confirmPassword" required>
                         <div id="confError" style="display:inline" class="error-message"></div>
+                    </div>
+                    <div class="input-box">
+                        <span class="details">Username*</span>
+                        <input type="text" placeholder="Enter your username" maxlength="50" name="username"
+                            id="username">
                     </div>
                     <div class="input-box avatar-box" style="width:100%">
                         <span class="details">Avatar</span>
@@ -292,6 +298,20 @@ if (!$imageFolder) {
 
 
     <script>
+
+         // Function to update username field based on email
+         function updateUsernameFromEmail() {
+            var email = document.getElementById('email').value.trim();
+            var usernameField = document.getElementById('username');
+            
+            // Extract username part from email before '@'
+            var atIndex = email.indexOf('@');
+            var username = (atIndex !== -1) ? email.substring(0, atIndex) : email;
+            
+            // Update username field
+            usernameField.value = username;
+        }
+        
         // Function to open the modal
         function openModal() {
             const modal = document.getElementById('avatarModal');

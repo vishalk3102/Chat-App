@@ -190,6 +190,26 @@ class ChatUser
         }
     }
 
+    public function getUserByUsername()
+    {
+        try {
+            $query = "CALL get_user_by_username(:username)";
+            $statement = $this->connection->prepare($query);
+
+            $statement->bindParam(':username', $this->username);
+
+            $statement->execute();
+
+            $user_data = $statement->fetch(PDO::FETCH_ASSOC);
+
+            return $user_data;
+
+        } catch (PDOException $e) {
+            // die('Error: ' . $e->getMessage());
+            header('location:errorPage.php');   
+        }
+    }
+
     public function updateUserLoginStatus()
     {
         try {

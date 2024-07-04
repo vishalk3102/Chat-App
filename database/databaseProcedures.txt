@@ -41,6 +41,20 @@ END //
 DELIMITER ;
 
 
+GET_USER_BY_USERNAME:-
+DELIMITER //
+
+CREATE PROCEDURE `get_user_by_username` (
+    IN p_username VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM `User`
+    WHERE `username` = p_username;
+END //
+
+DELIMITER ;
+
+
 
 UPDATE_USER_STATUS:-
 DELIMITER //

@@ -58,12 +58,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         date_default_timezone_set("ASIA/KOLKATA");
         $user->setPasswordUpdateDate(date('Y-m-d H:i:s'));
         $user->setRegistrationDate(date('Y-m-d H:i:s'));
-        $user->setPhoto('avatar.png');
+        $user->setPhoto($_POST['avatar_src']);
+        $user->setUsername($_POST['username']);
         $user->setStatus('Inactive');
         $checkuser = $user->getUserByEmail();
+        $checkusername = $user->getUserByUsername();
+
         if (is_array($checkuser) && count($checkuser) > 0) {
             $error = "There already exist a user with this email";
-        } else {
+        }
+        else if(is_array($checkusername) && count($checkusername) > 0)
+        {
+            $error = "Username already taken";
+        } 
+        else {
             if ($user->saveUser()) {
                 $success_message = "Registration successful! Now you can login.";
                 //  header('location:index.php?Message='.$success_message.'');   
@@ -272,6 +280,8 @@ if (!$imageFolder) {
                             id="confirmPassword" required>
                         <div id="confError" style="display:inline" class="error-message"></div>
                     </div>
+                    <div class="input-box">
+                        <span class="details">Username</span>
                     <div class="input-box" style="width:100%">
                         <span class="details">Username*</span>
                         <input type="text" placeholder="Enter your username" maxlength="50" name="username"
@@ -283,7 +293,7 @@ if (!$imageFolder) {
                             <img src="./assets/avatar1.jpg" alt="avatar">
                         </div>
                         <button type="button" id="openAvatarModal">Select Avatar</button>
-                        <input type="hidden" id="avatar_src" name="avatar_src" value="default_avatar.jpg">
+                        <input type="hidden" id="avatar_src" name="avatar_src" value="avatar1.jpg">
                     </div>
                     <div id="avatarModal" class="modal">
                         <div class="modal-content">

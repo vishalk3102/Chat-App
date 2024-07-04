@@ -359,7 +359,7 @@ var chatInterval;
         })
             .then(response => response.json()) // Parse response as JSON
             .then(data => {
-                console.log("Response received: ", data);
+                // console.log("Response received: ", data);
                 if (Array.isArray(data)) {
                     // Construct HTML for users
                     let userHTML = '';

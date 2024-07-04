@@ -53,9 +53,9 @@ var chatInterval;
                             <img src="`+ user_photo + `" alt="avatar">
                         </div>
                         <div class="text-box">
-                            <p class="username-box">`+ user_name + `</p>
-                            <p class="status-box">`+ username + `</p>
-                            <p class="status-box">`+ status_style + user_status + `</p>
+                            <p class="username-box" id="make_chat_name">`+ user_name + `</p>
+                            <p class="status-box" id = "make_chat_username">`+ username + `</p>
+                            <p class="status-box" id ="make_chat_status">`+ status_style + user_status + `</p>
 
                         </div>
                     </div>
@@ -83,6 +83,23 @@ var chatInterval;
             backButton.style.display = 'none';
         }
     }
+
+    function updateMakeChat()
+    {
+        if(receiver_userid)
+        {
+            document.getElementById("make_chat_name").innerHTML = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
+            document.getElementById("make_chat_username").innerHTML = document.getElementById('list_user_username_' + receiver_userid).innerHTML;
+            let curr_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
+            var curr_status_style = `<span class='dot' id='red'></span>`;
+            if (curr_status == 'Active') {
+                curr_status_style = `<span class='dot' id='green12'></span>`;
+            }
+            document.getElementById("make_chat_status").innerHTML=curr_status_style+' '+curr_status;
+        }
+    }
+
+    setInterval(updateMakeChat,1000);
 
     function loadChat(element) {
 

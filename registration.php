@@ -268,8 +268,8 @@ if (!$imageFolder) {
                                     alt="Avatar 6" class="avatar-option">
                             </div>
                             <div class="modal-footer button-box">
-                                <button id="closeBtn">Close</button>
-                                <button id="saveBtn">Save</button>
+                            <button type="button" id="closeBtn">Close</button>
+                            <button type="button" id="saveBtn">Save</button>
                             </div>
                         </div>
                     </div>

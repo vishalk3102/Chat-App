@@ -252,76 +252,7 @@ class ChatUser
     }
 
 
-    public function updateOTP($otp, $email) {
-        try {
-            date_default_timezone_set("ASIA/KOLKATA");
-            $expiry_time = date('Y-m-d H:i:s', strtotime('now +2 minutes'));
-            $used = false;
-    
-            $query = "CALL update_insert_otp(:email, :otp, :expiry_time, :used)";
-
-            $statement = $this->connection->prepare($query);
-            
-            $statement->bindParam(':email', $email, PDO::PARAM_STR);
-            $statement->bindParam(':otp', $otp, PDO::PARAM_STR);
-            $statement->bindParam(':expiry_time', $expiry_time, PDO::PARAM_STR);
-            $statement->bindParam(':used', $used, PDO::PARAM_BOOL);
-            $statement->execute();
-    
-            return true;
-        } catch (PDOException $e) {
-            // echo "Error: " . $e->getMessage();
-            // return false;
-            header('location:errorPage.php');   
-        }
-    }
-    
-
-    public function newPassword($otp, $email, $password)
-    {
-        try {
-            date_default_timezone_set("ASIA/KOLKATA");
-            $query = "CALL GetValidOTP(:email)";
-            $statement = $this->connection->prepare($query);
-            $statement->bindParam(':email', $email, PDO::PARAM_STR);
-            $statement->execute();
-            $current_time = date('Y-m-d H:i:s');
-            $unix_timestamp = strtotime($current_time);
-            $row = $statement->fetch(PDO::FETCH_ASSOC);
-            $statement->closeCursor();
-            if (!$row) {
-                return false; // No valid OTP found for this email
-            }
-
-            $dbOtp = $row['otp'];
-            $expiryTimestamp = $row['expiry_timestamp'];
-
-            if (md5((string)$otp)==$dbOtp && $unix_timestamp<=$expiryTimestamp) {
-                // OTP is valid and not expired
-                $this->setRegistrationEmail($email);
-                $this->setPassword($password);
-                $used = true;
-                if ($this->resetPassword()) {
-                    // Mark OTP as used
-                    $query = "CALL check_otp(:email)";
-                    $stmt = $this->connection->prepare($query);
-                    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-                    $stmt->execute();
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false; // OTP is invalid or expired
-            }
-        } catch (PDOException $e) {
-            // echo "Error: " . $e->getMessage();
-
-            // return false;
-            header('location:errorPage.php');   
-        }
-    }
-
+  
     public function getStatusWithUserId()
     {
         try {

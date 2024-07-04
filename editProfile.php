@@ -227,13 +227,15 @@ if (!$imageFolder) {
         font-size: 14px;
         font-weight: 600;
     }
-    .alert-success{
-    color: #104b1e;
-    font-size: 14px;
+
+    .alert-success {
+        color: #104b1e;
+        font-size: 14px;
     }
-    .alert-danger{
-    color: red ;
-    font-size: 14px;
+
+    .alert-danger {
+        color: red;
+        font-size: 14px;
     }
 
     
@@ -323,6 +325,7 @@ if (!$imageFolder) {
 <body>
 <div id="toaster" class="toaster"></div>
     <section id="profile" class="container">
+        <input type="hidden" id="login_user_id" name="login_user_id" value="<?php echo $user_obj['id'] ?>">
         <div class="profile-card">
             <div class="toaster-box">
                 <?php
@@ -401,7 +404,8 @@ if (!$imageFolder) {
                             <input type="text" value="<?php echo $_SESSION['user_data']['username'] ?>" name='username'>
                         </div>
 
-                    <input type="hidden" id="avatar_src" name="avatar_src" value="<?php echo  $_SESSION['user_data']['photo'] ?>">
+                        <input type="hidden" id="avatar_src" name="avatar_src"
+                            value="<?php echo $_SESSION['user_data']['photo'] ?>">
 
                         <div class="button-box">
                             <button id="change-avatar-btn" type="submit">
@@ -473,5 +477,6 @@ if (!$imageFolder) {
     <?php endif; ?>
 
 </script>
+<script type="text/javascript" src="./js/script.js"> </script>
 
 </html>

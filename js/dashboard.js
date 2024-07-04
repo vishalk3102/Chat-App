@@ -89,7 +89,7 @@ var chatInterval;
         if(receiver_userid)
         {
             document.getElementById("make_chat_name").innerHTML = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
-            document.getElementById("make_chat_name").innerHTML = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
+            document.getElementById("make_chat_username").innerHTML = document.getElementById('list_user_username_' + receiver_userid).innerHTML;
             document.getElementById("make_chat_photo").src = document.getElementById('selected_user_image_' + receiver_userid).src;
             let curr_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
             var curr_status_style = `<span class='dot' id='red'></span>`;

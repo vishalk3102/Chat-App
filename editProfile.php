@@ -245,7 +245,7 @@ if (!$imageFolder) {
 
     .toaster {
         position: fixed;
-        top: 15%;
+        top: 60px;
         left: 50%;
         transform: translateX(-50%);
         background-color: #065e40;

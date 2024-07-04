@@ -185,7 +185,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
     </div>
 
 
-
+    <script src="js/check.js">
+        
+        </script>
 </body>
 <script>
     // LOGIC FOR COUNTDOWN TIMER

@@ -238,6 +238,20 @@ if (!$imageFolder) {
         font-size: 14px;
     }
 
+    
+.toaster {
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #065e40;
+  color: white;
+  padding: 15px 32px;
+  border-radius: 8px;
+  display: none;
+  z-index: 999;
+} 
+
     /* RESPONSIVE CODE  */
     @media screen and (max-width: 768px) {
         .profile-card {
@@ -309,21 +323,22 @@ if (!$imageFolder) {
 </style>
 
 <body>
+<div id="toaster" class="toaster"></div>
     <section id="profile" class="container">
         <input type="hidden" id="login_user_id" name="login_user_id" value="<?php echo $user_obj['id'] ?>">
         <div class="profile-card">
             <div class="toaster-box">
                 <?php
-                if ($error != '') {
-                    echo '<p class=" alert alert-danger" role="alert">
-                ' . $error . '
-                </p>';
-                }
-                if ($success_message != '') {
-                    echo '<p class="alert alert-success" role="alert">
-                ' . $success_message . '
-                </p>';
-                }
+                // if ($error != '') {
+                //     echo '<p class=" alert alert-danger" role="alert">
+                // ' . $error . '
+                // </p>';
+                // }
+                // if ($success_message != '') {
+                //     echo '<p class="alert alert-success" role="alert">
+                // ' . $success_message . '
+                // </p>';
+                // }
                 ?>
             </div>
             <div class="">
@@ -446,6 +461,20 @@ if (!$imageFolder) {
         // Save logic here
         closeModal();
     });
+
+     // Toaster Message
+     <?php if ($success_message != '' || $error != ''): ?>
+        var toaster = document.getElementById('toaster');
+        toaster.textContent = "<?php echo $success_message != '' ? $success_message : $error; ?>";
+        toaster.style.backgroundColor = "<?php echo $success_message != '' ? '#065e40' : '#f44336'; ?>"; // Green for success, red for error
+
+        toaster.style.display = "block";
+        
+        setTimeout(function () {
+            toaster.style.display = "none"; // Redirect after 2 seconds
+            
+        }, 2000);
+    <?php endif; ?>
 
 </script>
 <script type="text/javascript" src="./js/script.js"> </script>

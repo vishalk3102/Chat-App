@@ -111,12 +111,14 @@ if (!$imageFolder) {
         margin: 1rem;
         height: 80%;
         width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .left-side-box img {
         border-radius: 10px;
-        height: 100%;
-        width: 100%;
+        width: 80%;
     }
 
     .left-side-box .button-box {
@@ -243,7 +245,7 @@ if (!$imageFolder) {
 
     .toaster {
         position: fixed;
-        top: 15%;
+        top: 60px;
         left: 50%;
         transform: translateX(-50%);
         background-color: #065e40;
@@ -392,7 +394,7 @@ if (!$imageFolder) {
                                     alt="Avatar 1" class="avatar-option">
                                 <img src="<?php echo $imageFolder . 'avatar2.jpg' ?>" onclick="selectAvatar(this)"
                                     alt="Avatar 2" class="avatar-option">
-                                <img src="<?php echo $imageFolder . 'avatar3.png' ?>" onclick="selectAvatar(this)"
+                                <img src="<?php echo $imageFolder . 'avatar3.jpg' ?>" onclick="selectAvatar(this)"
                                     alt="Avatar 3" class="avatar-option">
                                 <img src="<?php echo $imageFolder . 'avatar4.jpg' ?>" onclick="selectAvatar(this)"
                                     alt="Avatar 4" class="avatar-option">

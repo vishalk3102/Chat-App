@@ -71,10 +71,6 @@ $user_obj = $_SESSION['user_data'];
             padding: 2px;
 
         }
-
-        /* .show_message{
-            font-size: 300px;
-        } */
     </style>
 </head>
 
@@ -166,4 +162,5 @@ $user_obj = $_SESSION['user_data'];
 
 <script type="text/javascript" src="./js/logout.js"> </script>
 <script type="text/javascript" src="./js/dashboard.js"> </script>
+
 </html>

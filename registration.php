@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             if ($user->saveUser()) {
              $success_message = "Registration successful! Now you can login.";
-             header('location:index.php?Message='.$success_message.'');   
+            //  header('location:index.php?Message='.$success_message.'');   
         } else {
                 $error = "Error: " . $db->errorInfo()[2];
             }
@@ -83,28 +83,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="style/style.css">
 
 </head>
-,<style>
-.alert-danger{
-  color: red ;
-  font-size: 14px;
-}
-.
-.alert-success{
-  color: #104b1e;
-  font-size: 14px;
-}
-</style>
+
 <body>
+    <div id="toaster" class="toaster"></div>
     <div class="container reg-container">
         <?php
         if ($error != '') {
             echo '<div class="alert alert-danger" role="alert">
                 ' . $error . '
-                </div>';
-        }
-        if ($success_message != '') {
-            echo '<div class="alert alert-success" role="alert">
-                ' . $success_message . '
                 </div>';
         }
         ?>
@@ -142,6 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div id="confError" style="display:inline" class="error-message"></div>
                     </div>
                 </div>
+                
                 <div class="button">
                     <input type="submit" id="registerBtn" value="Register">
                 </div>
@@ -151,11 +138,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
         </div>
     </div>
+ 
 
     <script>
         function validateForm() {
-            // var firstName = document.getElementById('firstName').value.trim();
-            // var lastName = document.getElementById('lastName').value.trim();
+           
             var email = document.getElementById('email').value.trim();
             var password = document.getElementById('password').value;
             var confirmPassword = document.getElementById('confirmPassword').value;
@@ -197,6 +184,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             return true;
         }
+
+        // Toater Message and Redirect
+        <?php if ($success_message != ''): ?>
+        var toaster = document.getElementById('toaster');
+        toaster.textContent = "<?php echo $success_message; ?>";
+        toaster.style.display = "block";
+        
+        setTimeout(function () {
+            window.location.href = "index.php"; // Redirect after 2 seconds
+            
+        }, 2000);
+        <?php endif; ?>
+
     </script>
 </body>
 

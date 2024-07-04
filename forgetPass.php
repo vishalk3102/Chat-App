@@ -1,5 +1,5 @@
 <?php
-$error="";
+$message="";
 session_start();
 
 
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     else
     {
-        $error="This id is not registered";
+        $message="Email Sent";
     }
 }
 ?>
@@ -34,34 +34,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script>
         function validateForm() {
-
-            var email = document.getElementById('email').value.trim();
-
-            // Validate email format
-            var emailRegex = /^[^\s@]+@([^\s@]+\.)?contata\.in$/i;
-            var errorMessage = "Please enter a valid email address";
-            if (!emailRegex.test(email)) {
-                document.getElementById('emailError').textContent = errorMessage;
-                return false;
-            }
-
-            return true;
+      
+        var toaster = document.getElementById('toaster');
+        toaster.textContent = "Email sent";
+        toaster.style.display = "block";
+        
+        setTimeout(function () {
+            toaster.style.display = "none";
+        }, 2000);
+       
         }
+
+        
     </script>
 
 </head>
 
+
 <body>
+<div id="toaster" class="toaster"></div>
     <div class="container log-container">
+
     <?php
-        if ($error != '') {
-            echo '<div class="alert alert-danger" role="alert">
-                ' . $error . '
+         if ($message != '') {
+            echo '<div class="alert alert-success" role="alert">
+                ' . $message . '
                 </div>';
         }
-        
-        
-        ?>
+    ?>
+    
         <div class="title">Password recovery</div>
         <div class="content">
             <form method="post" onsubmit="return validateForm()">
@@ -69,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="input-box">
                         <span class="details">Email</span>
                         <input type="text" id="email" name="email" placeholder="Enter your email" required>
-                        <div id="emailError" class="error-message"></div>
+                        <!-- <div id="emailError" class="error-message"></div> -->
                     </div>
                 </div>
                 <div class="button">

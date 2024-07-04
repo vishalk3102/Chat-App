@@ -280,10 +280,8 @@ if (!$imageFolder) {
                             id="confirmPassword" required>
                         <div id="confError" style="display:inline" class="error-message"></div>
                     </div>
-                    <div class="input-box">
-                        <span class="details">Username</span>
                     <div class="input-box" style="width:100%">
-                        <span class="details">Username*</span>
+                        <span class="details">Username</span>
                         <input type="text" placeholder="Enter your username" maxlength="50" name="username"
                             id="username">
                     </div>

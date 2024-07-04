@@ -259,7 +259,7 @@ if (!$imageFolder) {
                                     alt="Avatar 1" class="avatar-option">
                                 <img src="<?php echo $imageFolder . 'avatar2.jpg' ?>" onclick="selectAvatar(this)"
                                     alt="Avatar 2" class="avatar-option">
-                                <img src="<?php echo $imageFolder . 'avatar3.png' ?>" onclick="selectAvatar(this)"
+                                <img src="<?php echo $imageFolder . 'avatar3.jpg' ?>" onclick="selectAvatar(this)"
                                     alt="Avatar 3" class="avatar-option">
                                 <img src="<?php echo $imageFolder . 'avatar4.jpg' ?>" onclick="selectAvatar(this)"
                                     alt="Avatar 4" class="avatar-option">

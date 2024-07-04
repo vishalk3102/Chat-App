@@ -31,6 +31,7 @@ if(isset($_POST['email'],$_POST['password']))
                     'email' => $user_data['email'],
                     'username' => $user_data['username'],
                 ];
+                // setcookie("user_id",time(),time()+600);
                 header('location:dashboard.php');
             }
         } else {

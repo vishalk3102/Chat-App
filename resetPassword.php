@@ -13,12 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otp'])) {
     $user = new ChatUser();
     $user->setPassword($_POST['password']);
     $user->setRegistrationEmail($_SESSION['reset_email']);
-    if (checkOtp($_POST['otp'],$_SESSION['reset_email'])) {
+    $res = checkOtp($_POST['otp'],$_SESSION['reset_email']) ;
+    if ($res == 2) {
         $user->resetPassword();
         $success_message = "Password updated ! Enjoy your safe & secure chatting :)";
         unset($_SESSION["reset_email"]);
-    } else {
-        $error = "Error: Invalid otp";
+    } else if($res == 1){
+        $error = "OTP is Expired";
+    }
+    else
+    {
+        $error = "Invalid OTP";
     }
 }
 

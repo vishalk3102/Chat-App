@@ -1,4 +1,5 @@
 <?php
+//deletion on unused otp file
 function checkAndDeleteExpiredOtp() {
     $directory = 'C:/xampp/$temp~'; 
 

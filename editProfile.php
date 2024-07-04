@@ -4,21 +4,27 @@ session_start();
 $error = '';
 $success_message = '';
 
+//checking already login logic
 if (!isset($_SESSION['user_data'])) {
     header('location:index.php');
 }
 
 $user_obj = $_SESSION['user_data'];
+
+//checking user required field
 function allFieldsFilled($data)
 {
     return isset($data['first_name']) && $data['first_name'] !== "" && isset($data['last_name']) && $data['last_name'] !== "" &&
         isset($data['username']) && $data['username'] !== "" && isset($data['avatar_src']) && $data['avatar_src'] !== "";
 }
+
+//validating name length
 function validateNameLength($name, $maxLength = 50)
 {
     return strlen($name) <= $maxLength;
 }
 
+//applying validation
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     require_once ('database/ChatUser.php');
@@ -54,6 +60,7 @@ require 'bin\vendor\autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+//validating path
 $imageFolder = $_ENV['imgpath'];
 if (!$imageFolder) {
     die('IMAGE_FOLDER environment variable is not set.');

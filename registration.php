@@ -4,23 +4,25 @@
 $error = '';
 $success_message = '';
 
+//validaton of email
 function validateEmail($email)
 {
     $emailRegex = "/^[^\s@]+@([^\s@]+\.)?contata\.in$/i";
     return preg_match($emailRegex, $email);
 }
-
+//password validation
 function validatePassword($password)
 {
     $passwordRegex = "/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
     return preg_match($passwordRegex, $password);
 }
-
+//checking the required fields are set or not
 function allFieldsFilled($data)
 {
-    return isset($data['first_name']) && isset($data['last_name']) &&
-        isset($data['email']) && isset($data['password']) && isset($data['cpassword']);
+    return isset($data['first_name']) && $data['first_name']!=="" && isset($data['last_name'])&& $data['last_name']!=="" &&
+        isset($data['email'])&& $data['email'] !== "" && isset($data['password']) && $data['password'] !== "" && isset($data['cpassword']) && $data['cpassword'] !=="";
 }
+//checking the name length
 function validateNameLength($name, $maxLength = 50)
 {
     return strlen($name) <= $maxLength;
@@ -28,13 +30,15 @@ function validateNameLength($name, $maxLength = 50)
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     session_start();
+    //checking if user is already logged in 
     if (isset($_SESSION['user_data'])) {
         header('location:dashboard.php');
     }
 
+    //validing all the required parameters
     require_once ('database/ChatUser.php');
     if (!allFieldsFilled($_POST)) {
-        $error = "All fields except middle name are required.";
+        $error = "Please fill all required fields";
     } elseif (!validateNameLength($_POST['first_name']) || !validateNameLength($_POST['middle_name']) || !validateNameLength($_POST['last_name'])) {
         $error = "First name, middle name, and last name must each be no more than 50 characters long.";
     } elseif (!validateEmail($_POST['email'])) {
@@ -77,6 +81,7 @@ require 'bin\vendor\autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+//checking the path is correct or not
 $imageFolder = $_ENV['imgpath'];
 if (!$imageFolder) {
     die('IMAGE_FOLDER environment variable is not set.');

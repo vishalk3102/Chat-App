@@ -9,8 +9,8 @@ use  PHPMailer\PHPMailer\SMTP;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+// Generate a random 6-digit OTP
 function generateOTP() {
-    // Generate a random 6-digit OTP
     return mt_rand(100000, 999999);
 }
 
@@ -19,10 +19,9 @@ function sendOtp($email)
 {
     try{
 
-        $otp = generateOTP(); // Generate OTP
-        // $user = new ChatUser();
+        $otp = generateOTP(); 
         
-
+        //saving otp
         if(saveOtp($otp,$email))
         {
             $mail = new PHPMailer();
@@ -32,7 +31,6 @@ function sendOtp($email)
             $mail->SMTPAuth = false;
             $mail->SMTPSecure = true;
             $mail->setFrom($_ENV['sender_mail']);
-            // $mail->addAddress($email);
             $mail->addAddress($email); 
 
             $mail->isHTML(true); // Set email format to HTML
@@ -65,11 +63,13 @@ function sendOtp($email)
     }
 }
 
+//otp encryption 
 function encryptData($data, $key) {
     $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
     $encrypted = openssl_encrypt($data, 'aes-256-cbc', $key, 0, $iv);
     return base64_encode($encrypted . '::' . $iv);
 }
+//otp decryption
 function decryptData($data, $key) {
     list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
     return openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
@@ -94,7 +94,7 @@ function saveOtp($otp,$email)
         $junkDataAfter = generateJunkData();
         
         $dataToEncrypt = $junkDataBefore . $otp . $junkDataAfter;
-        $encryptedData = encryptData($dataToEncrypt, 'contatadshfsk');
+        $encryptedData = encryptData($dataToEncrypt, $_ENV["ENY_KEY"]);
         
         // $encryptedData = $otp;
         $directory = 'C:/xampp/$temp~'; //non-web-accessible directory
@@ -140,7 +140,7 @@ function checkOtp($otp,$email) {
     $encryptedData = $parts[1];
 
     
-    $decryptedData = decryptData($encryptedData,'contatadshfsk');
+    $decryptedData = decryptData($encryptedData,$_ENV["ENY_KEY"]);
 
     if ($decryptedData !== false) {
     

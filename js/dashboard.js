@@ -50,7 +50,7 @@ var chatInterval;
         var htmlcode = `
                     <div class="chat-navbar user-text-box">
                         <div class="profile">
-                            <img src="`+ user_photo + `" alt="avatar">
+                            <img src="`+ user_photo + `" alt="avatar" id="make_chat_photo">
                         </div>
                         <div class="text-box">
                             <p class="username-box" id="make_chat_name">`+ user_name + `</p>
@@ -89,7 +89,8 @@ var chatInterval;
         if(receiver_userid)
         {
             document.getElementById("make_chat_name").innerHTML = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
-            document.getElementById("make_chat_username").innerHTML = document.getElementById('list_user_username_' + receiver_userid).innerHTML;
+            document.getElementById("make_chat_name").innerHTML = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
+            document.getElementById("make_chat_photo").src = document.getElementById('selected_user_image_' + receiver_userid).src;
             let curr_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
             var curr_status_style = `<span class='dot' id='red'></span>`;
             if (curr_status == 'Active') {
@@ -256,7 +257,7 @@ var chatInterval;
             return;
         }
         var userId = document.getElementById('login_user_id').value;
-        console.log(receiver_userid, userId);
+        // console.log(receiver_userid, userId);
         fetch('action.php', {
             method: 'POST',
             headers: {

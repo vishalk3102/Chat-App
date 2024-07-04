@@ -3,17 +3,21 @@ session_start();
 $error = '';
 $success_message = '';
 
+//checking user is logged in
 if (!isset($_SESSION['reset_email'])) {
     header('location:forgetPass.php');
 }
 $user_email = $_SESSION['reset_email'];
+
+//handling otp send request
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otp'])) {
     require_once ('sendOtp.php');
 
     $user = new ChatUser();
     $user->setPassword($_POST['password']);
     $user->setRegistrationEmail($_SESSION['reset_email']);
-    $res = checkOtp($_POST['otp'],$_SESSION['reset_email']) ;
+    $res = checkOtp($_POST['otp'],$_SESSION['reset_email']);
+
     if ($res == 2) {
         $user->resetPassword();
         $success_message = "Password updated ! Enjoy your safe & secure chatting :)";
@@ -27,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otp'])) {
     }
 }
 
+//Resend otp logic
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
     require ("./sendOTP.php");
 
@@ -37,8 +42,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
     if (is_array($user_data) && count($user_data) > 0) {
 
         sendOtp($_POST['otpemail']);
+        $success_message = "Email Sent";
     } else {
-        $success_message = "This id is not registered";
+        $success_message = "Email Sent";
     }
 }
 

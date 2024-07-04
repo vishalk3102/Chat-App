@@ -22,7 +22,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'leave') {
     } else {
         $response = ['status' => 0, 'message' => 'Failed to update user status'];
     }
-    // setcookie('user_id', '', time() - 3600);
     echo json_encode($response);
 }
 

@@ -341,6 +341,25 @@ class ChatUser
             header('location:errorPage.php');   
         }
     }
+
+    public function getStatusWithUserId()
+    {
+        try {
+            $query = "CALL get_status_with_userid(:user_id)";
+            $stmt = $this->connection->prepare($query);
+ 
+            $stmt->bindParam(':user_id', $this->user_id, PDO::PARAM_INT);
+ 
+            $stmt->execute();
+ 
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+ 
+            return $data;
+        } catch (PDOException $e) {
+            // die('Error: ' . $e->getMessage());
+            header('location:errorPage.php');  
+        }
+    }
 }
 
 

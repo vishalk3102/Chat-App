@@ -8,11 +8,13 @@ if (!isset($_SESSION['reset_email'])) {
 }
 $user_email = $_SESSION['reset_email'];
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['otp'])) {
-    require_once ('database/ChatUser.php');
+    require_once ('sendOtp.php');
 
     $user = new ChatUser();
     $user->setPassword($_POST['password']);
-    if ($user->newPassword($_POST['otp'], $_SESSION['reset_email'], $_POST['password'])) {
+    $user->setRegistrationEmail($_SESSION['reset_email']);
+    if (checkOtp($_POST['otp'],$_SESSION['reset_email'])) {
+        $user->resetPassword();
         $success_message = "Password updated ! Enjoy your safe & secure chatting :)";
         unset($_SESSION["reset_email"]);
     } else {
@@ -31,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
 
         sendOtp($_POST['otpemail']);
     } else {
-        $error = "This id is not registered";
+        $success_message = "This id is not registered";
     }
 }
 

@@ -18,6 +18,7 @@ if(isset($_POST['email'],$_POST['password']))
     $user_data = $user->getUserByEmail();
     if (is_array($user_data) && count($user_data) > 0) {
         if (password_verify($_POST['password'], $user_data['password'])) {
+           
             $user->setUserId($user_data['user_id']);
             $user->setStatus('Active');
             if ($user->UpdateUserLoginStatus()) {

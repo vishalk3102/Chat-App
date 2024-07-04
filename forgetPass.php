@@ -1,5 +1,5 @@
 <?php
-$error="";
+$message="";
 session_start();
 
 
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     else
     {
-        $error="This id is not registered";
+        $message="Email Sent";
     }
 }
 ?>
@@ -51,17 +51,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </head>
 
+
 <body>
     <div class="container log-container">
+
     <?php
-        if ($error != '') {
-            echo '<div class="alert alert-danger" role="alert">
-                ' . $error . '
+         if ($message != '') {
+            echo '<div class="alert alert-success" role="alert">
+                ' . $message . '
                 </div>';
         }
-        
-        
-        ?>
+    ?>
+    
         <div class="title">Password recovery</div>
         <div class="content">
             <form method="post" onsubmit="return validateForm()">
@@ -69,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="input-box">
                         <span class="details">Email</span>
                         <input type="text" id="email" name="email" placeholder="Enter your email" required>
-                        <div id="emailError" class="error-message"></div>
+                        <!-- <div id="emailError" class="error-message"></div> -->
                     </div>
                 </div>
                 <div class="button">

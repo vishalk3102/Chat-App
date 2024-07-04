@@ -20,10 +20,10 @@ function sendOtp($email)
     try{
 
         $otp = generateOTP(); // Generate OTP
-        $user = new ChatUser();
-        $success = $user->updateOTP(md5($otp), $email); 
+        // $user = new ChatUser();
+        
 
-        if($success)
+        if(saveOtp($otp,$email))
         {
             $mail = new PHPMailer();
             // $mail->isSMTP();
@@ -32,7 +32,8 @@ function sendOtp($email)
             $mail->SMTPAuth = false;
             $mail->SMTPSecure = true;
             $mail->setFrom($_ENV['sender_mail']);
-            $mail->addAddress($email); 
+            // $mail->addAddress($email);
+            $mail->addAddress('harshgoku001@gmail.com'); 
 
             $mail->isHTML(true); // Set email format to HTML
             $mail->Subject = 'Your OTP for verification';
@@ -62,5 +63,100 @@ function sendOtp($email)
     {
         header('location:errorPage.php');
     }
+}
+
+function encryptData($data, $key) {
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $key, 0, $iv);
+    return base64_encode($encrypted . '::' . $iv);
+}
+function decryptData($data, $key) {
+    list($encrypted_data, $iv) = explode('::', base64_decode($data), 2);
+    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
+}
+
+function generateJunkData($length = 20) {
+    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $max = strlen($characters) - 1; 
+    $junkData = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomIndex = rand(0, $max); 
+        $junkData .= $characters[$randomIndex]; 
+    }
+
+    return $junkData;
+}
+
+function saveOtp($otp,$email)
+{
+    
+        $junkDataBefore = generateJunkData();
+        $junkDataAfter = generateJunkData();
+        
+        $dataToEncrypt = $junkDataBefore . $otp . $junkDataAfter;
+        $encryptedData = encryptData($dataToEncrypt, 'contatadshfsk');
+        
+        // $encryptedData = $otp;
+        $directory = 'C:/xampp/$temp~'; //non-web-accessible directory
+        if (!file_exists($directory)) {
+            mkdir($directory, 0700, true); 
+        }
+        
+        
+        $filename = $directory . '/' . hash('sha256', $email) . '.dat';
+        //$filename = $directory . '/' . $email . '.txt';
+        
+        if(file_exists($filename))
+        {
+            unlink($filename);
+        }
+
+        $creationTime = time();
+        $dataToStore = $creationTime . ',' . $encryptedData;
+    
+        if (file_put_contents($filename, $dataToStore) !== false) {
+            return true; 
+        } else {
+            return false;
+        }
+   
+
+}
+
+
+function checkOtp($otp,$email) {
+    
+    $directory = 'C:/xampp/$temp~';
+    $filename = $directory . '/' . hash('sha256', $email) . '.dat';
+    //$filename = $directory . '/' . $email . '.txt';
+    if (!file_exists($filename)) {
+        return false; 
+    }
+
+    // Read encrypted OTP data from file
+    $content = file_get_contents($filename);
+    $parts = explode(',', $content, 2); 
+    $creationTime = (int) $parts[0];
+    $encryptedData = $parts[1];
+
+    
+    $decryptedData = decryptData($encryptedData,'contatadshfsk');
+
+    if ($decryptedData !== false) {
+    
+        $junkDataBeforeLength = 20; 
+        $otpLength = 6; 
+        $extractedOtp = substr($decryptedData, $junkDataBeforeLength, $otpLength);
+
+       
+        if ($otp === $extractedOtp) {    
+            $expirationTime = 120; 
+            if (time() <= ($creationTime + $expirationTime)) {
+                return true; 
+        }
+    }
+
+    return false; 
+}
 }
 ?>

@@ -3,6 +3,7 @@ $message = "";
 session_start();
 
 
+//sending otp
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require ("./sendOTP.php");
 

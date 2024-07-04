@@ -4,11 +4,13 @@ session_start();
 $error = '';
 $success_message = '';
 
+//already login check
 if (!isset($_SESSION['user_data'])) {
     header('location:index.php');
 }
 $user_obj = $_SESSION['user_data'];
 
+//validating data
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset($_SESSION['user_data'])) {
@@ -20,10 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $userData = $user->getUserByEmail();
         if (is_array($userData) && count($userData) > 0) {
+            //checking old password match with password in database
             if (password_verify($_POST['opassword'], $userData['password'])) {
                 if ($_POST['npassword'] !== $_POST['cnpassword']) {
                     $error = "Password and confirm password did not matched";
-                } else if (password_verify($_POST['npassword'], $userData['password'])) {
+                }
+                 else if (password_verify($_POST['npassword'], $userData['password'])) { 
                     $error = "New password must be different from old password";
                 } else {
                     $user->setPassword($_POST['npassword']);

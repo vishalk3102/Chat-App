@@ -11,6 +11,7 @@ require 'bin\vendor\autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+//file exist or not
 $imageFolder = $_ENV['imgpath'];
 if (!$imageFolder) {
     die('IMAGE_FOLDER environment variable is not set.');
@@ -213,10 +214,10 @@ if (!$imageFolder) {
 
 
             $login_user_id = $user_obj['id'];
-            require_once 'database/ChatUser.php';
-            $chatuser = new ChatUser();
-            $chatuser->setUserId($login_user_id);
-            $user_data = $chatuser->getAllUsersDataWithStatus();
+            // require_once 'database/ChatUser.php';
+            // $chatuser = new ChatUser();
+            // $chatuser->setUserId($login_user_id);
+            // $user_data = $chatuser->getAllUsersDataWithStatus();
 
             ?>
 

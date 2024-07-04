@@ -173,5 +173,4 @@ if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) >
 <script type="text/javascript" src="./js/logout.js"> </script>
 <script type="text/javascript" src="./js/dashboard.js"> </script>
 
-<!-- <script type="text/javascript" src="./js/session.js"></script> -->
 </html>

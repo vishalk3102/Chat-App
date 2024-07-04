@@ -202,9 +202,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
         let countdown;
 
         function initializeTimer() {
-            const storedEndTime = localStorage.getItem('otpStartTime');
+            const startTime = localStorage.getItem('otpStartTime');
             const now = new Date().getTime();
-            const elapsedTime = now - startTime;
+            const elapsedTime = now - parseInt(startTime);
 
             if (startTime && elapsedTime < 30000) {
                 // If less than 30 seconds have passed, continue the timer
@@ -213,6 +213,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
                 // If more than 30 seconds have passed or no start time, set timer to 0
                 timer = 0;
             }
+
             updateTimerDisplay();
             if (timer > 0) {
                 startTimer();
@@ -220,87 +221,73 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
             } else {
                 resendButton.disabled = false;
             }
+        }
 
-            /*   if (storedEndTime && now < storedEndTime) {
-                  // If there's a stored end time and it's in the future, continue the timer
-                  timer = Math.round((storedEndTime - now) / 1000);
-              } else {
-  
-                  timer = 30;
-                  localStorage.setItem('otpEndTime', now + 30000);
-              } */
-
-
-            /*  updateTimerDisplay();
-             startTimer();
-             resendButton.disabled = true;
-         } */
-
-            function startTimer() {
-                countdown = setInterval(function () {
-                    timer--;
-                    updateTimerDisplay();
-
-                    if (timer <= 0) {
-                        clearInterval(countdown);
-                        resendButton.disabled = false;
-                        localStorage.removeItem('otpEndTime');
-                    }
-                }, 1000);
-            }
-
-            function updateTimerDisplay() {
-                let minutes = Math.floor(timer / 60);
-                let seconds = timer % 60;
-
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                timerDisplay.textContent = minutes + ":" + seconds;
-            }
-
-            function resetTimer() {
-                clearInterval(countdown);
-                timer = 30;
-                const now = new Date().getTime();
-                localStorage.setItem('otpEndTime', now + 30000);
-                resendButton.disabled = true;
+        function startTimer() {
+            countdown = setInterval(function () {
+                timer--;
                 updateTimerDisplay();
-                startTimer();
-            }
 
-            // LOGIC FOR RESENDING OTP
-            resendButton.addEventListener('click', function (event) {
-                console.log('resend clicked')
-                event.preventDefault();
+                if (timer <= 0) {
+                    clearInterval(countdown);
+                    resendButton.disabled = false;
+                    localStorage.removeItem('otpStartTime');
+                }
+            }, 1000);
+        }
 
-                // Get the email from data attribute
-                var userEmail = resendButton.getAttribute('data-email');
+        function updateTimerDisplay() {
+            let minutes = Math.floor(timer / 60);
+            let seconds = timer % 60;
 
-                // Create form element
-                var form = document.createElement('form');
-                form.setAttribute('method', 'POST');
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
 
-                // Create hidden input field for email
-                var emailInput = document.createElement('input');
-                emailInput.setAttribute('type', 'hidden');
-                emailInput.setAttribute('name', 'otpemail');
-                emailInput.setAttribute('value', userEmail);
+            timerDisplay.textContent = minutes + ":" + seconds;
+        }
 
-                // Append the input to the form
-                form.appendChild(emailInput);
+        function resetTimer() {
+            clearInterval(countdown);
+            timer = 30;
+            const now = new Date().getTime();
+            localStorage.setItem('otpStartTime', now.toString());
+            resendButton.disabled = true;
+            updateTimerDisplay();
+            startTimer();
+        }
 
-                // Append the form to the document body
-                document.body.appendChild(form);
+        // LOGIC FOR RESENDING OTP
+        resendButton.addEventListener('click', function (event) {
+            console.log('resend clicked')
+            event.preventDefault();
 
-                form.submit();
+            // Get the email from data attribute
+            var userEmail = resendButton.getAttribute('data-email');
 
-                // Reset the timer after form submission
-                resetTimer();
-            });
+            // Create form element
+            var form = document.createElement('form');
+            form.setAttribute('method', 'POST');
 
-            initializeTimer();
+            // Create hidden input field for email
+            var emailInput = document.createElement('input');
+            emailInput.setAttribute('type', 'hidden');
+            emailInput.setAttribute('name', 'otpemail');
+            emailInput.setAttribute('value', userEmail);
+
+            // Append the input to the form
+            form.appendChild(emailInput);
+
+            // Append the form to the document body
+            document.body.appendChild(form);
+
+            form.submit();
+
+            // Reset the timer after form submission
+            resetTimer();
         });
+
+        initializeTimer();
+    });
 
     // Toaster Message
     <?php if ($success_message != '' || $error != ''): ?>

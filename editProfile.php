@@ -212,9 +212,13 @@ if (!$imageFolder) {
         height: 100px;
         border-radius: 50%;
         cursor: pointer;
-        border: 1px solid black;
+        border: 1px solid transparent;
         margin: 10px;
         transition: border-color 0.3s ease;
+    }
+
+    .avatar-options .avatar-option.selected {
+        border: 3px solid #EE4E4E;
     }
 
     .back-to-login a {
@@ -466,16 +470,27 @@ if (!$imageFolder) {
         modal.style.display = 'block';
     }
 
+
+    let tempSelectedAvatar = null;
+
     // Function to select an avatar
     function selectAvatar(imgElement) {
-        updateAvatarImage(imgElement.src);
+        document.querySelectorAll('.avatar-option').forEach(img => {
+            img.classList.remove('selected');
+        });
+
+        // Add 'selected' class to the clicked avatar
+        imgElement.classList.add('selected');
+        tempSelectedAvatar = imgElement.src;
     }
 
     // Function to close the modal
     function closeModal() {
         const modal = document.getElementById('avatarModal');
         modal.style.display = 'none';
+        tempSelectedAvatar = null;
     }
+
 
     // Function to update the avatar image
     function updateAvatarImage(src) {
@@ -492,7 +507,9 @@ if (!$imageFolder) {
     document.querySelector('.button-box').addEventListener('click', openModal);
     document.getElementById('closeBtn').addEventListener('click', closeModal);
     document.getElementById('saveBtn').addEventListener('click', () => {
-        // Save logic here
+        if (tempSelectedAvatar) {
+            updateAvatarImage(tempSelectedAvatar)
+        }
         closeModal();
     });
 

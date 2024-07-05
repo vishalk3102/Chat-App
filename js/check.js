@@ -1,10 +1,10 @@
 function cleanTempFile() {
     var xhr = new XMLHttpRequest();
-
+    console.log('performed');
     xhr.open('GET', 'deleteExpiredOTP.php', true);
     xhr.send();
 
 }
 
 
-setInterval(cleanTempFile, 60000);
+setInterval(cleanTempFile, 500000);

@@ -42,6 +42,8 @@ var chatInterval;
             handleMessage();
         }
     }
+
+    //create chat area when user select a particular chat
     function make_chat_area(user_name, username, user_status, chatStarted, user_photo) {
         var status_style = `<span class='dot' id='red'></span>`;
         if (user_status == 'Active') {
@@ -84,12 +86,13 @@ var chatInterval;
         }
     }
 
+    //Reflect change in the status, name, username and photo of the selected user to change when it gets changed from there side
     function updateMakeChat()
     {
         if(receiver_userid)
         {
             document.getElementById("make_chat_name").innerHTML = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
-            document.getElementById("make_chat_name").innerHTML = document.getElementById('list_user_name_' + receiver_userid).innerHTML;
+            document.getElementById("make_chat_username").innerHTML = document.getElementById('list_user_username_' + receiver_userid).innerHTML;
             document.getElementById("make_chat_photo").src = document.getElementById('selected_user_image_' + receiver_userid).src;
             let curr_status = document.getElementById('list_user_status_' + receiver_userid).innerHTML;
             var curr_status_style = `<span class='dot' id='red'></span>`;
@@ -102,6 +105,7 @@ var chatInterval;
 
     setInterval(updateMakeChat,1000);
 
+    //load the chat between logged user and the selected user
     function loadChat(element) {
 
         document.querySelectorAll('.user-text-box').forEach(userBox => {
@@ -168,6 +172,7 @@ var chatInterval;
     // Call initializeChat when your chat component is mounted or loaded
     initializeChat();
 
+    //fetch the chat time to time to get updated about the new messages
     function fetchChat(recUserId) {
         receiver_userid = recUserId
         var userId = document.getElementById('login_user_id').value;
@@ -243,6 +248,7 @@ var chatInterval;
 
 
 
+    //handle message when sent 
     async function handleMessage() {
 
         var inputmsg = document.getElementById('user_text_message');
@@ -344,6 +350,8 @@ var chatInterval;
     // Listen for visibility changes
     document.addEventListener('visibilitychange', toggleBackButtonVisibility);
 
+
+    //update the user record in some interval to get updated with the message received and their profile information
     function updateUsers() {
         var userId = document.getElementById('login_user_id').value;
 

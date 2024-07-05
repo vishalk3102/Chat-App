@@ -12,7 +12,7 @@ var chatInterval;
     // DROPDOWN LOGIC 
     document.addEventListener('DOMContentLoaded', () => {
         const profileIcon = document.querySelector('.profile span');
-        const dropdownContent = document.querySelector('.dropdown-content');
+        const dropdownContent = document.querySelector('.dropdown-content'); 
 
         function toggleDropdown(event) {
             event.stopPropagation();

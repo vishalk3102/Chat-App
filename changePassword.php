@@ -59,54 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Password recovery</title>
     <link rel="stylesheet" href="style/style.css">
 </head>
-<style>
-    .alert-danger {
-        color: red;
-        font-size: 14px;
-    }
-
-    .alert-success {
-        color: #104b1e;
-        font-size: 14px;
-    }
-</style>
-
-<script>
-    function validateForm() {
-
-
-        var password = document.getElementById('new-password').value;
-        var confirmPassword = document.getElementById('cnew-password').value;
-
-        // console.log(password);
-        // Validate password and confirm password match
-
-        var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        var errorMessage = "Password must contain at least one letter, one number, one special character, and be at least 8 characters long";
-
-        // Check if password matches the regex
-        var target = document.getElementById('newPasswordError');
-
-        if (!passwordRegex.test(password)) {
-            // console.log("ghg");
-            target.style.display = "inline";
-            target.textContent = errorMessage;
-            return false;
-        } target.style.display = "none";
-        // console.log("ttt");
-
-        var errorMessage = "Password and Confirm Password do not match";
-        var target = document.getElementById('confError');
-        if (password !== confirmPassword) {
-            // console.log("uuu");
-            target.style.display = "inline";
-            target.textContent = errorMessage;
-            return false;
-        } target.style.display = "none";
-
-        return true;
-    }
-</script>
 
 <body>
 <div id="toaster" class="toaster"></div>
@@ -163,36 +115,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <script>
         function validateForm() {
-            // event.preventDefault();
-
-            var oldPassword = document.getElementById('old-password').value;
-            var newPassword = document.getElementById('new-password').value;
-            var confirmPassword = document.getElementById('cnew-password').value;
 
 
-            // Validate password and confirm password match
+        var password = document.getElementById('new-password').value;
+        var confirmPassword = document.getElementById('cnew-password').value;
 
-            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            var errorMessage = "Password must contain at least one letter, one number, one special character, and be at least 8 characters long.";
+        // console.log(password);
+        // Validate password and confirm password match
 
-            // Check if password matches the regex
-            if (!passwordRegex.test(oldPassword)) {
-                document.getElementById('oldPasswordError').textContent = errorMessage;
-                return false;
-            }
+        var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        var errorMessage = "Password must contain at least one letter, one number, one special character, and be at least 8 characters long";
 
-            if (!passwordRegex.test(newPassword)) {
-                document.getElementById('newPasswordError').textContent = errorMessage;
-                return false;
-            }
+        // Check if password matches the regex
+        var target = document.getElementById('newPasswordError');
 
-            var errorMessage = "Password and Confirm Password do not match";
-            if (newPassword !== confirmPassword) {
-                document.getElementById('confError').textContent = errorMessage;
-                return false;
-            }
+        if (!passwordRegex.test(password)) {
+            // console.log("ghg");
+            target.style.display = "inline";
+            target.textContent = errorMessage;
+            return false;
+        } target.style.display = "none";
+        // console.log("ttt");
 
-            return true;
+        var errorMessage = "Password and Confirm Password do not match";
+        var target = document.getElementById('confError');
+        if (password !== confirmPassword) {
+            // console.log("uuu");
+            target.style.display = "inline";
+            target.textContent = errorMessage;
+            return false;
+        } target.style.display = "none";
+
+        return true;
         }
 
          // Toaster Message
@@ -204,9 +158,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             toaster.style.display = "block";
 
             setTimeout(function () {
-                toaster.style.display = "none"; // Redirect after 2 seconds
-
-            }, 3000);
+            toaster.style.display = "none"; // Redirect after 2 seconds
+            <?php if ($success_message != ''): ?>
+            window.location.href = "profile.php";
+            <?php endif; ?>
+        }, 2000);
         <?php endif; ?>
 
         

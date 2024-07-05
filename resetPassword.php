@@ -258,7 +258,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
 
         // LOGIC FOR RESENDING OTP
         resendButton.addEventListener('click', function (event) {
-            console.log('resend clicked')
+            // console.log('resend clicked')
             event.preventDefault();
 
             // Get the email from data attribute

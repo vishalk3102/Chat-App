@@ -86,7 +86,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "get_users") {
     }
     if ($redirect) {
         unset($_SESSION['user_data']);
-      
+        session_destroy();
     }
     
     echo json_encode($user_html);
@@ -103,6 +103,7 @@ if(isset($_POST['action']) && $_POST["action"] == "check_user_status") {
     $user_data = $chatuser->getStatusWithUserId();
     if ($user_data[0]['status'] == 'Inactive') {
         unset($_SESSION['user_data']);
+        session_destroy();
     }
     echo json_encode($user_data);
 }

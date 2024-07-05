@@ -1,0 +1,5 @@
+RewriteEngine On
+
+# Redirect non-existent files to dashboard.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ errorPage.php [L]

@@ -20,7 +20,7 @@ function validatePassword($password)
 function allFieldsFilled($data)
 {
     return isset($data['first_name']) && $data['first_name']!=="" && isset($data['last_name'])&& $data['last_name']!=="" &&
-        isset($data['email'])&& $data['email'] !== "" && isset($data['password']) && $data['password'] !== "" && isset($data['cpassword']) && $data['cpassword'] !=="";
+        isset($data['email'])&& $data['email'] !== "" && isset($data['password']) && $data['password'] !== "" && isset($data['cpassword']) && $data['cpassword'] !=="" &&  isset($data['username'])&& $data['username'] !== "";
 }
 //checking the name length
 function validateNameLength($name, $maxLength = 50)
@@ -58,12 +58,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         date_default_timezone_set("ASIA/KOLKATA");
         $user->setPasswordUpdateDate(date('Y-m-d H:i:s'));
         $user->setRegistrationDate(date('Y-m-d H:i:s'));
-        $user->setPhoto('avatar.png');
+        $user->setPhoto($_POST['avatar_src']);
+        $user->setUsername($_POST['username']);
         $user->setStatus('Inactive');
         $checkuser = $user->getUserByEmail();
+        $checkusername = $user->getUserByUsername();
+
         if (is_array($checkuser) && count($checkuser) > 0) {
             $error = "There already exist a user with this email";
-        } else {
+        }
+        else if(is_array($checkusername) && count($checkusername) > 0)
+        {
+            $error = "Username already taken";
+        } 
+        else {
             if ($user->saveUser()) {
                 $success_message = "Registration successful! Now you can login.";
                 //  header('location:index.php?Message='.$success_message.'');   
@@ -199,9 +207,28 @@ if (!$imageFolder) {
 
     /* RESPONSIVE CODE  */
     @media screen and (max-width: 768px) {
+
+        .container {
+            padding: 15px 25px;
+        }
+
+        .content form .user-details {
+            margin: 16px 0px 0px 0px;
+        }
+
+        .reg-container form .user-details .input-box {
+            /* border: 2px solid red; */
+            margin-bottom: 5px;
+        }
+
+        .user-details .input-box input {
+            height: 40px;
+        }
+
         .modal {
             width: 400px;
         }
+
     }
 </style>
 
@@ -253,10 +280,10 @@ if (!$imageFolder) {
                             id="confirmPassword" required>
                         <div id="confError" style="display:inline" class="error-message"></div>
                     </div>
-                    <div class="input-box">
-                        <span class="details">Username*</span>
+                    <div class="input-box" style="width:100%">
+                        <span class="details">Username</span>
                         <input type="text" placeholder="Enter your username" maxlength="50" name="username"
-                            id="username">
+                            id="username" required>
                     </div>
                     <div class="input-box avatar-box" style="width:100%">
                         <span class="details">Avatar</span>
@@ -264,7 +291,7 @@ if (!$imageFolder) {
                             <img src="./assets/avatar1.jpg" alt="avatar">
                         </div>
                         <button type="button" id="openAvatarModal">Select Avatar</button>
-                        <input type="hidden" id="avatar_src" name="avatar_src" value="default_avatar.jpg">
+                        <input type="hidden" id="avatar_src" name="avatar_src" value="avatar1.jpg">
                     </div>
                     <div id="avatarModal" class="modal">
                         <div class="modal-content">
@@ -291,7 +318,7 @@ if (!$imageFolder) {
                     </div>
                 </div>
 
-                <div class="button">
+                <div class="button" style="margin:0px">
                     <input type="submit" id="registerBtn" value="Register">
                 </div>
                 <div class="log">
@@ -304,19 +331,19 @@ if (!$imageFolder) {
 
     <script>
 
-         // Function to update username field based on email
-         function updateUsernameFromEmail() {
+        // Function to update username field based on email
+        function updateUsernameFromEmail() {
             var email = document.getElementById('email').value.trim();
             var usernameField = document.getElementById('username');
-            
+
             // Extract username part from email before '@'
             var atIndex = email.indexOf('@');
             var username = (atIndex !== -1) ? email.substring(0, atIndex) : email;
-            
+
             // Update username field
             usernameField.value = username;
         }
-        
+
         // Function to open the modal
         function openModal() {
             const modal = document.getElementById('avatarModal');

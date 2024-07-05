@@ -1,3 +1,4 @@
+//check the status every time and perform action on it
 function checkStatus() {
     var userId = document.getElementById("login_user_id").value;
     if (userId) {

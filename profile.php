@@ -223,6 +223,8 @@ if (!$imageFolder) {
 
         </div>
         <div class="profile-card">
+        <input type="hidden" id="login_user_id" name="login_user_id"
+        value="<?php echo $login_user_id ?>">
             <div class="left-side-box">
                 <img src="<?php echo $imageFolder . $user_obj['photo'] ?>" alt="avatar">
             </div>

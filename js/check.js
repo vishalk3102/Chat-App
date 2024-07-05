@@ -6,5 +6,5 @@ function cleanTempFile() {
 
 }
 
-cleanTempFile();
+
 setInterval(cleanTempFile, 60000);

@@ -299,7 +299,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
 
         setTimeout(function () {
             toaster.style.display = "none"; // Redirect after 2 seconds
-
+            window.location.href = "index.php";
         }, 2000);
     <?php endif; ?>
 

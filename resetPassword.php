@@ -258,7 +258,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
 
         // LOGIC FOR RESENDING OTP
         resendButton.addEventListener('click', function (event) {
-            console.log('resend clicked')
+            // console.log('resend clicked')
             event.preventDefault();
 
             // Get the email from data attribute
@@ -299,7 +299,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['otpemail'])) {
 
         setTimeout(function () {
             toaster.style.display = "none"; // Redirect after 2 seconds
-
+            <?php if ($success_message != ''): ?>
+            window.location.href = "index.php";
+            <?php endif; ?>
         }, 2000);
     <?php endif; ?>
 

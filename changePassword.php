@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         var password = document.getElementById('new-password').value;
         var confirmPassword = document.getElementById('cnew-password').value;
 
-        console.log(password);
+        // console.log(password);
         // Validate password and confirm password match
 
         var passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -88,17 +88,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         var target = document.getElementById('newPasswordError');
 
         if (!passwordRegex.test(password)) {
-            console.log("ghg");
+            // console.log("ghg");
             target.style.display = "inline";
             target.textContent = errorMessage;
             return false;
         } target.style.display = "none";
-        console.log("ttt");
+        // console.log("ttt");
 
         var errorMessage = "Password and Confirm Password do not match";
         var target = document.getElementById('confError');
         if (password !== confirmPassword) {
-            console.log("uuu");
+            // console.log("uuu");
             target.style.display = "inline";
             target.textContent = errorMessage;
             return false;

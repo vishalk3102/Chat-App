@@ -9,6 +9,7 @@ $dotenv->load();
 
 // file_put_contents($logFile, "Request received: " . print_r($_POST, true) . "\n", FILE_APPEND);
 
+//logout
 if (isset($_POST['action']) && $_POST['action'] == 'leave') {
     require ('database/ChatUser.php');
     $user = new ChatUser();
@@ -25,6 +26,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'leave') {
     echo json_encode($response);
 }
 
+//fetch chat
 if (isset($_POST["action"]) && $_POST["action"] == 'fetch_chat') {
     require 'database/ChatMessage.php';
     $chat_object = new ChatMessage();
@@ -34,6 +36,8 @@ if (isset($_POST["action"]) && $_POST["action"] == 'fetch_chat') {
     echo json_encode($chat_object->fetch_chat());
 }
 
+
+//sending message
 if (isset($_POST["action"]) && $_POST["action"] == "send_message") {
     require 'database/ChatMessage.php';
     $chat_object = new ChatMessage();
@@ -48,6 +52,8 @@ if (isset($_POST["action"]) && $_POST["action"] == "send_message") {
     echo json_encode($response);
 }
 
+
+//get users with status
 if (isset($_POST["action"]) && $_POST["action"] == "get_users") {
 
     $user_id = $_POST["user_id"];
@@ -86,6 +92,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "get_users") {
     }
     if ($redirect) {
         unset($_SESSION['user_data']);
+        session_destroy();
       
     }
     
@@ -95,6 +102,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "get_users") {
 
 }
 
+//check user status 
 if(isset($_POST['action']) && $_POST["action"] == "check_user_status") {
     $user_id = $_POST["user_id"];
     require_once 'database/ChatUser.php';
@@ -103,6 +111,7 @@ if(isset($_POST['action']) && $_POST["action"] == "check_user_status") {
     $user_data = $chatuser->getStatusWithUserId();
     if ($user_data[0]['status'] == 'Inactive') {
         unset($_SESSION['user_data']);
+        session_destroy();
     }
     echo json_encode($user_data);
 }
